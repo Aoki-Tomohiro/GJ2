@@ -162,6 +162,46 @@ void Player::BehaviorJumpInitialize() {
 }
 
 void Player::BehaviorJumpUpdate() {
+	XINPUT_STATE joyState{};
+	if (Input::GetInstance()->GetJoystickState(joyState)) {
+		//しきい値
+		const float threshold = 0.7f;
+		//移動フラグ
+		bool isMoving = false;
+		//移動量
+		Vector3 move = {
+			(float)joyState.Gamepad.sThumbLX / SHRT_MAX,
+			0.0f,
+			(float)joyState.Gamepad.sThumbLY / SHRT_MAX,
+		};
+
+		//スティックの押し込みが遊び範囲を超えていたら移動フラグをtureにする
+		if (Length(move) > threshold) {
+			isMoving = true;
+		}
+
+		if (isMoving) {
+			//速さ
+			const float kSpeed = 0.3f;
+
+			//移動量に速さを反映
+			move = Multiply(Normalize(move), kSpeed);
+
+			//移動ベクトルをカメラの角度だけ回転する
+			Matrix4x4 rotateMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
+			move = TransformNormal(move, rotateMatrix);
+
+			//移動
+			worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, move);
+
+			//目標角度の算出
+			destinationAngleY_ = std::atan2(move.x, move.z);
+		}
+	}
+
+	//移動方向に見た目を合わせる
+	worldTransformBase_.rotation_.y = LerpShortAngle(worldTransformBase_.rotation_.y, destinationAngleY_, 0.5f);
+
 	worldTransformBase_.translation_.y += workJump_.power;
 	workJump_.power -= 0.05f;
 	if (worldTransformBase_.translation_.y <= 0.0f) {

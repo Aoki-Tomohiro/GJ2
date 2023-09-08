@@ -1,13 +1,12 @@
 #pragma once
-
-
+#include "CollisionManager/Collider.h"
 #include"Model/Model.h"
-
+#include"CollisionManager/CollisionConfig.h"
 using std::unique_ptr;
 
 
 
-class TransCubeBullet
+class TransCubeBullet:public Collider
 {
 public:
 	TransCubeBullet();
@@ -15,18 +14,21 @@ public:
 
 
 	void Initialize(Vector3 &velocity,Vector3 pos);
-
 	void Update();
+	void Draw(ViewProjection view);
+
+	Vector3 GetWorldPosition()override;
+	void OnCollision()override;
 
 	bool IsDead() const{ return isDead; }
 	void SetIsDead(bool flag) {  isDead=flag; }
 	Vector3 GetPosition() { return GetWorldPosition(); }
-
-	void Draw(ViewProjection view);
+	
+	
 
 	
 private:
-	Vector3 GetWorldPosition();
+	//Vector3 GetWorldPosition();
 
 
 	Model* model_ = nullptr;

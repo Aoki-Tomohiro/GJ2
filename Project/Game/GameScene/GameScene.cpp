@@ -91,10 +91,19 @@ void GameScene::Update(GameManager* gameManager) {
 	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets_) {
 		collisionManager_->SetColliderList(bullet.get());
 	}
+
 	//敵キャラを衝突マネージャーのリストに追加
 	collisionManager_->SetColliderList(transCube_.get());
+
+	//
+	for (TransCubeBullet* bullet : transCube_.get()->Getbullets())
+	{
+		collisionManager_->SetColliderList(bullet);
+	}
+
 	//衝突判定
 	collisionManager_->CheckAllCollisions();
+
 
 	//デバッグカメラの更新
 	debugCamera_->Update();

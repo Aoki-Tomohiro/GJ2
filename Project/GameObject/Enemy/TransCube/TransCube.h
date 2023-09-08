@@ -35,14 +35,18 @@ public:
 
 	Vector3 GetWorldPosition()override;
 	void OnCollision()override;
+	
 	TransCubeReticle GetReticlePos() { return DirectionReticlePos_; }
 	WorldTransform& GetWorldTransform() { return worldTransform; }
 	Player* GetPlayer() { return player_; }
+	std::list<TransCubeBullet*>Getbullets() { return bullets_; }
 
 	void SetWorldTransform(WorldTransform w) { worldTransform = w; }
 	void SetPlayer(Player* player) { player_ = player; }
-
+	void Setbullet(std::list<TransCubeBullet*>bullets) { bullets_ = bullets; }
 	
+	void PushBackBullet(Vector3 velocity, Vector3 pos);
+
 private:
 
 	void ReticlePosFanc();
@@ -56,6 +60,10 @@ private:
 	TransCubeReticle DirectionReticlePos_ = {};
 
 	const float DirectionReticleSpace = 5.0f;
+
+	//stateRandBulletの本体
+	std::list<TransCubeBullet*>bullets_;
+
 
 	Input* input = nullptr;
 	Player *player_ = nullptr;

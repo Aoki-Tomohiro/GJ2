@@ -13,14 +13,20 @@ void TransCubeBullet::Initialize(Vector3 &velocity,Vector3 pos)
 {
 
 	model_ = new Model();
-	model_->CreateSphere();
+	//model_->CreateSphere();
 
-	//model_->CreateFromOBJ("Project/Resources/EnemyObj/TransCube", "TransCube.obj");
+	model_->CreateFromOBJ("Project/Resources/EnemyObj/TransCube", "TransCube.obj");
 	worldTransform_.matWorld_ = MakeIdentity4x4();
 	worldTransform_.scale_ = { 1,1,1 };
 	worldTransform_.translation_ = pos;
-	worldTransform_.translation_.y = worldTransform_.translation_.y+3.0f;
+	worldTransform_.translation_.y = worldTransform_.translation_.y+0.0f;
 	velocity_ = velocity;
+	//velocity_ = Multiply(velocity_, 0.0f);
+
+	//衝突属性を設定
+	SetCollisionAttribute(kCollisionAttributeEnemyBullet);
+	//衝突対象を自分の属性以外に設定
+	SetCollisionMask(~kCollisionAttributeEnemyBullet);
 }
 
 void TransCubeBullet::Update()
@@ -44,4 +50,9 @@ Vector3 TransCubeBullet::GetWorldPosition()
 	pos.y = worldTransform_.matWorld_.m[3][1];
 	pos.z = worldTransform_.matWorld_.m[3][2];
 	return pos;
+}
+
+void TransCubeBullet::OnCollision()
+{
+	isDead = true;
 }

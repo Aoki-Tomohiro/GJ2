@@ -222,11 +222,11 @@
     <ClCompile Include="Project\GameObject\Enemy\TransCube\RandBullet\TransCubeBullet.cpp">
       <Filter>ソース ファイル\Project\GameObject\TransCube</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\TransCube\GroundAttack\TransCubeGroundAttack.cpp">
-      <Filter>ソース ファイル\Project\GameObject\TransCube\state_\TransCubeGroundAttack</Filter>
+    <ClCompile Include="Project\GameObject\Enemy\TransCube\state\TransCubeGroundAttak\TransCubeGroundAttack.cpp">
+      <Filter>ソース ファイル\Project\GameObject\TransCube\state_\TransCubeGroundBullet</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\TransCube\state\TransCubeGroundAttak\TranscubeGroundAttak.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Project\GameObject\Enemy\TransCube\GroundAttack\TransCubeGroundAttackState.cpp">
+      <Filter>ソース ファイル\Project\GameObject\TransCube\state_\TransCubeGroundAttack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -353,10 +353,10 @@
     <ClInclude Include="Project\GameObject\Enemy\TransCube\RandBullet\TransCubeBullet.h">
       <Filter>ソース ファイル\Project\GameObject\TransCube</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\TransCube\GroundAttack\TransCubeGroundAttack.h">
+    <ClInclude Include="Project\GameObject\Enemy\TransCube\GroundAttack\TransCubeGroundAttackState.h">
       <Filter>ソース ファイル\Project\GameObject\TransCube\state_\TransCubeGroundAttack</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\TransCube\state\TransCubeGroundAttak\TransCubeGroundAttak.h">
+    <ClInclude Include="Project\GameObject\Enemy\TransCube\state\TransCubeGroundAttak\TransCubeGroundAttack.h">
       <Filter>ソース ファイル\Project\GameObject\TransCube\state_\TransCubeGroundBullet</Filter>
     </ClInclude>
   </ItemGroup>

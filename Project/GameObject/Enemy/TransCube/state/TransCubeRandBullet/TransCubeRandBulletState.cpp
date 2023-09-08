@@ -52,12 +52,12 @@ void TransCubeRandBulletState::Update(TransCube* state)
 	ModeTimer++;
 	if (ModeTimer<300)
 	{
-		rotateSpeed += rotateSpeed*0.02f;
+		//rotateSpeed += rotateSpeed*0.02f;
 
 	}
-	if (ModeTimer > 300)
+	//if (ModeTimer > 300)
 	{
-		if (ModeTimer <= 1200)
+		//if (ModeTimer <= 1200)
 		{
 			CoolTime++;
 

@@ -20,7 +20,7 @@ void Player::Initialize(const std::vector<Model*> models) {
 	//衝突属性を設定
 	SetCollisionAttribute(kCollisionAttributePlayer);
 	//衝突対象を自分の属性以外に設定
-	SetCollisionMask(~kCollisionAttributePlayer);
+	SetCollisionMask(kCollisionmaskPlayer);
 }
 
 void Player::Update() {

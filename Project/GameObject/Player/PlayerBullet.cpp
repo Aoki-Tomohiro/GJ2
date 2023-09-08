@@ -19,7 +19,7 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vecto
 	//衝突属性を設定
 	SetCollisionAttribute(kCollisionAttributePlayerBullet);
 	//衝突対象を自分の属性以外に設定
-	SetCollisionMask(~kCollisionAttributePlayerBullet);
+	SetCollisionMask(kCollisionmaskPlayerBullet);
 }
 
 void PlayerBullet::Update() {

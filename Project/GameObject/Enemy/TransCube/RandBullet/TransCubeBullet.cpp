@@ -26,7 +26,7 @@ void TransCubeBullet::Initialize(Vector3 &velocity,Vector3 pos)
 	//衝突属性を設定
 	SetCollisionAttribute(kCollisionAttributeEnemyBullet);
 	//衝突対象を自分の属性以外に設定
-	SetCollisionMask(~kCollisionAttributeEnemyBullet);
+	SetCollisionMask(kCollisionmaskEnemyBullet);
 }
 
 void TransCubeBullet::Update()

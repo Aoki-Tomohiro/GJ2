@@ -36,14 +36,13 @@ void TitleScene::Initialize(GameManager* gameManager) {
 	debugCamera_ = new DebugCamera();
 
 
-	isTrigger_ = 0;
-
+	sprite_ = new Sprite();
 
 	//スプライトの初期化
 	position_ = { 0.0f,0.0f };
-	//textureHandle_=textureManager_->Load("Project/Resources/Title/TitleLogo/TitleLogo.png");
+	textureHandle_=textureManager_->Load("Project/Resources/Title/TitleLogo/TitleLogo.png");
 
-	//sprite_->Create(textureHandle_, position_, kNormal);
+	sprite_->Create(textureHandle_, position_);
 	
 }
 
@@ -78,7 +77,7 @@ void TitleScene::Update(GameManager* gameManager) {
 
 	ImGui::Begin("Title");
 	ImGui::Text("Title");
-	ImGui::InputInt("isTrigger", &isTrigger_);
+	ImGui::Text("Space To SlectScene");
 	ImGui::End();
 
 	XINPUT_STATE joyState{};
@@ -86,13 +85,10 @@ void TitleScene::Update(GameManager* gameManager) {
 	//スペースでステージ選択へ
 	//今はそのままゲームシーンへ
 	if (input_->IsPushKeyEnter(DIK_SPACE)) {
-		isTrigger_ = 1;
+		gameManager->ChangeScene(new SelectScene());
 	}
 	
 
-	if (isTrigger_ == 1) {
-		gameManager->ChangeScene(new SelectScene());
-	}
 
 }
 
@@ -104,7 +100,7 @@ void TitleScene::Draw(GameManager* gameManager) {
 	//modelSkydome_->Draw(worldTransform_, viewProjection_);
 
 
-	//sprite_->Draw();
+	sprite_->Draw();
 
 }
 

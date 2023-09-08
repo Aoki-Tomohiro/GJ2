@@ -234,6 +234,12 @@
     <ClCompile Include="Project\Game\SelectScene\SelectScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Project\Game\WinScene\WinScene.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Game\LoseScene\LoseScene.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Base\DirectXCommon\DirectXCommon.h">
@@ -369,6 +375,12 @@
       <Filter>ヘッダー ファイル\Project</Filter>
     </ClInclude>
     <ClInclude Include="Project\Game\SelectScene\SelectScene.h">
+      <Filter>ヘッダー ファイル\Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Game\WinScene\WinScene.h">
+      <Filter>ヘッダー ファイル\Project\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Game\LoseScene\LoseScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

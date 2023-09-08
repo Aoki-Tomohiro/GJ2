@@ -15,17 +15,17 @@
 //StatePatternの時は前方宣言を忘れずに
 class GameManager;
 
-class TitleScene : public IScene {
+class WinScene : public IScene {
 public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	TitleScene();
+	WinScene();
 
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~TitleScene();
+	~WinScene();
 
 	/// <summary>
 	/// 初期化
@@ -63,6 +63,9 @@ private:
 	//Skydome
 	std::unique_ptr<Model> modelSkydome_ = nullptr;
 	WorldTransform worldTransform_{};
+
+
+
 
 
 	//タイトル画面の画像

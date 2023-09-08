@@ -1,27 +1,31 @@
-#include "SelectScene.h"
+#include "LoseScene.h"
 #include "GameManager/GameManager.h"
+
 #include "GameScene/GameScene.h"
+#include "SelectScene/SelectScene.h"
+#include "TitleScene/TitleScene.h"
+
 #include <imgui.h>
 
 
 /// <summary>
 /// コンストラクタ
 /// </summary>
-SelectScene::SelectScene() {
+LoseScene::LoseScene() {
 
 }
 
 /// <summary>
 /// デストラクタ
 /// </summary>
-SelectScene::~SelectScene() {
+LoseScene::~LoseScene() {
 
 }
 
 /// <summary>
 /// 初期化
 /// </summary>
-void SelectScene::Initialize(GameManager* gameManager) {
+void LoseScene::Initialize(GameManager* gameManager) {
 	//TextureManagerのインスタンスを取得
 	textureManager_ = TextureManager::GetInstance();
 	//Audioのインスタンスを取得
@@ -36,8 +40,6 @@ void SelectScene::Initialize(GameManager* gameManager) {
 	debugCamera_ = new DebugCamera();
 
 
-	//初期では1を選択している
-	stageNumber_ = 1;
 
 
 	//スプライトの初期化
@@ -51,7 +53,7 @@ void SelectScene::Initialize(GameManager* gameManager) {
 /// <summary>
 /// 更新
 /// </summary>
-void SelectScene::Update(GameManager* gameManager) {
+void LoseScene::Update(GameManager* gameManager) {
 	
 	//Skydome
 	worldTransform_.UpdateMatrix();
@@ -75,21 +77,33 @@ void SelectScene::Update(GameManager* gameManager) {
 	else {
 	}
 
+	//Aボタンでステージ選択へ
+	//今はそのままゲームシーンへ
+	
+	//1でGameSceneへ
+	if (input_->IsPushKeyEnter(DIK_1)) {
+		gameManager->ChangeScene(new GameScene());
+	}
+	//2でSelectSceneへ
+	if (input_->IsPushKeyEnter(DIK_2)) {
+		gameManager->ChangeScene(new SelectScene());
+	}
+	//3でSelectSceneへ
+	if (input_->IsPushKeyEnter(DIK_3)) {
+		gameManager->ChangeScene(new TitleScene());
+	}
+
+	ImGui::Begin("WinScene");
+	ImGui::Text("1:To GameScene");
+	ImGui::Text("2:To SelectScene");
+	ImGui::Text("3:To TitleScene");
 
 
-	ImGui::Begin("Select");
-	ImGui::Text("Select");
-	ImGui::Text("Space To GameScene");
 	ImGui::End();
 
 	XINPUT_STATE joyState{};
 
-	//Aボタンでステージ選択へ
-	//今はそのままゲームシーンへ
 	
-	if (input_->IsPushKeyEnter(DIK_SPACE)) {
-		gameManager->ChangeScene(new GameScene());
-	}
 
 
 }
@@ -97,7 +111,7 @@ void SelectScene::Update(GameManager* gameManager) {
 /// <summary>
 /// 描画
 /// </summary>
-void SelectScene::Draw(GameManager* gameManager) {
+void LoseScene::Draw(GameManager* gameManager) {
 	//Skydome
 	//modelSkydome_->Draw(worldTransform_, viewProjection_);
 

@@ -83,7 +83,6 @@ void TransCube::ChangeRandBulletState()
 {
 	state_.release();
 	state_ = std::make_unique<TransCubeRandBulletState>();
-	//state_ = std::make_unique<TransCubeRandBulletState>();
 	state_.get()->Initialize(this);
 }
 

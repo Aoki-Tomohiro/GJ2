@@ -41,9 +41,6 @@ void TransCubeRandBulletState::Update(TransCube* state)
 
 	}
 
-
-
-
 	WorldTransform GetCubeWorldTransform = state->GetWorldTransform();
 
 	GetCubeWorldTransform.rotation_.y += rotateSpeed;

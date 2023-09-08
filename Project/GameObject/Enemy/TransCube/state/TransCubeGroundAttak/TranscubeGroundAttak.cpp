@@ -17,8 +17,6 @@ void TransCubeGroundAttak::Update(TransCube* state)
 {
 	player_ = state->GetPlayer();
 
-
-
 }
 
 void TransCubeGroundAttak::Draw(TransCube* state, ViewProjection view)

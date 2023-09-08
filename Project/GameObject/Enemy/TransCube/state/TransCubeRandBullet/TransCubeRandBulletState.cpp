@@ -85,7 +85,6 @@ void TransCubeRandBulletState::SetParent(const WorldTransform* parent)
 
 void TransCubeRandBulletState::Deleate(TransCube* state)
 {
-	
 
 	for (TransCubeBullet* bullet : state->Getbullets())
 	{

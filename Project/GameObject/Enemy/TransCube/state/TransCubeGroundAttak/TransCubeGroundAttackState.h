@@ -17,10 +17,11 @@ public:
 
 	
 	void SetParent(const WorldTransform* parent)override;
-
 	void Deleate(TransCube *state)override;
 
 private:
+
+
 
 };
 

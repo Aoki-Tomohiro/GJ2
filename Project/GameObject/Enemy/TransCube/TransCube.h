@@ -7,6 +7,7 @@
 #include "CollisionManager/Collider.h"
 #include"../GameObject/Enemy/TransCube/GroundAttack/TransCubeGroundAttack.h"
 
+#include"ImGuiManager/ImGuiManager.h"
 struct TransCubeReticle
 {
 	Vector3 Left = {};
@@ -34,7 +35,7 @@ public:
 
 	void Draw(ViewProjection view);
 
-	void ChangeRandBulletState();
+	void ChangeState(ITransCubeState* state);
 
 	Vector3 GetWorldPosition()override;
 	void OnCollision()override;
@@ -42,12 +43,14 @@ public:
 	TransCubeReticle GetReticlePos() { return DirectionReticlePos_; }
 	WorldTransform& GetWorldTransform() { return worldTransform; }
 	Player* GetPlayer() { return player_; }
+
 	std::list<TransCubeBullet*>Getbullets() { return bullets_; }
+	std::list<TransCubeGroundAttack*>&GetGroundBullets() { return GroundBullets_; }
 
 	void SetWorldTransform(WorldTransform w) { worldTransform = w; }
 	void SetPlayer(Player* player) { player_ = player; }
 	void Setbullet(std::list<TransCubeBullet*>bullets) { bullets_ = bullets; }
-	void SetGroundBullet(std::list<TransCubeGroundAttack*>groundBullet) { Ground_ = groundBullet; }
+	void SetGroundBullet(std::list<TransCubeGroundAttack*>groundBullet) { GroundBullets_ = groundBullet; }
 
 	void PushBackBullet(Vector3 velocity, Vector3 pos);
 
@@ -56,12 +59,13 @@ public:
 private:
 
 	void ReticlePosFanc();
+	void BulletKill();
 
 	Model*model_;
 	WorldTransform worldTransform = {};
 
 
-	std::unique_ptr<ITransCubeState>state_ = nullptr;
+	ITransCubeState*state_ = nullptr;
 
 	TransCubeReticle DirectionReticlePos_ = {};
 
@@ -70,8 +74,11 @@ private:
 	//stateRandBulletの本体
 	std::list<TransCubeBullet*>bullets_;
 
-	std::list<TransCubeGroundAttack*>Ground_;
+	std::list<TransCubeGroundAttack*>GroundBullets_;
 
 	Input* input = nullptr;
 	Player *player_ = nullptr;
+
+	bool stateFlag = false;
+
 };

@@ -27,6 +27,8 @@ void TransCubeGroundAttackState::SetParent(const WorldTransform* parent)
 
 void TransCubeGroundAttackState::Deleate(TransCube* state)
 {
-
-
+	for (TransCubeGroundAttack* bullet : state->GetGroundBullets())
+	{
+		bullet->SetDead(true);
+    }
 }

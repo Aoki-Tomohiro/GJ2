@@ -91,16 +91,16 @@ void GameScene::Update(GameManager* gameManager) {
 	transCube_.get()->SetPlayer(player_.get());
 	//敵キャラの更新
 	transCube_->Update();
+
 	//箱の更新
 	boxManager_->Update();
 	//追従カメラの更新
 	followCamera_->Update();
 
+
 	//衝突マネージャーのリストをクリア
 	collisionManager_->ClearColliderList();
-
 	SetCollisions();
-
 	//衝突判定
 	collisionManager_->CheckAllCollisions();
 

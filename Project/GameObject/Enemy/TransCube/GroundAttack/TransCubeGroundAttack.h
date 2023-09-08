@@ -15,7 +15,8 @@ public:
 
 	void Draw(ViewProjection view);
 
-
+	bool IsDead() const { return isDead_; }
+	void SetDead(bool Flag) { isDead_ = Flag; }
 private:
 
 	Model* BulletGround_;
@@ -24,8 +25,7 @@ private:
 	WorldTransform worldTransformBulletGround_;
 	WorldTransform worldTransformBullet_;
 
-	
-
+	bool isDead_ = false;
 
 };
 

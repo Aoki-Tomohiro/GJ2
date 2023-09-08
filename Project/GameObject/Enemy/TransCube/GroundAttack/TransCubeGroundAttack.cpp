@@ -6,12 +6,14 @@ TransCubeGroundAttack::TransCubeGroundAttack()
 
 TransCubeGroundAttack::~TransCubeGroundAttack()
 {
+	delete BulletGround_;
+	delete Bullet_;
 	
 }
 
 void TransCubeGroundAttack::Initialize(Vector3 position)
 {
-	BulletGround_ = new Model();
+	BulletGround_ =new Model();
 	Bullet_ = new Model();
 
 	BulletGround_->CreateSphere();
@@ -39,7 +41,7 @@ void TransCubeGroundAttack::Update()
 
 void TransCubeGroundAttack::Draw(ViewProjection view)
 {
-	BulletGround_->Draw(worldTransformBulletGround_,view);
+	BulletGround_->Draw(worldTransformBulletGround_, view);
 	Bullet_->Draw(worldTransformBullet_, view);
 
 }

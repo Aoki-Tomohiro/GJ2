@@ -7,8 +7,7 @@ TransCube::TransCube()
 
 TransCube::~TransCube()
 {
-	state_.get()->Deleate(this);
-	state_.release();
+	state_->Deleate(this);;
 	delete model_;
 }
 
@@ -20,7 +19,7 @@ void TransCube::Initialize()
 	worldTransform.translation_ = { 0,0,0 };
 	model_->CreateFromOBJ("Project/Resources/EnemyObj/TransCube", "TransCube.obj");
 	
-	state_ =std::make_unique<TransCubeGroundAttackState>();
+	state_ =new TransCubeGroundAttackState();
 	state_->Initialize(this);
 	
 	input = Input::GetInstance();
@@ -34,26 +33,17 @@ void TransCube::Initialize()
 
 void TransCube::Update()
 {
-	if (input->IsPushKey(DIK_F))
+	ImGui::Begin("TransCube");
+	ImGui::SliderFloat3("translate", &worldTransform.translation_.x, -10, 10);
+	ImGui::Checkbox("state",&stateFlag);
+	if (stateFlag)
 	{
-		worldTransform.translation_.x -= 1.00f;
+	    TransCubeRandBulletState* state = new  TransCubeRandBulletState();
+		ChangeState(state);
+		//stateFlag = false;
 	}
-	if (input->IsPushKey(DIK_T))
-	{
-		worldTransform.translation_.z += 1.05f;
-	}
-	if (input->IsPushKey(DIK_G))
-	{
-		worldTransform.translation_.x += 1.05f;
-	}
-	if (input->IsPushKey(DIK_V))
-	{
-		worldTransform.translation_.z -= 1.05f;
-	}
-	ReticlePosFanc();
 
-	worldTransform.UpdateMatrix();
-	state_->Update(this);
+	ImGui::End();
 
 	bullets_.remove_if([](TransCubeBullet* bullet) {
 		if (bullet->IsDead()) {
@@ -61,12 +51,28 @@ void TransCube::Update()
 			return true;
 		}
 		return false;
+		});
+
+	GroundBullets_.remove_if([](TransCubeGroundAttack* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
 	});
+
+	ReticlePosFanc();
+	worldTransform.UpdateMatrix();
+
+	state_->Update(this);
+
+	//BulletKill();
+
 	for (TransCubeBullet* bullet : bullets_)
 	{
 		bullet->Update();
 	}
-	for (TransCubeGroundAttack* bullet : Ground_)
+	for (TransCubeGroundAttack* bullet : GroundBullets_)
 	{
 		bullet->Update();
 	}
@@ -79,23 +85,21 @@ void TransCube::Draw(ViewProjection view)
 	{
 		bullet->Draw(view);
 	}
-	for (TransCubeGroundAttack* bullet : Ground_)
+	for (TransCubeGroundAttack* bullet : GroundBullets_)
 	{
 		bullet->Draw(view);
 	}
-
-
 	state_->Draw(this, view);
 	model_->Draw(worldTransform, view);
 
 }
 
-void TransCube::ChangeRandBulletState()
+void TransCube::ChangeState(ITransCubeState* state)
 {
-
-	state_.release();
-	state_ = std::make_unique<TransCubeRandBulletState>();
-	state_.get()->Initialize(this);
+	state_->Deleate(this);
+	delete state_;
+	state_ = state;
+	state_->Initialize(this);
 }
 
 Vector3 TransCube::GetWorldPosition()
@@ -125,7 +129,7 @@ void TransCube::PushBackGroundBullet(Vector3 pos)
 {
 	TransCubeGroundAttack* bullet = new TransCubeGroundAttack();
 	bullet->Initialize(pos);
-	Ground_.push_back(bullet);
+	GroundBullets_.push_back(bullet);
 
 }
 
@@ -201,5 +205,11 @@ void TransCube::ReticlePosFanc()
 	DirectionReticlePos_.LworldTransform.translation_.z = Loffset.z + Lpos.z;
 
 	DirectionReticlePos_.LworldTransform.UpdateMatrix();
+
+}
+
+void TransCube::BulletKill()
+{
+
 
 }

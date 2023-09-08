@@ -19,13 +19,15 @@ void TransCubeRandBulletState::Initialize(TransCube* state)
 	Input* input = Input::GetInstance();
 	mode_ = boost;
 
+
+
 }
 
 void TransCubeRandBulletState::Update(TransCube* state)
 {
 
 
-	for (TransCubeBullet* bullet : bullets_) {
+	for (TransCubeBullet* bullet : state->Getbullets()) {
 
 		if (bullet->GetPosition().x >= 80 || bullet->GetPosition().x <= -80)
 		{
@@ -38,13 +40,7 @@ void TransCubeRandBulletState::Update(TransCube* state)
 		}
 
 	}
-	bullets_.remove_if([](TransCubeBullet* bullet) {
-		if (bullet->IsDead()) {
-			delete bullet;
-			return true;
-		}
-		return false;
-	});
+
 
 
 
@@ -72,23 +68,13 @@ void TransCubeRandBulletState::Update(TransCube* state)
 	{
 		rotateSpeed -= rotateSpeed * 0.02f;
 	}
-
-	for (TransCubeBullet* bullet : bullets_)
-	{
-		bullet->Update();
-	}
 	
 }
 
 void TransCubeRandBulletState::Draw(TransCube* state, ViewProjection view)
 {
 
-	for (TransCubeBullet* bullet : bullets_)
-	{
 
-		bullet->Draw(view);
-
-	}
 }
 
 void TransCubeRandBulletState::SetParent(const WorldTransform* parent)
@@ -97,10 +83,11 @@ void TransCubeRandBulletState::SetParent(const WorldTransform* parent)
 
 }
 
-void TransCubeRandBulletState::Deleate()
+void TransCubeRandBulletState::Deleate(TransCube* state)
 {
+	
 
-	for (TransCubeBullet* bullet : bullets_)
+	for (TransCubeBullet* bullet : state->Getbullets())
 	{
 		delete bullet;
 	}
@@ -138,11 +125,11 @@ void TransCubeRandBulletState::Fire(TransCube *state)
 
 	if (CoolTime >= 10)
 	{
-		BulletPushBack(FlontVelocity,state->GetWorldPosition());
-		BulletPushBack(BackVelocity,state->GetWorldPosition());
+		BulletPushBack(FlontVelocity,state->GetWorldPosition(),state);
+		BulletPushBack(BackVelocity,state->GetWorldPosition(),state);
 		
-		BulletPushBack(RightVelocity,state->GetWorldPosition());
-		BulletPushBack(LeftVelocity,state->GetWorldPosition());
+	    BulletPushBack(RightVelocity,state->GetWorldPosition(),state);
+		BulletPushBack(LeftVelocity,state->GetWorldPosition(),state);
 
 		CoolTime = 0;
 	}
@@ -159,10 +146,7 @@ Vector3 TransCubeRandBulletState::VelocityFanc(Vector3 v1, Vector3 v2)
 
 }
 
-void TransCubeRandBulletState::BulletPushBack(Vector3 v,Vector3 pos)
+void TransCubeRandBulletState::BulletPushBack(Vector3 v,Vector3 pos, TransCube* state)
 {
-	TransCubeBullet* bullet = new TransCubeBullet();
-	bullet->Initialize(v,pos);
-	bullets_.push_back(bullet);
-
+	state->PushBackBullet(v, pos);
 }

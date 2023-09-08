@@ -7,7 +7,7 @@ TransCube::TransCube()
 
 TransCube::~TransCube()
 {
-	state_.get()->Deleate();
+	state_.get()->Deleate(this);
 	state_.release();
 	delete model_;
 }
@@ -28,7 +28,7 @@ void TransCube::Initialize()
 	//衝突属性を設定
 	SetCollisionAttribute(kCollisionAttributeEnemy);
 	//衝突対象を自分の属性以外に設定
-	SetCollisionMask(~kCollisionAttributeEnemy);
+	SetCollisionMask(kCollisionMaskEnemy);
 
 }
 
@@ -54,10 +54,26 @@ void TransCube::Update()
 
 	worldTransform.UpdateMatrix();
 	state_->Update(this);
+
+	bullets_.remove_if([](TransCubeBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
+	for (TransCubeBullet* bullet : bullets_)
+	{
+		bullet->Update();
+	}
 }
 
 void TransCube::Draw(ViewProjection view)
 {
+	for (TransCubeBullet* bullet : bullets_)
+	{
+		bullet->Draw(view);
+	}
 	state_->Draw(this, view);
 	model_->Draw(worldTransform, view);
 
@@ -83,6 +99,13 @@ Vector3 TransCube::GetWorldPosition()
 
 void TransCube::OnCollision() {
 
+}
+
+void TransCube::PushBackBullet(Vector3 velocity,Vector3 pos)
+{
+	TransCubeBullet* bullet = new TransCubeBullet();
+	bullet->Initialize(velocity, pos);
+	bullets_.push_back(bullet);
 }
 
 void TransCube::ReticlePosFanc()

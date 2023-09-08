@@ -15,7 +15,7 @@ public:
 	virtual void Draw(TransCube* state,ViewProjection view) = 0;
 
 	virtual void SetParent(const WorldTransform* parent) = 0;
-	virtual void Deleate() = 0;
+	virtual void Deleate(TransCube* state) = 0;
 private:
 
 };

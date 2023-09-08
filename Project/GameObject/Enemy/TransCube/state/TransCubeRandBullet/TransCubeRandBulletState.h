@@ -23,7 +23,7 @@ public:
 
 	void SetParent(const WorldTransform* parent)override;
 
-	void Deleate()override;
+	void Deleate(TransCube* state)override;
 
 private:
 
@@ -36,9 +36,7 @@ private:
 	void Fire(TransCube *state);
 
 	Vector3 VelocityFanc(Vector3 v1, Vector3 v2);
-	void BulletPushBack(Vector3 v,Vector3 pos);
-
-	std::list<TransCubeBullet*> bullets_;
+	void BulletPushBack(Vector3 v,Vector3 pos,TransCube *state);
 
 	int32_t CoolTime = 0;
 	Input* input = nullptr;

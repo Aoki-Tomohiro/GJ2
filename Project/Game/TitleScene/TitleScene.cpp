@@ -36,7 +36,7 @@ void TitleScene::Initialize(GameManager* gameManager) {
 	debugCamera_ = new DebugCamera();
 
 
-
+	isTrigger_ = 0;
 
 
 	//スプライトの初期化
@@ -78,19 +78,21 @@ void TitleScene::Update(GameManager* gameManager) {
 
 	ImGui::Begin("Title");
 	ImGui::Text("Title");
+	ImGui::InputInt("isTrigger", &isTrigger_);
 	ImGui::End();
 
 	XINPUT_STATE joyState{};
 
-	//Aボタンでステージ選択へ
+	//スペースでステージ選択へ
 	//今はそのままゲームシーンへ
-	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
-			gameManager->ChangeScene(new SelectScene());
-		}
+	if (input_->IsPushKeyEnter(DIK_SPACE)) {
+		isTrigger_ = 1;
 	}
+	
 
-
+	if (isTrigger_ == 1) {
+		gameManager->ChangeScene(new SelectScene());
+	}
 
 }
 

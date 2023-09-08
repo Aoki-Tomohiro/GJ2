@@ -74,5 +74,6 @@ private:
 	//位置
 	Vector2 position_ = {};
 
+	int isTrigger_ = 0;
 
 };

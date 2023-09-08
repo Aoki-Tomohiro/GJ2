@@ -85,12 +85,10 @@ void SelectScene::Update(GameManager* gameManager) {
 
 	//Aボタンでステージ選択へ
 	//今はそのままゲームシーンへ
-	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
-			gameManager->ChangeScene(new GameScene());
-		}
+	
+	if (input_->IsPushKeyEnter(DIK_SPACE)) {
+		gameManager->ChangeScene(new GameScene());
 	}
-
 
 
 }

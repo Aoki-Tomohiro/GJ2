@@ -216,7 +216,16 @@
     <ClCompile Include="Engine\Components\CollisionManager\CollisionManager.cpp">
       <Filter>ソース ファイル\Engine\Components\CollisionManager</Filter>
     </ClCompile>
+    <ClCompile Include="Project\GameObject\Box\Box.cpp">
+      <Filter>ソース ファイル\Project\GameObject\Box</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Box\BoxManager.cpp">
+      <Filter>ソース ファイル\Project\GameObject\Box</Filter>
+    </ClCompile>
     <ClCompile Include="Project\GameObject\Enemy\TransCube\TransCube.cpp">
+      <Filter>ソース ファイル\Project\GameObject\TransCube</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Enemy\TransCube\RandBullet\TransCubeBullet.cpp">
       <Filter>ソース ファイル\Project\GameObject\TransCube</Filter>
     </ClCompile>
     <ClCompile Include="Project\GameObject\Enemy\TransCube\state\ITransCubeState.cpp">
@@ -225,23 +234,11 @@
     <ClCompile Include="Project\GameObject\Enemy\TransCube\state\TransCubeRandBullet\TransCubeRandBulletState.cpp">
       <Filter>ソース ファイル\Project\GameObject\TransCube\state_</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\TransCube\RandBullet\TransCubeBullet.cpp">
-      <Filter>ソース ファイル\Project\GameObject\TransCube</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\TransCube\state\TransCubeGroundAttak\TransCubeGroundAttack.cpp">
-      <Filter>ソース ファイル\Project\GameObject\TransCube\state_\TransCubeGroundBullet</Filter>
-    </ClCompile>
     <ClCompile Include="Project\GameObject\Enemy\TransCube\GroundAttack\TransCubeGroundAttackState.cpp">
       <Filter>ソース ファイル\Project\GameObject\TransCube\state_\TransCubeGroundAttack</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\TransCube\state\TransCubeGroundAttak\TranscubeGroundAttak.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Box\Box.cpp">
-      <Filter>ソース ファイル\Project\GameObject\Box</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Box\BoxManager.cpp">
-      <Filter>ソース ファイル\Project\GameObject\Box</Filter>
+    <ClCompile Include="Project\GameObject\Enemy\TransCube\state\TransCubeGroundAttak\TransCubeGroundAttack.cpp">
+      <Filter>ソース ファイル\Project\GameObject\TransCube\state_\TransCubeGroundBullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -356,24 +353,6 @@
     <ClInclude Include="Engine\Components\CollisionManager\CollisionManager.h">
       <Filter>ヘッダー ファイル\Engine\Components\CollisionManager</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\TransCube\TransCube.h">
-      <Filter>ソース ファイル\Project\GameObject\TransCube</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\TransCube\state\TransCubeRandBullet\TransCubeRandBulletState.h">
-      <Filter>ソース ファイル\Project\GameObject\TransCube\state_</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\TransCube\state\ITransCubeState.h">
-      <Filter>ソース ファイル\Project\GameObject\TransCube\state_</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\TransCube\RandBullet\TransCubeBullet.h">
-      <Filter>ソース ファイル\Project\GameObject\TransCube</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\TransCube\GroundAttack\TransCubeGroundAttackState.h">
-      <Filter>ソース ファイル\Project\GameObject\TransCube\state_\TransCubeGroundAttack</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\TransCube\state\TransCubeGroundAttak\TransCubeGroundAttack.h">
-      <Filter>ソース ファイル\Project\GameObject\TransCube\state_\TransCubeGroundBullet</Filter>
-    </ClInclude>
     <ClInclude Include="Project\GameObject\Box\Box.h">
       <Filter>ヘッダー ファイル\Project\GameObject\Box</Filter>
     </ClInclude>
@@ -382,6 +361,24 @@
     </ClInclude>
     <ClInclude Include="Project\GameObject\LoadTestObject\LoadTestObject.h">
       <Filter>ソース ファイル\Project\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\TransCube\TransCube.h">
+      <Filter>ソース ファイル\Project\GameObject\TransCube</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\TransCube\RandBullet\TransCubeBullet.h">
+      <Filter>ソース ファイル\Project\GameObject\TransCube</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\TransCube\state\ITransCubeState.h">
+      <Filter>ソース ファイル\Project\GameObject\TransCube\state_</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\TransCube\state\TransCubeRandBullet\TransCubeRandBulletState.h">
+      <Filter>ソース ファイル\Project\GameObject\TransCube\state_</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\TransCube\GroundAttack\TransCubeGroundAttackState.h">
+      <Filter>ソース ファイル\Project\GameObject\TransCube\state_\TransCubeGroundAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\TransCube\state\TransCubeGroundAttak\TransCubeGroundAttack.h">
+      <Filter>ソース ファイル\Project\GameObject\TransCube\state_\TransCubeGroundBullet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

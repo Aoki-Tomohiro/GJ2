@@ -129,6 +129,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\GameObject\Player\PlayerBullet.cpp" />
     <ClCompile Include="Project\Game\GameManager\GameManager.cpp" />
     <ClCompile Include="Project\Game\GameScene\GameScene.cpp" />
+    <ClCompile Include="Project\Game\TitleScene\TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\2D\GlobalVariables\GlobalVariables.h" />
@@ -174,6 +175,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\Game\GameManager\GameManager.h" />
     <ClInclude Include="Project\Game\GameManager\IScene.h" />
     <ClInclude Include="Project\Game\GameScene\GameScene.h" />
+    <ClInclude Include="Project\Game\TitleScene\TitleScene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Project\Resources\Shader\FinalPass.hlsli">

@@ -228,6 +228,9 @@
     <ClCompile Include="Project\GameObject\Enemy\TransCube\state\TransCubeGroundAttak\TranscubeGroundAttak.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Project\Game\TitleScene\TitleScene.cpp">
+      <Filter>ソース ファイル\Project\GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Base\DirectXCommon\DirectXCommon.h">
@@ -358,6 +361,9 @@
     </ClInclude>
     <ClInclude Include="Project\GameObject\Enemy\TransCube\state\TransCubeGroundAttak\TransCubeGroundAttak.h">
       <Filter>ソース ファイル\Project\GameObject\TransCube\state_\TransCubeGroundBullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Game\TitleScene\TitleScene.h">
+      <Filter>ヘッダー ファイル\Project</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

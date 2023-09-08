@@ -1,5 +1,8 @@
 #include "GameManager.h"
+
 #include "GameScene/GameScene.h"
+#include "TitleScene/TitleScene.h"
+
 #include "GlobalVariables/GlobalVariables.h"
 
 GameManager::GameManager() {
@@ -30,8 +33,11 @@ GameManager::GameManager() {
 	Sprite::Initialize();
 	//グローバル変数の読み込み
 	GlobalVariables::GetInstance()->LoadFiles();
+
+
+
 	//シーンの初期化
-	currentScene_ = new GameScene();
+	currentScene_ = new TitleScene();
 	currentScene_->Initialize(this);
 }
 

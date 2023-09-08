@@ -56,7 +56,7 @@ GameManager::~GameManager() {
 }
 
 void GameManager::ChangeScene(IScene* newScene) {
-	currentScene_ = nullptr;
+	delete currentScene_;
 	currentScene_ = newScene;
 	currentScene_->Initialize(this);
 }

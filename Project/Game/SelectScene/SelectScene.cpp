@@ -15,6 +15,27 @@ SelectScene::SelectScene() {
 /// デストラクタ
 /// </summary>
 SelectScene::~SelectScene() {
+	//Spriteのデストラクタも忘れずに
+	delete sprite_;
+
+	
+
+	
+	delete stageIconSprite_[0];
+	delete stageIconSprite_[1];
+		
+
+	//タイトルに戻るためのアイコン
+	delete backToTitleSprite_;
+
+	
+	//カーソル
+	//一番後ろに描画しないと見えない
+	delete cursorSprite_;
+
+
+
+
 
 }
 
@@ -39,13 +60,54 @@ void SelectScene::Initialize(GameManager* gameManager) {
 	//初期では1を選択している
 	stageNumber_ = 1;
 
+	
 
 	//スプライトの初期化
-	position_ = { 0.0f,0.0f };
-	//textureHandle_=textureManager_->Load("Project/Resources/Title/TitleLogo/TitleLogo.png");
-
-	//sprite_->Create(textureHandle_, position_, kNormal);
 	
+	
+	
+	//背景的なスプライト
+	sprite_ = new Sprite();
+	textureHandle_=textureManager_->Load("Project/Resources/Select/Select.png");
+	Vector2 position_ = {0.0f,0.0f};
+	sprite_->Create(textureHandle_, position_);
+	
+
+	
+	//ステージアイコン
+	//←,1,2,?
+	//タイトルに戻る
+	backToTitleSprite_ = new Sprite();
+	backToTitleTexture_ = textureManager_->Load("Project/Resources/Select/ToTitle.png");
+	Vector2 backToTitlePosition = { 400.0f,500.0f };
+	backToTitleSprite_->Create(backToTitleTexture_, backToTitlePosition);
+	
+	
+	
+	for (int i = 0; i < 2; i++) {
+		stageIconSprite_[i] = new Sprite();
+	}
+	stageIconTexture_[0]= textureManager_->Load("Project/Resources/Select/Stage1.png");
+	stageIconTexture_[1]= textureManager_->Load("Project/Resources/Select/Stage2.png");
+	
+	//アイコンの間隔
+	WIDTH_INTERVAL_ = 200.0f;
+	stageIconPosition[0] = { backToTitlePosition.x + WIDTH_INTERVAL_ * 1.0f,backToTitlePosition.y };
+	stageIconPosition[1] = { backToTitlePosition.x + WIDTH_INTERVAL_ * 2.0f,backToTitlePosition.y };
+		
+	stageIconSprite_[0]->Create(stageIconTexture_[0], stageIconPosition[0]);
+	stageIconSprite_[1]->Create(stageIconTexture_[1], stageIconPosition[1]);
+	
+	//カーソル
+	cursorSprite_ = new Sprite();
+	cursorTexture_ = textureManager_->Load("Project/Resources/Select/Cursor.png");
+	cursorPosition = { 400.0f,500.0f };
+	cursorSprite_->Create(cursorTexture_, cursorPosition);
+
+
+
+	
+
 }
 
 /// <summary>
@@ -75,21 +137,30 @@ void SelectScene::Update(GameManager* gameManager) {
 	else {
 	}
 
-
+	cursorSprite_->SetTranslation({ cursorPosition.x,cursorPosition.y });
 
 	ImGui::Begin("Select");
 	ImGui::Text("Select");
 	ImGui::Text("Space To GameScene");
-	ImGui::End();
-
-	XINPUT_STATE joyState{};
-
-	//Aボタンでステージ選択へ
-	//今はそのままゲームシーンへ
+	ImGui::Text("SelectKey Left Or Right");
 	
+
+	
+	//2つ用意で
 	if (input_->IsPushKeyEnter(DIK_SPACE)) {
 		gameManager->ChangeScene(new GameScene());
 	}
+
+	//左右キーで移動
+	if (input_->IsPushKeyEnter(DIK_RIGHT)) {
+		cursorSprite_->SetTranslation({ cursorPosition.x + WIDTH_INTERVAL_,cursorPosition.y });
+		ImGui::Text("Right");
+	}
+	if (input_->IsPushKeyEnter(DIK_LEFT)) {
+		cursorSprite_->SetTranslation({ cursorPosition.x - WIDTH_INTERVAL_,cursorPosition.y });
+		ImGui::Text("Left");
+	}
+	ImGui::End();
 
 
 }
@@ -98,12 +169,21 @@ void SelectScene::Update(GameManager* gameManager) {
 /// 描画
 /// </summary>
 void SelectScene::Draw(GameManager* gameManager) {
-	//Skydome
-	//modelSkydome_->Draw(worldTransform_, viewProjection_);
+	
+	//背景
+	sprite_->Draw();
 
+	//StageIcon
+	stageIconSprite_[0]->Draw();
+	stageIconSprite_[1]->Draw();
+	
 
-	//sprite_->Draw();
-
+	//タイトルに戻るためのアイコン
+	backToTitleSprite_->Draw();
+	
+	//カーソル
+	//一番後ろに描画しないと見えない
+	cursorSprite_->Draw();
 }
 
 

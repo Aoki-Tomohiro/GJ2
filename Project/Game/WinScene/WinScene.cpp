@@ -41,8 +41,11 @@ void WinScene::Initialize(GameManager* gameManager) {
 
 
 	//スプライトの初期化
+	//インスタンスを作り忘れないように
+	sprite_ = new Sprite();
+	
 	position_ = { 0.0f,0.0f };
-	textureHandle_=textureManager_->Load("Project/Resources/Title/TitleLogo/TitleLogo.png");
+	textureHandle_=textureManager_->Load("Project/Resources/Result/Win/Win.png");
 
 	sprite_->Create(textureHandle_, position_);
 	

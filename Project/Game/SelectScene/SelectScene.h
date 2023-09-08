@@ -60,8 +60,6 @@ private:
 	//ビュープロジェクション
 	ViewProjection viewProjection_{};
 
-	//Skydome
-	std::unique_ptr<Model> modelSkydome_ = nullptr;
 	WorldTransform worldTransform_{};
 
 
@@ -70,16 +68,30 @@ private:
 	//ステージ選択専用
 	int32_t stageNumber_ = 0;
 
-
+	float WIDTH_INTERVAL_;
 
 	//タイトル画面の画像
 	Sprite* sprite_ = nullptr;
-
-	//テクスチャ用
 	uint32_t textureHandle_ = 0u;
 
-	//位置
-	Vector2 position_ = {};
+	//カーソル
+	Sprite* cursorSprite_ = nullptr;
+	uint32_t cursorTexture_ = 0u;
+	Vector2 cursorPosition = {};
+
+	//StageIcon
+	Sprite* stageIconSprite_[2] = { nullptr };
+	uint32_t stageIconTexture_[2] = { 0u };
+	Vector2 stageIconPosition[2] = {};
+
+
+	//タイトルに戻るためのアイコン
+	Sprite* backToTitleSprite_ = nullptr;
+	uint32_t backToTitleTexture_ = 0u;
+		
+	
+
+	
 
 
 };

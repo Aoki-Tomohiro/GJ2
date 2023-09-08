@@ -228,17 +228,17 @@
     <ClCompile Include="Project\GameObject\Enemy\TransCube\state\TransCubeGroundAttak\TranscubeGroundAttak.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Game\TitleScene\TitleScene.cpp">
-      <Filter>ソース ファイル\Project\GameObject</Filter>
+    <ClCompile Include="Project\Game\LoseScene\LoseScene.cpp">
+      <Filter>ソース ファイル\Project\Game</Filter>
     </ClCompile>
     <ClCompile Include="Project\Game\SelectScene\SelectScene.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Project\Game</Filter>
     </ClCompile>
     <ClCompile Include="Project\Game\WinScene\WinScene.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Project\Game</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Game\LoseScene\LoseScene.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Project\Game\TitleScene\TitleScene.cpp">
+      <Filter>ソース ファイル\Project\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -371,17 +371,17 @@
     <ClInclude Include="Project\GameObject\Enemy\TransCube\state\TransCubeGroundAttak\TransCubeGroundAttak.h">
       <Filter>ソース ファイル\Project\GameObject\TransCube\state_\TransCubeGroundBullet</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Game\TitleScene\TitleScene.h">
-      <Filter>ヘッダー ファイル\Project</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\Game\SelectScene\SelectScene.h">
-      <Filter>ヘッダー ファイル\Project</Filter>
-    </ClInclude>
     <ClInclude Include="Project\Game\WinScene\WinScene.h">
       <Filter>ヘッダー ファイル\Project\Game</Filter>
     </ClInclude>
     <ClInclude Include="Project\Game\LoseScene\LoseScene.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Project\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Game\SelectScene\SelectScene.h">
+      <Filter>ヘッダー ファイル\Project\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Game\TitleScene\TitleScene.h">
+      <Filter>ヘッダー ファイル\Project\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

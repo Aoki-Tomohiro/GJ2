@@ -1,6 +1,7 @@
 #include "TitleScene.h"
 #include "GameManager/GameManager.h"
 #include "SelectScene/SelectScene.h"
+#include "GameScene/GameScene.h"
 #include <imgui.h>
 
 
@@ -15,7 +16,7 @@ TitleScene::TitleScene() {
 /// デストラクタ
 /// </summary>
 TitleScene::~TitleScene() {
-
+	delete sprite_;
 }
 
 /// <summary>

@@ -514,3 +514,8 @@ float LerpShortAngle(const float& a, const float& b, float t) {
 
 	return a + theta * t;
 }
+
+float EaseOutSine(float x){
+	float PI = 3.14159265359f;
+	return 1 - std::cosf((x * PI) / 2);
+}

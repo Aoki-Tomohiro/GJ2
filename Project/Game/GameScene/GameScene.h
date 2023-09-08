@@ -11,8 +11,13 @@
 #include "Model/Model.h"
 #include "Sprite/Sprite.h"
 #include "CollisionManager/CollisionManager.h"
-#include "Player/Player.h"
-#include "FollowCamera/FollowCamera.h"
+#include "../GameObject/Player/Player.h"
+#include "../GameObject/Player/PlayerBullet.h"
+#include "../GameObject/FollowCamera/FollowCamera.h"
+#include "../GameObject/Ground/TestGround.h"
+#include "../GameObject/Enemy/TransCube/TransCube.h"
+#include "CollisionManager/CollisionManager.h"
+#include <list>
 
 class GameScene : public IScene {
 public:
@@ -41,6 +46,11 @@ public:
 	/// </summary>
 	void Draw(GameManager* gameManager)override;
 
+	/// <summary>
+	/// 自機の弾を追加する
+	/// </summary>
+	void AddPlayerBullet(PlayerBullet* playerBullet);
+
 private:
 	//TextureManager
 	TextureManager* textureManager_ = nullptr;
@@ -51,9 +61,9 @@ private:
 	//PostProcess
 	PostProcess* postProcess_ = nullptr;
 	//衝突マネージャー
-	CollisionManager* collisionManager_ = nullptr;
+	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
 	//DebugCamera
-	DebugCamera* debugCamera_ = nullptr;
+	std::unique_ptr<DebugCamera> debugCamera_ = nullptr;
 	//DebugCameraの切り替え
 	bool isDebugCameraActive_ = false;
 	//ビュープロジェクション
@@ -66,11 +76,16 @@ private:
 	std::unique_ptr<Model> modelPlayerL_arm_ = nullptr;
 	std::unique_ptr<Model> modelPlayerR_arm_ = nullptr;
 	std::unique_ptr<Player>player_ = nullptr;
-
+	//自弾
+	std::unique_ptr<Model> modelPlayerBullet_ = nullptr;
+	std::list<std::unique_ptr<PlayerBullet>> playerBullets_{};
+	//敵キャラ
+	std::unique_ptr<Model> modelTransCube_;
+	std::unique_ptr<TransCube> transCube_;
 	//追従カメラ
 	std::unique_ptr<FollowCamera> followCamera_ = nullptr;
+	//地面
+	std::unique_ptr<TestGround> ground_ = nullptr;
 
-	//Skydome
-	std::unique_ptr<Model> modelSkydome_ = nullptr;
-	WorldTransform worldTransform_{};
+
 };

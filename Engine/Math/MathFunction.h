@@ -246,3 +246,10 @@ Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t);
 /// <param name="t"></param>
 /// <returns></returns>
 float LerpShortAngle(const float& a, const float& b, float t);
+
+/// <summary>
+/// イージング
+/// </summary>
+/// <param name="x"></param>
+/// <returns></returns>
+float EaseOutSine(float x);

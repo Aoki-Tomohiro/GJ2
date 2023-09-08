@@ -40,6 +40,16 @@ public:
 	~Model();
 
 	/// <summary>
+	/// 初期化
+	/// </summary>
+	static void Initialize();
+
+	/// <summary>
+	/// 削除
+	/// </summary>
+	static void Delete();
+
+	/// <summary>
 	/// モデルの作成
 	/// </summary>
 	void Create(const std::vector<VertexData>& vertices);
@@ -80,7 +90,7 @@ private:
 	/// <summary>
 	/// DXCompilerの初期化
 	/// </summary>
-	void InitializeDxcCompiler();
+	static void InitializeDxcCompiler();
 
 	/// <summary>
 	/// シェーダーの読み込み
@@ -91,7 +101,7 @@ private:
 	/// <param name="dxcCompiler"></param>
 	/// <param name="includeHandler"></param>
 	/// <returns></returns>
-	IDxcBlob* CompileShader(//CompilerするShaderファイルへのパス
+	static IDxcBlob* CompileShader(//CompilerするShaderファイルへのパス
 		const std::wstring& filePath,
 		//compilerに使用するProfile
 		const wchar_t* profile,
@@ -103,7 +113,7 @@ private:
 	/// <summary>
 	/// パイプラインステートの作成
 	/// </summary>
-	void CreatePipelineStateObject();
+	static void CreatePipelineStateObject();
 
 	/// <summary>
 	/// Objファイルの読み込み
@@ -111,7 +121,7 @@ private:
 	/// <param name="directoryPath"></param>
 	/// <param name="filename"></param>
 	/// <returns></returns>
-	ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
+	static ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
 
 	/// <summary>
 	/// mtlファイルの読み込み
@@ -119,19 +129,19 @@ private:
 	/// <param name="directoryPath"></param>
 	/// <param name="filename"></param>
 	/// <returns></returns>
-	MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);
+	static MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);
 
 private:
 	//DXCompiler
-	Microsoft::WRL::ComPtr<IDxcUtils> dxcUtils_ = nullptr;
-	Microsoft::WRL::ComPtr<IDxcCompiler3> dxcCompiler_ = nullptr;
-	Microsoft::WRL::ComPtr<IDxcIncludeHandler> includeHandler_ = nullptr;
+	static Microsoft::WRL::ComPtr<IDxcUtils> sDxcUtils_;
+	static Microsoft::WRL::ComPtr<IDxcCompiler3> sDxcCompiler_;
+	static Microsoft::WRL::ComPtr<IDxcIncludeHandler> sIncludeHandler_;
 	//ルートシグネチャ
-	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_ = nullptr;
+	static Microsoft::WRL::ComPtr<ID3D12RootSignature> sRootSignature_;
 	//パイプラインステート
-	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState_ = nullptr;
+	static Microsoft::WRL::ComPtr<ID3D12PipelineState> sPipelineState_;
 	//コマンドリスト
-	ID3D12GraphicsCommandList* commandList_ = nullptr;
+	static ID3D12GraphicsCommandList* sCommandList_;
 	//ライティング
 	std::unique_ptr<DirectionalLight> directionalLight_ = nullptr;
 	//モデルデータ

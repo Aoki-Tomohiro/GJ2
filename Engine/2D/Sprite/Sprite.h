@@ -22,6 +22,7 @@ public:
 
 	struct VertexPosUV {
 		Vector4 pos;
+		Vector4 color;
 		Vector2 texcoord;
 	};
 
@@ -45,11 +46,21 @@ public:
 	~Sprite();
 
 	/// <summary>
+	/// 初期化
+	/// </summary>
+	static void Initialize();
+
+	/// <summary>
+	/// 削除
+	/// </summary>
+	static void Delete();
+
+	/// <summary>
 	/// スプライト作成
 	/// </summary>
 	/// <param name="textureHandle"></param>
 	/// <param name="position"></param>
-	void Create(uint32_t textureHandle, Vector2 position, BlendMode blendMode);
+	void Create(uint32_t textureHandle, Vector2 position);
 
 	/// <summary>
 	/// 描画
@@ -144,7 +155,7 @@ private:
 	/// <summary>
     /// DXCompilerの初期化
     /// </summary>
-	void InitializeDxcCompiler();
+	static void InitializeDxcCompiler();
 
 	/// <summary>
 	/// シェーダーの読み込み
@@ -155,7 +166,7 @@ private:
 	/// <param name="dxcCompiler"></param>
 	/// <param name="includeHandler"></param>
 	/// <returns></returns>
-	IDxcBlob* CompileShader(//CompilerするShaderファイルへのパス
+	static IDxcBlob* CompileShader(//CompilerするShaderファイルへのパス
 		const std::wstring& filePath,
 		//compilerに使用するProfile
 		const wchar_t* profile,
@@ -167,7 +178,7 @@ private:
 	/// <summary>
 	/// パイプラインステートの作成
 	/// </summary>
-	void CreatePipelineStateObject(BlendMode blendMode);
+	static void CreatePipelineStateObject(BlendMode blendMode);
 
 	/// <summary>
 	/// マッピング
@@ -176,17 +187,17 @@ private:
 
 private:
 	//DXCompiler
-	Microsoft::WRL::ComPtr<IDxcUtils> dxcUtils_ = nullptr;
-	Microsoft::WRL::ComPtr<IDxcCompiler3> dxcCompiler_ = nullptr;
-	Microsoft::WRL::ComPtr<IDxcIncludeHandler> includeHandler_ = nullptr;
+	static Microsoft::WRL::ComPtr<IDxcUtils> sDxcUtils_;
+	static Microsoft::WRL::ComPtr<IDxcCompiler3> sDxcCompiler_;
+	static Microsoft::WRL::ComPtr<IDxcIncludeHandler> sIncludeHandler_;
 	//ルートシグネチャ
-	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_ = nullptr;
+	static Microsoft::WRL::ComPtr<ID3D12RootSignature> sRootSignature_;
 	//パイプラインステート
-	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState_ = nullptr;
+	static Microsoft::WRL::ComPtr<ID3D12PipelineState> sPipelineState_;
 	//コマンドリスト
-	ID3D12GraphicsCommandList* commandList_ = nullptr;
+	static ID3D12GraphicsCommandList* sCommandList_;
 	//プロジェクション行列
-	Matrix4x4 matProjection_{};
+	Matrix4x4 matProjection_;
 	//頂点
 	std::vector<VertexPosUV> vertices_{};
 	//頂点バッファ

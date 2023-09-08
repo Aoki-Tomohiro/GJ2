@@ -15,9 +15,9 @@ void GameScene::Initialize(GameManager* gameManager) {
 	//PostProcessのインスタンスを取得
 	postProcess_ = PostProcess::GetInstance();
 	//衝突マネージャーの作成
-	collisionManager_ = new CollisionManager();
+	collisionManager_ = std::make_unique<CollisionManager>();
 	//デバッグカメラの生成
-	debugCamera_ = new DebugCamera();
+	debugCamera_ = std::make_unique<DebugCamera>();
 
 	//自キャラのモデル作成
 	//頭
@@ -32,31 +32,69 @@ void GameScene::Initialize(GameManager* gameManager) {
 	//右腕
 	modelPlayerR_arm_ = std::make_unique<Model>();
 	modelPlayerR_arm_->CreateFromOBJ("Project/Resources/Player_R_arm", "Player_R_arm.obj");
+	//自弾
+	modelPlayerBullet_ = std::make_unique<Model>();
+	modelPlayerBullet_->CreateSphere();
 	//モデルを配列にまとめる
-	playerModels_ = { modelPlayerHead_.get(),modelPlayerBody_.get(),modelPlayerL_arm_.get(),modelPlayerR_arm_.get() };
+	playerModels_ = { modelPlayerHead_.get(),modelPlayerBody_.get(),modelPlayerL_arm_.get(),modelPlayerR_arm_.get(),modelPlayerBullet_.get() };
 	//自キャラの初期化
 	player_ = std::make_unique<Player>();
 	player_->Initialize(playerModels_);
+	player_->SetGameScene(this);
+
+	//敵キャラの初期化
+	modelTransCube_ = std::make_unique<Model>();
+	modelTransCube_->CreateFromOBJ("Project/Resources/EnemyObj/TransCube", "TransCube.obj");
+	transCube_ = std::make_unique<TransCube>();
+	transCube_->Initialize();
+	player_->SetTrancCube(transCube_.get());
 
 	//追従カメラの初期化
 	followCamera_ = std::make_unique<FollowCamera>();
 	followCamera_->SetTarget(&player_->GetWorldTransform());
+	followCamera_->SetRockonTarget(&transCube_->GetWorldTransform());
 	player_->SetViewProjection(&followCamera_->GetViewProjection());
 
-	//Skydome
-	modelSkydome_ = std::make_unique<Model>();
-	modelSkydome_->CreateFromOBJ("Project/Resources/Skydome", "Skydome.obj");
-	modelSkydome_->GetMaterial()->enableLighting_ = false;
-	modelSkydome_->GetMaterial()->Update();
+	//地面の初期化
+	ground_ = std::make_unique<TestGround>();
+	ground_->Initialize();
+
+	//衝突マネージャーの生成
+	collisionManager_ = std::make_unique<CollisionManager>();
 };
 
 void GameScene::Update(GameManager* gameManager) {
 	//自キャラの更新
 	player_->Update();
+	//デスフラグの立った自弾を削除
+	playerBullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {
+		if (bullet->isDead()) {
+			bullet.reset();
+			return true;
+		}
+		return false;
+		});
+	// 自弾の更新
+	for (std::unique_ptr<PlayerBullet>& bullet : playerBullets_) {
+		bullet->Update();
+	}
+	//敵キャラの更新
+	transCube_->Update();
 	//追従カメラの更新
 	followCamera_->Update();
-	//Skydome
-	worldTransform_.UpdateMatrix();
+
+	//衝突マネージャーのリストをクリア
+	collisionManager_->ClearColliderList();
+	//自キャラを衝突マネージャーのリストに追加
+	collisionManager_->SetColliderList(player_.get());
+	//自弾を衝突マネージャーのリストに追加
+	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets_) {
+		collisionManager_->SetColliderList(bullet.get());
+	}
+	//敵キャラを衝突マネージャーのリストに追加
+	collisionManager_->SetColliderList(transCube_.get());
+	//衝突判定
+	collisionManager_->CheckAllCollisions();
 
 	//デバッグカメラの更新
 	debugCamera_->Update();
@@ -100,8 +138,15 @@ void GameScene::Update(GameManager* gameManager) {
 void GameScene::Draw(GameManager* gameManager) {
 	//自キャラの描画
 	player_->Draw(viewProjection_);
-	//Skydome
-	modelSkydome_->Draw(worldTransform_, viewProjection_);
+	//自弾の描画
+	for (std::unique_ptr<PlayerBullet>& bullet : playerBullets_) {
+		bullet->Draw(viewProjection_);
+	}
+	//敵キャラの描画
+	transCube_->Draw(viewProjection_);
+	//地面の描画
+	ground_->Draw(viewProjection_);
+
 
 #pragma region ポストプロセス
 	//ポストプロセスの描画前処理
@@ -111,4 +156,12 @@ void GameScene::Draw(GameManager* gameManager) {
 	postProcess_->PostDraw();
 #pragma endregion
 
+#pragma region スプライトの描画
+
+#pragma endregion
 };
+
+void GameScene::AddPlayerBullet(PlayerBullet* playerBullet) {
+	//自機の弾を追加する
+	playerBullets_.push_back(std::unique_ptr<PlayerBullet>(playerBullet));
+}

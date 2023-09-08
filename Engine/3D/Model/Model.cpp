@@ -2,14 +2,46 @@
 #include <fstream>
 #include <sstream>
 
+//DXCompiler
+Microsoft::WRL::ComPtr<IDxcUtils> Model::sDxcUtils_ = nullptr;
+Microsoft::WRL::ComPtr<IDxcCompiler3> Model::sDxcCompiler_ = nullptr;
+Microsoft::WRL::ComPtr<IDxcIncludeHandler> Model::sIncludeHandler_ = nullptr;
+//ルートシグネチャ
+Microsoft::WRL::ComPtr<ID3D12RootSignature> Model::sRootSignature_;
+//パイプラインステート
+Microsoft::WRL::ComPtr<ID3D12PipelineState> Model::sPipelineState_;
+//コマンドリスト
+ID3D12GraphicsCommandList* Model::sCommandList_;
+
+void Model::Initialize() {
+	//DxcCompilerの初期化
+	Model::InitializeDxcCompiler();
+	//パイプラインステートの作成
+	Model::CreatePipelineStateObject();
+	//コマンドリストを取得
+	sCommandList_ = DirectXCommon::GetInstance()->GetCommandList().Get();
+}
+
+void Model::Delete() {
+	sDxcUtils_.Reset();
+	//DXCompiler
+	sDxcUtils_.Reset();
+	sDxcCompiler_.Reset();
+	sIncludeHandler_.Reset();
+	//ルートシグネチャ
+	sRootSignature_.Reset();
+	//パイプラインステート
+	sPipelineState_.Reset();
+}
+
 void Model::InitializeDxcCompiler() {
-	HRESULT hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils_));
+	HRESULT hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&sDxcUtils_));
 	assert(SUCCEEDED(hr));
-	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxcCompiler_));
+	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&sDxcCompiler_));
 	assert(SUCCEEDED(hr));
 
 	//現時点でincludeはしないが、includeに対応するための設定を行っていく
-	hr = dxcUtils_->CreateDefaultIncludeHandler(&includeHandler_);
+	hr = sDxcUtils_->CreateDefaultIncludeHandler(&sIncludeHandler_);
 	assert(SUCCEEDED(hr));
 }
 
@@ -127,7 +159,7 @@ void Model::CreatePipelineStateObject() {
 	}
 	//バイナリを元に生成
 	hr = DirectXCommon::GetInstance()->GetDevice()->CreateRootSignature(0, signatureBlob->GetBufferPointer(),
-		signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature_));
+		signatureBlob->GetBufferSize(), IID_PPV_ARGS(&sRootSignature_));
 	assert(SUCCEEDED(hr));
 
 	//InputLayout
@@ -162,11 +194,11 @@ void Model::CreatePipelineStateObject() {
 
 	//Shaderをコンパイルする
 	Microsoft::WRL::ComPtr<IDxcBlob> vertexShaderBlob = CompileShader(L"Project/Resources/Shader/Object3d.VS.hlsl",
-		L"vs_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
+		L"vs_6_0", sDxcUtils_.Get(), sDxcCompiler_.Get(), sIncludeHandler_.Get());
 	assert(vertexShaderBlob != nullptr);
 
 	Microsoft::WRL::ComPtr<IDxcBlob> pixelShaderBlob = CompileShader(L"Project/Resources/Shader/Object3d.PS.hlsl",
-		L"ps_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
+		L"ps_6_0", sDxcUtils_.Get(), sDxcCompiler_.Get(), sIncludeHandler_.Get());
 	assert(pixelShaderBlob != nullptr);
 
 	//DepthStencilStateの設定
@@ -180,7 +212,7 @@ void Model::CreatePipelineStateObject() {
 
 	//グラフィックスパイプラインステートの作成
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-	graphicsPipelineStateDesc.pRootSignature = rootSignature_.Get();//RootSignature
+	graphicsPipelineStateDesc.pRootSignature = sRootSignature_.Get();//RootSignature
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;//InputLayout
 	graphicsPipelineStateDesc.VS = { vertexShaderBlob->GetBufferPointer(),
 	vertexShaderBlob->GetBufferSize() };//VertexShader
@@ -202,7 +234,7 @@ void Model::CreatePipelineStateObject() {
 	graphicsPipelineStateDesc.SampleDesc.Count = 1;
 	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 	//実際に生成
-	hr = DirectXCommon::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pipelineState_));
+	hr = DirectXCommon::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&sPipelineState_));
 	assert(SUCCEEDED(hr));
 }
 
@@ -211,12 +243,6 @@ Model::Model() {};
 Model::~Model() {};
 
 void Model::Create(const std::vector<VertexData>& vertices) {
-	//DxcCompilerの初期化
-	Model::InitializeDxcCompiler();
-	//パイプラインステートの作成
-	Model::CreatePipelineStateObject();
-	//コマンドリストを取得
-	commandList_ = DirectXCommon::GetInstance()->GetCommandList().Get();
 	//DirectionalLightの作成
 	directionalLight_ = std::make_unique<DirectionalLight>();
 	directionalLight_->Initialize();
@@ -232,12 +258,6 @@ void Model::Create(const std::vector<VertexData>& vertices) {
 }
 
 void Model::CreateSphere() {
-	//DxcCompilerの初期化
-	Model::InitializeDxcCompiler();
-	//パイプラインステートの作成
-	Model::CreatePipelineStateObject();
-	//コマンドリストを取得
-	commandList_ = DirectXCommon::GetInstance()->GetCommandList().Get();
 	//DirectionalLightの作成
 	directionalLight_ = std::make_unique<DirectionalLight>();
 	directionalLight_->Initialize();
@@ -296,12 +316,6 @@ void Model::CreateSphere() {
 }
 
 void Model::CreateFromOBJ(const std::string& directoryPath, const std::string& filename) {
-	//DxcCompilerの初期化
-	Model::InitializeDxcCompiler();
-	//パイプラインステートの作成
-	Model::CreatePipelineStateObject();
-	//コマンドリストを取得
-	commandList_ = DirectXCommon::GetInstance()->GetCommandList().Get();
 	//DirectionalLightの作成
 	directionalLight_ = std::make_unique<DirectionalLight>();
 	directionalLight_->Initialize();
@@ -424,7 +438,7 @@ void Model::Draw(const WorldTransform& worldTransform, const ViewProjection& vie
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 	//viewportを設定
-	commandList_->RSSetViewports(1, &viewport);
+	sCommandList_->RSSetViewports(1, &viewport);
 	//基本的にビューポートと同じ矩形が構成されるようにする
 	D3D12_RECT scissorRect;
 	scissorRect.left = 0;
@@ -432,11 +446,11 @@ void Model::Draw(const WorldTransform& worldTransform, const ViewProjection& vie
 	scissorRect.top = 0;
 	scissorRect.bottom = LONG(WinApp::GetInstance()->kClientHeight);
 	//ScissorRectを設定
-	commandList_->RSSetScissorRects(1, &scissorRect);
+	sCommandList_->RSSetScissorRects(1, &scissorRect);
 	//RootSignatureを設定
-	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
+	sCommandList_->SetGraphicsRootSignature(sRootSignature_.Get());
 	//PSOを設定
-	commandList_->SetPipelineState(pipelineState_.Get());
+	sCommandList_->SetPipelineState(sPipelineState_.Get());
 	//マテリアルを設定
 	material_->SetGraphicsCommand(UINT(RootParameterIndex::Material));
 	//transformationMatrixを設定
@@ -463,7 +477,7 @@ void Model::Draw(const WorldTransform& worldTransform, const ViewProjection& vie
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 	//viewportを設定
-	commandList_->RSSetViewports(1, &viewport);
+	sCommandList_->RSSetViewports(1, &viewport);
 	//基本的にビューポートと同じ矩形が構成されるようにする
 	D3D12_RECT scissorRect;
 	scissorRect.left = 0;
@@ -471,11 +485,11 @@ void Model::Draw(const WorldTransform& worldTransform, const ViewProjection& vie
 	scissorRect.top = 0;
 	scissorRect.bottom = LONG(WinApp::GetInstance()->kClientHeight);
 	//ScissorRectを設定
-	commandList_->RSSetScissorRects(1, &scissorRect);
+	sCommandList_->RSSetScissorRects(1, &scissorRect);
 	//RootSignatureを設定
-	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
+	sCommandList_->SetGraphicsRootSignature(sRootSignature_.Get());
 	//PSOを設定
-	commandList_->SetPipelineState(pipelineState_.Get());
+	sCommandList_->SetPipelineState(sPipelineState_.Get());
 	//マテリアルを設定
 	material_->SetGraphicsCommand(UINT(RootParameterIndex::Material));
 	//transformationMatrixを設定

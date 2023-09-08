@@ -24,6 +24,10 @@ GameManager::GameManager() {
 	//ポストプロセスの初期化
 	postProcess_ = PostProcess::GetInstance();
 	postProcess_->Initialize();
+	//モデルの初期化
+	Model::Initialize();
+	//スプライトの初期化
+	Sprite::Initialize();
 	//グローバル変数の読み込み
 	GlobalVariables::GetInstance()->LoadFiles();
 	//シーンの初期化
@@ -34,6 +38,8 @@ GameManager::GameManager() {
 GameManager::~GameManager() {
 	delete currentScene_;
 	currentScene_ = nullptr;
+	Sprite::Delete();
+	Model::Delete();
 	PostProcess::DeleteInstance();
 	Input::DeleteInstance();
 	Audio::DeleteInstance();

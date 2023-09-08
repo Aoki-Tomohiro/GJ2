@@ -1,13 +1,44 @@
 #include "Sprite.h"
 
+//DXCompiler
+Microsoft::WRL::ComPtr<IDxcUtils> Sprite::sDxcUtils_;
+Microsoft::WRL::ComPtr<IDxcCompiler3> Sprite::sDxcCompiler_;
+Microsoft::WRL::ComPtr<IDxcIncludeHandler> Sprite::sIncludeHandler_;
+//ルートシグネチャ
+Microsoft::WRL::ComPtr<ID3D12RootSignature> Sprite::sRootSignature_;
+//パイプラインステート
+Microsoft::WRL::ComPtr<ID3D12PipelineState> Sprite::sPipelineState_;
+//コマンドリスト
+ID3D12GraphicsCommandList* Sprite::sCommandList_;
+
+void Sprite::Initialize() {
+	//DxcCompilerの初期化
+	Sprite::InitializeDxcCompiler();
+	//パイプラインステートの作成
+	Sprite::CreatePipelineStateObject(kNormal);
+	//コマンドリストを取得
+	sCommandList_ = DirectXCommon::GetInstance()->GetCommandList().Get();
+}
+
+void Sprite::Delete() {
+	//DXCompiler
+	sDxcUtils_.Reset();
+	sDxcCompiler_.Reset();
+	sIncludeHandler_.Reset();
+	//ルートシグネチャ
+	sRootSignature_.Reset();
+	//パイプラインステート
+	sPipelineState_.Reset();
+}
+
 void Sprite::InitializeDxcCompiler() {
-	HRESULT hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils_));
+	HRESULT hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&sDxcUtils_));
 	assert(SUCCEEDED(hr));
-	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxcCompiler_));
+	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&sDxcCompiler_));
 	assert(SUCCEEDED(hr));
 
 	//現時点でincludeはしないが、includeに対応するための設定を行っていく
-	hr = dxcUtils_->CreateDefaultIncludeHandler(&includeHandler_);
+	hr = sDxcUtils_->CreateDefaultIncludeHandler(&sIncludeHandler_);
 	assert(SUCCEEDED(hr));
 }
 
@@ -124,19 +155,23 @@ void Sprite::CreatePipelineStateObject(BlendMode blendMode) {
 	}
 	//バイナリを元に生成
 	hr = DirectXCommon::GetInstance()->GetDevice()->CreateRootSignature(0, signatureBlob->GetBufferPointer(),
-		signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature_));
+		signatureBlob->GetBufferSize(), IID_PPV_ARGS(&sRootSignature_));
 	assert(SUCCEEDED(hr));
 
 	//InputLayout
-	D3D12_INPUT_ELEMENT_DESC inputElementDescs[2] = {};
+	D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};
 	inputElementDescs[0].SemanticName = "POSITION";
 	inputElementDescs[0].SemanticIndex = 0;
 	inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	inputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-	inputElementDescs[1].SemanticName = "TEXCOORD";
+	inputElementDescs[1].SemanticName = "COLOR";
 	inputElementDescs[1].SemanticIndex = 0;
-	inputElementDescs[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+	inputElementDescs[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	inputElementDescs[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	inputElementDescs[2].SemanticName = "TEXCOORD";
+	inputElementDescs[2].SemanticIndex = 0;
+	inputElementDescs[2].Format = DXGI_FORMAT_R32G32_FLOAT;
+	inputElementDescs[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc{};
 	inputLayoutDesc.pInputElementDescs = inputElementDescs;
 	inputLayoutDesc.NumElements = _countof(inputElementDescs);
@@ -187,11 +222,11 @@ void Sprite::CreatePipelineStateObject(BlendMode blendMode) {
 
 	//Shaderをコンパイルする
 	Microsoft::WRL::ComPtr<IDxcBlob> vertexShaderBlob = CompileShader(L"Project/Resources/Shader/SpriteVS.hlsl",
-		L"vs_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
+		L"vs_6_0", sDxcUtils_.Get(), sDxcCompiler_.Get(), sIncludeHandler_.Get());
 	assert(vertexShaderBlob != nullptr);
 
 	Microsoft::WRL::ComPtr<IDxcBlob> pixelShaderBlob = CompileShader(L"Project/Resources/Shader/SpritePS.hlsl",
-		L"ps_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
+		L"ps_6_0", sDxcUtils_.Get(), sDxcCompiler_.Get(), sIncludeHandler_.Get());
 	assert(pixelShaderBlob != nullptr);
 
 	//DepthStencilStateの設定
@@ -205,7 +240,7 @@ void Sprite::CreatePipelineStateObject(BlendMode blendMode) {
 
 	//グラフィックスパイプラインステートの作成
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-	graphicsPipelineStateDesc.pRootSignature = rootSignature_.Get();//RootSignature
+	graphicsPipelineStateDesc.pRootSignature = sRootSignature_.Get();//RootSignature
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;//InputLayout
 	graphicsPipelineStateDesc.VS = { vertexShaderBlob->GetBufferPointer(),
 	vertexShaderBlob->GetBufferSize() };//VertexShader
@@ -226,7 +261,7 @@ void Sprite::CreatePipelineStateObject(BlendMode blendMode) {
 	graphicsPipelineStateDesc.SampleDesc.Count = 1;
 	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 	//実際に生成
-	hr = DirectXCommon::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pipelineState_));
+	hr = DirectXCommon::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&sPipelineState_));
 	assert(SUCCEEDED(hr));
 }
 
@@ -234,28 +269,22 @@ Sprite::Sprite() {};
 
 Sprite::~Sprite() {};
 
-void Sprite::Create(uint32_t textureHandle, Vector2 position, BlendMode blendMode) {
-	//DxcCompilerの初期化
-	Sprite::InitializeDxcCompiler();
-	//パイプラインステートの作成
-	Sprite::CreatePipelineStateObject(blendMode);
-	//コマンドリストを取得
-	commandList_ = DirectXCommon::GetInstance()->GetCommandList().Get();
-	//平行投影行列の作成
-	matProjection_ = MakeOrthographicMatrix(0.0f, 0.0f, float(WinApp::GetInstance()->kClientWidth), float(WinApp::GetInstance()->kClientHeight), 0.0f, 100.0f);
+void Sprite::Create(uint32_t textureHandle, Vector2 position) {
 	//テクスチャハンドルを取得
 	textureHandle_ = textureHandle;
 	//リソースの設定を取得
 	resourceDesc_ = TextureManager::GetInstance()->GetResourceDesc(textureHandle_);
+	//スプライトの座標を取得
+	translation_ = position;
 	//リソースの設定からサイズを取得
 	Vector2 size = { float(resourceDesc_.Width), float(resourceDesc_.Height) };
 	//頂点の作成
-	vertices_.push_back(VertexPosUV{ { position.x,position.y + size.y,0.0f,1.0f},{ 0.0f,1.0f } });//左下
-	vertices_.push_back(VertexPosUV{ { position.x,position.y,0.0f,1.0f},{ 0.0f,0.0f } });//左上
-	vertices_.push_back(VertexPosUV{ { position.x + size.x,position.y + size.y,0.0f,1.0f } ,{ 1.0f,1.0f } });//右下
-	vertices_.push_back(VertexPosUV{ { position.x,position.y,0.0f,1.0f},{ 0.0f,0.0f } });//左上
-	vertices_.push_back(VertexPosUV{ { position.x + size.x,position.y,0.0f,1.0f } ,{ 1.0f,0.0f } });//右上
-	vertices_.push_back(VertexPosUV{ { position.x + size.x,position.y + size.y,0.0f,1.0f } ,{ 1.0f,1.0f } });//右下
+	vertices_.push_back(VertexPosUV{ { 0.0f,0.0f + size.y,0.0f,1.0f},{1.0f,1.0f,1.0f,1.0f}, { 0.0f,1.0f } });//左下
+	vertices_.push_back(VertexPosUV{ { 0.0f,0.0f,0.0f,1.0f},{1.0f,1.0f,1.0f,1.0f},{ 0.0f,0.0f } });//左上
+	vertices_.push_back(VertexPosUV{ { 0.0f + size.x,0.0f + size.y,0.0f,1.0f } ,{1.0f,1.0f,1.0f,1.0f},{ 1.0f,1.0f } });//右下
+	vertices_.push_back(VertexPosUV{ { 0.0f,0.0f,0.0f,1.0f},{1.0f,1.0f,1.0f,1.0f},{ 0.0f,0.0f } });//左上
+	vertices_.push_back(VertexPosUV{ { 0.0f + size.x,0.0f,0.0f,1.0f } ,{1.0f,1.0f,1.0f,1.0f},{ 1.0f,0.0f } });//右上
+	vertices_.push_back(VertexPosUV{ { 0.0f + size.x,0.0f + size.y,0.0f,1.0f } ,{1.0f,1.0f,1.0f,1.0f},{ 1.0f,1.0f } });//右下
 	//頂点バッファを作成
 	vertexResource_ = DirectXCommon::GetInstance()->CreateBufferResource(sizeof(VertexPosUV) * vertices_.size());
 	//頂点バッファビューを作成
@@ -270,6 +299,8 @@ void Sprite::Create(uint32_t textureHandle, Vector2 position, BlendMode blendMod
 	WVPResource_ = DirectXCommon::GetInstance()->CreateBufferResource(sizeof(ConstBufferDataWVP));
 	//マテリアル用のリソースの作成
 	MaterialResource_ = DirectXCommon::GetInstance()->CreateBufferResource(sizeof(ConstBufferDataMaterial));
+	//平行投影行列の作成
+	matProjection_ = MakeOrthographicMatrix(0.0f, 0.0f, float(WinApp::GetInstance()->kClientWidth), float(WinApp::GetInstance()->kClientHeight), 0.0f, 100.0f);
 }
 
 void Sprite::Map() {
@@ -304,7 +335,7 @@ void Sprite::Draw() {
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 	//viewportを設定
-	commandList_->RSSetViewports(1, &viewport);
+	sCommandList_->RSSetViewports(1, &viewport);
 	//基本的にビューポートと同じ矩形が構成されるようにする
 	D3D12_RECT scissorRect;
 	scissorRect.left = 0;
@@ -312,23 +343,23 @@ void Sprite::Draw() {
 	scissorRect.top = 0;
 	scissorRect.bottom = LONG(WinApp::GetInstance()->kClientHeight);
 	//ScissorRectを設定
-	commandList_->RSSetScissorRects(1, &scissorRect);
+	sCommandList_->RSSetScissorRects(1, &scissorRect);
 	//ルートシグネチャを設定
-	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
+	sCommandList_->SetGraphicsRootSignature(sRootSignature_.Get());
 	//パイプラインステートを設定
-	commandList_->SetPipelineState(pipelineState_.Get());
+	sCommandList_->SetPipelineState(sPipelineState_.Get());
 	//VertexBufferViewを設定
-	commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);
+	sCommandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	//WVPResourceを設定
-	commandList_->SetGraphicsRootConstantBufferView(UINT(RootParameterIndex::TransformationMatrix), WVPResource_->GetGPUVirtualAddress());
+	sCommandList_->SetGraphicsRootConstantBufferView(UINT(RootParameterIndex::TransformationMatrix), WVPResource_->GetGPUVirtualAddress());
 	//MaterialResourceを設定
-	commandList_->SetGraphicsRootConstantBufferView(UINT(RootParameterIndex::Material), MaterialResource_->GetGPUVirtualAddress());
+	sCommandList_->SetGraphicsRootConstantBufferView(UINT(RootParameterIndex::Material), MaterialResource_->GetGPUVirtualAddress());
 	//ディスクリプタヒープをセット
 	TextureManager::GetInstance()->SetGraphicsDescriptorHeap();
 	//テクスチャを設定
 	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(UINT(RootParameterIndex::Texture), textureHandle_);
 	//形状を設定
-	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	sCommandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//描画
-	commandList_->DrawInstanced(UINT(vertices_.size()), 1, 0, 0);
+	sCommandList_->DrawInstanced(UINT(vertices_.size()), 1, 0, 0);
 }

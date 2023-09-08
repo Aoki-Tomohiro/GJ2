@@ -105,6 +105,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Base\TextureManager\TextureManager.cpp" />
     <ClCompile Include="Engine\Base\WinApp\WinApp.cpp" />
     <ClCompile Include="Engine\Components\Audio\Audio.cpp" />
+    <ClCompile Include="Engine\Components\CollisionManager\CollisionManager.cpp" />
     <ClCompile Include="Engine\Components\Input\Input.cpp" />
     <ClCompile Include="Engine\Components\PostProcess\PostProcess.cpp" />
     <ClCompile Include="Engine\Externals\imgui\imgui.cpp" />
@@ -116,10 +117,18 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Engine\Math\MathFunction.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Project\Game\FollowCamera\FollowCamera.cpp" />
+    <ClCompile Include="Project\GameObject\Enemy\TransCube\GroundAttack\TransCubeGroundAttack.cpp" />
+    <ClCompile Include="Project\GameObject\Enemy\TransCube\RandBullet\TransCubeBullet.cpp" />
+    <ClCompile Include="Project\GameObject\Enemy\TransCube\state\ITransCubeState.cpp" />
+    <ClCompile Include="Project\GameObject\Enemy\TransCube\state\TransCubeGroundAttak\TranscubeGroundAttak.cpp" />
+    <ClCompile Include="Project\GameObject\Enemy\TransCube\state\TransCubeRandBullet\TransCubeRandBulletState.cpp" />
+    <ClCompile Include="Project\GameObject\Enemy\TransCube\TransCube.cpp" />
+    <ClCompile Include="Project\GameObject\FollowCamera\FollowCamera.cpp" />
+    <ClCompile Include="Project\GameObject\Ground\TestGround.cpp" />
+    <ClCompile Include="Project\GameObject\Player\Player.cpp" />
+    <ClCompile Include="Project\GameObject\Player\PlayerBullet.cpp" />
     <ClCompile Include="Project\Game\GameManager\GameManager.cpp" />
     <ClCompile Include="Project\Game\GameScene\GameScene.cpp" />
-    <ClCompile Include="Project\Game\Player\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\2D\GlobalVariables\GlobalVariables.h" />
@@ -138,6 +147,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Base\TextureManager\TextureManager.h" />
     <ClInclude Include="Engine\Base\WinApp\WinApp.h" />
     <ClInclude Include="Engine\Components\Audio\Audio.h" />
+    <ClInclude Include="Engine\Components\CollisionManager\Collider.h" />
+    <ClInclude Include="Engine\Components\CollisionManager\CollisionConfig.h" />
+    <ClInclude Include="Engine\Components\CollisionManager\CollisionManager.h" />
     <ClInclude Include="Engine\Components\Input\Input.h" />
     <ClInclude Include="Engine\Components\PostProcess\PostProcess.h" />
     <ClInclude Include="Engine\Externals\imgui\imconfig.h" />
@@ -149,11 +161,19 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Externals\imgui\imstb_textedit.h" />
     <ClInclude Include="Engine\Externals\imgui\imstb_truetype.h" />
     <ClInclude Include="Engine\Math\MathFunction.h" />
-    <ClInclude Include="Project\Game\FollowCamera\FollowCamera.h" />
+    <ClInclude Include="Project\GameObject\Enemy\TransCube\GroundAttack\TransCubeGroundAttack.h" />
+    <ClInclude Include="Project\GameObject\Enemy\TransCube\RandBullet\TransCubeBullet.h" />
+    <ClInclude Include="Project\GameObject\Enemy\TransCube\state\ITransCubeState.h" />
+    <ClInclude Include="Project\GameObject\Enemy\TransCube\state\TransCubeGroundAttak\TransCubeGroundAttak.h" />
+    <ClInclude Include="Project\GameObject\Enemy\TransCube\state\TransCubeRandBullet\TransCubeRandBulletState.h" />
+    <ClInclude Include="Project\GameObject\Enemy\TransCube\TransCube.h" />
+    <ClInclude Include="Project\GameObject\FollowCamera\FollowCamera.h" />
+    <ClInclude Include="Project\GameObject\Ground\TestGround.h" />
+    <ClInclude Include="Project\GameObject\Player\Player.h" />
+    <ClInclude Include="Project\GameObject\Player\PlayerBullet.h" />
     <ClInclude Include="Project\Game\GameManager\GameManager.h" />
     <ClInclude Include="Project\Game\GameManager\IScene.h" />
     <ClInclude Include="Project\Game\GameScene\GameScene.h" />
-    <ClInclude Include="Project\Game\Player\Player.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Project\Resources\Shader\FinalPass.hlsli">

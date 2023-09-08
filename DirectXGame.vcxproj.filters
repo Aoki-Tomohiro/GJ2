@@ -67,6 +67,48 @@
     <Filter Include="Shader">
       <UniqueIdentifier>{3ba02e86-d136-4605-bc0a-5ec7812bc9c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Project\GameObject">
+      <UniqueIdentifier>{f41c338d-99d0-4234-a0d7-6b9c6332e0c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Project\GameObject">
+      <UniqueIdentifier>{5f1400e4-9d7d-4af8-ae19-29d4f5135fe8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Project\GameObject\Player">
+      <UniqueIdentifier>{2b410acc-c5d4-4b7b-9215-1cbe1635b813}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Project\GameObject\Player">
+      <UniqueIdentifier>{f906b257-98e0-4462-9f62-9d3d54e1f7d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Project\GameObject\FollowCamera">
+      <UniqueIdentifier>{62278850-d7c8-4205-9d4a-aa0812cb7ebd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Project\GameObject\FollowCamera">
+      <UniqueIdentifier>{b7201c95-e34e-45fb-9616-a3586fa4a17d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Project\GameObject\Ground">
+      <UniqueIdentifier>{2a833845-db63-4fa0-818f-6919e75a5a03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Project\GameObject\Ground">
+      <UniqueIdentifier>{54a1810e-7eb1-4b35-ae90-6134b171335e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Project\GameObject\TransCube">
+      <UniqueIdentifier>{7685423f-9f37-4b67-b8c4-292d68d26b61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\Components\CollisionManager">
+      <UniqueIdentifier>{83ee9d0f-7727-4e34-a824-e1079160196e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\Components\CollisionManager">
+      <UniqueIdentifier>{8be040ad-0804-45c4-bc87-a5c2a7baa7a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Project\GameObject\TransCube\state_">
+      <UniqueIdentifier>{dd46ccd1-028d-4249-a55f-2e443bdd081a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Project\GameObject\TransCube\state_\TransCubeGroundAttack">
+      <UniqueIdentifier>{81ccd56b-8322-4d2b-8801-d02f23b64bb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Project\GameObject\TransCube\state_\TransCubeGroundBullet">
+      <UniqueIdentifier>{9c359feb-5c6c-49f1-9af8-12e6d99bf920}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -153,11 +195,38 @@
     <ClCompile Include="Project\Game\GameScene\GameScene.cpp">
       <Filter>ソース ファイル\Project\Game</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Game\Player\Player.cpp">
-      <Filter>ソース ファイル\Project\Game</Filter>
+    <ClCompile Include="Project\GameObject\Player\Player.cpp">
+      <Filter>ソース ファイル\Project\GameObject\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Game\FollowCamera\FollowCamera.cpp">
-      <Filter>ソース ファイル\Project\Game</Filter>
+    <ClCompile Include="Project\GameObject\FollowCamera\FollowCamera.cpp">
+      <Filter>ソース ファイル\Project\GameObject\FollowCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Ground\TestGround.cpp">
+      <Filter>ソース ファイル\Project\GameObject\Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Player\PlayerBullet.cpp">
+      <Filter>ソース ファイル\Project\GameObject\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Components\CollisionManager\CollisionManager.cpp">
+      <Filter>ソース ファイル\Engine\Components\CollisionManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Enemy\TransCube\TransCube.cpp">
+      <Filter>ソース ファイル\Project\GameObject\TransCube</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Enemy\TransCube\state\ITransCubeState.cpp">
+      <Filter>ソース ファイル\Project\GameObject\TransCube\state_</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Enemy\TransCube\state\TransCubeRandBullet\TransCubeRandBulletState.cpp">
+      <Filter>ソース ファイル\Project\GameObject\TransCube\state_</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Enemy\TransCube\RandBullet\TransCubeBullet.cpp">
+      <Filter>ソース ファイル\Project\GameObject\TransCube</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Enemy\TransCube\GroundAttack\TransCubeGroundAttack.cpp">
+      <Filter>ソース ファイル\Project\GameObject\TransCube\state_\TransCubeGroundAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Enemy\TransCube\state\TransCubeGroundAttak\TranscubeGroundAttak.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -251,11 +320,44 @@
     <ClInclude Include="Project\Game\GameScene\GameScene.h">
       <Filter>ヘッダー ファイル\Project\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Game\Player\Player.h">
-      <Filter>ヘッダー ファイル\Project\Game</Filter>
+    <ClInclude Include="Project\GameObject\Player\Player.h">
+      <Filter>ヘッダー ファイル\Project\GameObject\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Game\FollowCamera\FollowCamera.h">
-      <Filter>ヘッダー ファイル\Project\Game</Filter>
+    <ClInclude Include="Project\GameObject\FollowCamera\FollowCamera.h">
+      <Filter>ヘッダー ファイル\Project\GameObject\FollowCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Ground\TestGround.h">
+      <Filter>ヘッダー ファイル\Project\GameObject\Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Player\PlayerBullet.h">
+      <Filter>ヘッダー ファイル\Project\GameObject\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Components\CollisionManager\Collider.h">
+      <Filter>ヘッダー ファイル\Engine\Components\CollisionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Components\CollisionManager\CollisionConfig.h">
+      <Filter>ヘッダー ファイル\Engine\Components\CollisionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Components\CollisionManager\CollisionManager.h">
+      <Filter>ヘッダー ファイル\Engine\Components\CollisionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\TransCube\TransCube.h">
+      <Filter>ソース ファイル\Project\GameObject\TransCube</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\TransCube\state\TransCubeRandBullet\TransCubeRandBulletState.h">
+      <Filter>ソース ファイル\Project\GameObject\TransCube\state_</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\TransCube\state\ITransCubeState.h">
+      <Filter>ソース ファイル\Project\GameObject\TransCube\state_</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\TransCube\RandBullet\TransCubeBullet.h">
+      <Filter>ソース ファイル\Project\GameObject\TransCube</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\TransCube\GroundAttack\TransCubeGroundAttack.h">
+      <Filter>ソース ファイル\Project\GameObject\TransCube\state_\TransCubeGroundAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\TransCube\state\TransCubeGroundAttak\TransCubeGroundAttak.h">
+      <Filter>ソース ファイル\Project\GameObject\TransCube\state_\TransCubeGroundBullet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,9 +1,12 @@
 #pragma once
 #include"Model/Model.h"
 #include"state/TransCubeRandBullet/TransCubeRandBulletState.h"
+#include"state/TransCubeGroundAttak/TransCubeGroundAttackState.h"
 #include"Input/Input.h"
 #include"../GameObject/Player/Player.h"
 #include "CollisionManager/Collider.h"
+
+
 struct TransCubeReticle
 {
 	Vector3 Left = {};
@@ -30,7 +33,6 @@ public:
 	void Update();
 
 	void Draw(ViewProjection view);
-
 	void ChangeRandBulletState();
 
 	Vector3 GetWorldPosition()override;
@@ -44,7 +46,6 @@ public:
 	void SetWorldTransform(WorldTransform w) { worldTransform = w; }
 	void SetPlayer(Player* player) { player_ = player; }
 	void Setbullet(std::list<TransCubeBullet*>bullets) { bullets_ = bullets; }
-	
 	void PushBackBullet(Vector3 velocity, Vector3 pos);
 
 private:

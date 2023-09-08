@@ -10,6 +10,7 @@
 #include "IScene.h"
 #include <memory>
 
+
 class GameManager {
 public:
 	/// <summary>

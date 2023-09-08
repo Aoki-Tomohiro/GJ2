@@ -1,14 +1,12 @@
 #include "TransCubeRandBulletState.h"
 
+
 TransCubeRandBulletState::TransCubeRandBulletState()
 {
 }
 
-
-
 TransCubeRandBulletState::~TransCubeRandBulletState()
 {
-
 }
 
 void TransCubeRandBulletState::Initialize(TransCube* state)
@@ -42,8 +40,6 @@ void TransCubeRandBulletState::Update(TransCube* state)
 	}
 
 
-
-
 	WorldTransform GetCubeWorldTransform = state->GetWorldTransform();
 
 	GetCubeWorldTransform.rotation_.y += rotateSpeed;
@@ -66,9 +62,8 @@ void TransCubeRandBulletState::Update(TransCube* state)
 	}
 	if (ModeTimer>1200)
 	{
-		rotateSpeed -= rotateSpeed * 0.02f;
+		rotateSpeed -= rotateSpeed;
 	}
-	
 }
 
 void TransCubeRandBulletState::Draw(TransCube* state, ViewProjection view)

@@ -20,7 +20,7 @@ void TransCube::Initialize()
 	worldTransform.translation_ = { 0,0,0 };
 	model_->CreateFromOBJ("Project/Resources/EnemyObj/TransCube", "TransCube.obj");
 	
-	state_ =std::make_unique< TransCubeRandBulletState>();
+	state_ =std::make_unique<TransCubeRandBulletState>();
 	state_->Initialize(this);
 	
 	input = Input::GetInstance();
@@ -81,9 +81,9 @@ void TransCube::Draw(ViewProjection view)
 
 void TransCube::ChangeRandBulletState()
 {
-
 	state_.release();
 	state_ = std::make_unique<TransCubeRandBulletState>();
+	//state_ = std::make_unique<TransCubeRandBulletState>();
 	state_.get()->Initialize(this);
 }
 

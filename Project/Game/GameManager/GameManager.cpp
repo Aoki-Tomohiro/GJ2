@@ -33,6 +33,8 @@ GameManager::GameManager() {
 	//シーンの初期化
 	currentScene_ = new GameScene();
 	currentScene_->Initialize(this);
+
+
 }
 
 GameManager::~GameManager() {
@@ -86,6 +88,8 @@ void GameManager::run() {
 		//描画終了
 		dxCommon_->PostDraw();
 	}
+	
+
 	//ImGuiの解放処理
 	imguiManager_->ShutDown();
 	//Audioの解放処理

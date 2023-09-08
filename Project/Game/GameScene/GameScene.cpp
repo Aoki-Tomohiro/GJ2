@@ -78,32 +78,21 @@ void GameScene::Update(GameManager* gameManager) {
 	for (std::unique_ptr<PlayerBullet>& bullet : playerBullets_) {
 		bullet->Update();
 	}
+
+
 	//敵キャラの更新
+	transCube_.get()->SetPlayer(player_.get());
 	transCube_->Update();
+
 	//追従カメラの更新
 	followCamera_->Update();
 
-	//衝突マネージャーのリストをクリア
-	collisionManager_->ClearColliderList();
-	//自キャラを衝突マネージャーのリストに追加
-	collisionManager_->SetColliderList(player_.get());
-	//自弾を衝突マネージャーのリストに追加
-	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets_) {
-		collisionManager_->SetColliderList(bullet.get());
-	}
-
-	//敵キャラを衝突マネージャーのリストに追加
-	collisionManager_->SetColliderList(transCube_.get());
-
-	//
-	for (TransCubeBullet* bullet : transCube_.get()->Getbullets())
-	{
-		collisionManager_->SetColliderList(bullet);
-	}
-
-	//衝突判定
+	//衝突判定セット
+	SetCollision();
+	//衝突判定更新
 	collisionManager_->CheckAllCollisions();
 
+#pragma region カメラ
 
 	//デバッグカメラの更新
 	debugCamera_->Update();
@@ -125,6 +114,9 @@ void GameScene::Update(GameManager* gameManager) {
 		viewProjection_.matView_ = followCamera_->GetViewProjection().matView_;
 		viewProjection_.matProjection_ = followCamera_->GetViewProjection().matProjection_;
 	}
+
+#pragma endregion
+
 
 	ImGui::Begin(" ");
 	//ポストプロセス
@@ -173,4 +165,20 @@ void GameScene::Draw(GameManager* gameManager) {
 void GameScene::AddPlayerBullet(PlayerBullet* playerBullet) {
 	//自機の弾を追加する
 	playerBullets_.push_back(std::unique_ptr<PlayerBullet>(playerBullet));
+}
+
+void GameScene::SetCollision()
+{
+	collisionManager_->ClearColliderList();
+	//Player
+	collisionManager_->SetColliderList(player_.get());
+	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets_) {
+		collisionManager_->SetColliderList(bullet.get());
+	}
+
+	//Enemy
+	collisionManager_->SetColliderList(transCube_.get());
+	for (TransCubeBullet* bullet : transCube_.get()->Getbullets()){
+		collisionManager_->SetColliderList(bullet);
+	}
 }

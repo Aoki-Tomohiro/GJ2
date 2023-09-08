@@ -1,27 +1,27 @@
-#include "TitleScene.h"
+#include "SelectScene.h"
 #include "GameManager/GameManager.h"
-#include "SelectScene/SelectScene.h"
+#include "GameScene/GameScene.h"
 #include <imgui.h>
 
 
 /// <summary>
 /// コンストラクタ
 /// </summary>
-TitleScene::TitleScene() {
+SelectScene::SelectScene() {
 
 }
 
 /// <summary>
 /// デストラクタ
 /// </summary>
-TitleScene::~TitleScene() {
+SelectScene::~SelectScene() {
 
 }
 
 /// <summary>
 /// 初期化
 /// </summary>
-void TitleScene::Initialize(GameManager* gameManager) {
+void SelectScene::Initialize(GameManager* gameManager) {
 	//TextureManagerのインスタンスを取得
 	textureManager_ = TextureManager::GetInstance();
 	//Audioのインスタンスを取得
@@ -36,7 +36,8 @@ void TitleScene::Initialize(GameManager* gameManager) {
 	debugCamera_ = new DebugCamera();
 
 
-
+	//初期では1を選択している
+	stageNumber_ = 1;
 
 
 	//スプライトの初期化
@@ -50,7 +51,7 @@ void TitleScene::Initialize(GameManager* gameManager) {
 /// <summary>
 /// 更新
 /// </summary>
-void TitleScene::Update(GameManager* gameManager) {
+void SelectScene::Update(GameManager* gameManager) {
 	
 	//Skydome
 	worldTransform_.UpdateMatrix();
@@ -76,8 +77,8 @@ void TitleScene::Update(GameManager* gameManager) {
 
 
 
-	ImGui::Begin("Title");
-	ImGui::Text("Title");
+	ImGui::Begin("Select");
+	ImGui::Text("Select");
 	ImGui::End();
 
 	XINPUT_STATE joyState{};
@@ -86,7 +87,7 @@ void TitleScene::Update(GameManager* gameManager) {
 	//今はそのままゲームシーンへ
 	if (Input::GetInstance()->GetJoystickState(joyState)) {
 		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
-			gameManager->ChangeScene(new SelectScene());
+			gameManager->ChangeScene(new GameScene());
 		}
 	}
 
@@ -97,7 +98,7 @@ void TitleScene::Update(GameManager* gameManager) {
 /// <summary>
 /// 描画
 /// </summary>
-void TitleScene::Draw(GameManager* gameManager) {
+void SelectScene::Draw(GameManager* gameManager) {
 	//Skydome
 	//modelSkydome_->Draw(worldTransform_, viewProjection_);
 

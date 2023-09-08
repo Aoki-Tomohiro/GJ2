@@ -98,21 +98,8 @@ void GameScene::Update(GameManager* gameManager) {
 
 	//衝突マネージャーのリストをクリア
 	collisionManager_->ClearColliderList();
-	//自キャラを衝突マネージャーのリストに追加
-	collisionManager_->SetColliderList(player_.get());
-	//自弾を衝突マネージャーのリストに追加
-	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets_) {
-		collisionManager_->SetColliderList(bullet.get());
-	}
 
-	//敵キャラを衝突マネージャーのリストに追加
-	collisionManager_->SetColliderList(transCube_.get());
-
-	//
-	for (TransCubeBullet* bullet : transCube_.get()->Getbullets())
-	{
-		collisionManager_->SetColliderList(bullet);
-	}
+	SetCollisions();
 
 	//衝突判定
 	collisionManager_->CheckAllCollisions();
@@ -188,4 +175,19 @@ void GameScene::Draw(GameManager* gameManager) {
 void GameScene::AddPlayerBullet(PlayerBullet* playerBullet) {
 	//自機の弾を追加する
 	playerBullets_.push_back(std::unique_ptr<PlayerBullet>(playerBullet));
+}
+
+void GameScene::SetCollisions()
+{
+	//自キャラ
+	collisionManager_->SetColliderList(player_.get());
+	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets_) {
+		collisionManager_->SetColliderList(bullet.get());
+	}
+
+	//敵
+	collisionManager_->SetColliderList(transCube_.get());
+	for (TransCubeBullet* bullet : transCube_.get()->Getbullets()){
+		collisionManager_->SetColliderList(bullet);
+	}
 }

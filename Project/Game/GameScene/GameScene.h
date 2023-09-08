@@ -16,6 +16,7 @@
 #include "../GameObject/FollowCamera/FollowCamera.h"
 #include "../GameObject/Ground/TestGround.h"
 #include "../GameObject/Enemy/TransCube/TransCube.h"
+#include "../GameObject/Box/BoxManager.h"
 #include "CollisionManager/CollisionManager.h"
 #include <list>
 
@@ -87,5 +88,7 @@ private:
 	//地面
 	std::unique_ptr<TestGround> ground_ = nullptr;
 
+	//箱
+	std::unique_ptr<BoxManager> boxManager_ = nullptr;
 
 };

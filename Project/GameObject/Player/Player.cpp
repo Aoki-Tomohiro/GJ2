@@ -71,9 +71,6 @@ void Player::Update() {
 	worldTransformBody_.UpdateMatrix();
 	worldTransformL_arm_.UpdateMatrix();
 	worldTransformR_arm_.UpdateMatrix();
-
-	ImGui::Begin("Player");
-	ImGui::End();
 }
 
 void Player::Draw(const ViewProjection& viewProjection) {
@@ -98,6 +95,10 @@ Vector3 Player::GetWorldPosition() {
 	return worldPos;
 }
 
+void Player::OnCollisionBox() {
+
+}
+
 void Player::BehaviorRootInitialize() {
 	worldTransformL_arm_.rotation_ = { 0.0f,0.0f,0.0f };
 	worldTransformR_arm_.rotation_ = { 0.0f,0.0f,0.0f };
@@ -111,14 +112,14 @@ void Player::BehaviorRootUpdate() {
 		//移動フラグ
 		bool isMoving = false;
 		//移動量
-		Vector3 move = {
+		velocity_ = {
 			(float)joyState.Gamepad.sThumbLX / SHRT_MAX,
 			0.0f,
 			(float)joyState.Gamepad.sThumbLY / SHRT_MAX,
 		};
 
 		//スティックの押し込みが遊び範囲を超えていたら移動フラグをtureにする
-		if (Length(move) > threshold) {
+		if (Length(velocity_) > threshold) {
 			isMoving = true;
 		}
 
@@ -127,17 +128,17 @@ void Player::BehaviorRootUpdate() {
 			const float kSpeed = 0.3f;
 
 			//移動量に速さを反映
-			move = Multiply(Normalize(move), kSpeed);
+			velocity_ = Multiply(Normalize(velocity_), kSpeed);
 
 			//移動ベクトルをカメラの角度だけ回転する
 			Matrix4x4 rotateMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
-			move = TransformNormal(move, rotateMatrix);
+			velocity_ = TransformNormal(velocity_, rotateMatrix);
 
 			//移動
-			worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, move);
+			worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, velocity_);
 
 			//目標角度の算出
-			destinationAngleY_ = std::atan2(move.x, move.z);
+			destinationAngleY_ = std::atan2(velocity_.x, velocity_.z);
 		}
 	}
 
@@ -185,14 +186,14 @@ void Player::BehaviorAttackUpdate() {
 		//移動フラグ
 		bool isMoving = false;
 		//移動量
-		Vector3 move = {
+		velocity_ = {
 			(float)joyState.Gamepad.sThumbLX / SHRT_MAX,
 			0.0f,
 			(float)joyState.Gamepad.sThumbLY / SHRT_MAX,
 		};
 
 		//スティックの押し込みが遊び範囲を超えていたら移動フラグをtureにする
-		if (Length(move) > threshold) {
+		if (Length(velocity_) > threshold) {
 			isMoving = true;
 		}
 
@@ -201,14 +202,14 @@ void Player::BehaviorAttackUpdate() {
 			const float kSpeed = 0.3f;
 
 			//移動量に速さを反映
-			move = Multiply(Normalize(move), kSpeed);
+			velocity_ = Multiply(Normalize(velocity_), kSpeed);
 
 			//移動ベクトルをカメラの角度だけ回転する
 			Matrix4x4 rotateMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
-			move = TransformNormal(move, rotateMatrix);
+			velocity_ = TransformNormal(velocity_, rotateMatrix);
 
 			//移動
-			worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, move);
+			worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, velocity_);
 
 			//目標角度の算出
 			Vector3 rotation = Normalize(Subtract(transCube_->GetWorldPosition(), Player::GetWorldPosition()));
@@ -266,14 +267,14 @@ void Player::BehaviorJumpUpdate() {
 		//移動フラグ
 		bool isMoving = false;
 		//移動量
-		Vector3 move = {
+		velocity_ = {
 			(float)joyState.Gamepad.sThumbLX / SHRT_MAX,
 			0.0f,
 			(float)joyState.Gamepad.sThumbLY / SHRT_MAX,
 		};
 
 		//スティックの押し込みが遊び範囲を超えていたら移動フラグをtureにする
-		if (Length(move) > threshold) {
+		if (Length(velocity_) > threshold) {
 			isMoving = true;
 		}
 
@@ -282,17 +283,17 @@ void Player::BehaviorJumpUpdate() {
 			const float kSpeed = 0.3f;
 
 			//移動量に速さを反映
-			move = Multiply(Normalize(move), kSpeed);
+			velocity_ = Multiply(Normalize(velocity_), kSpeed);
 
 			//移動ベクトルをカメラの角度だけ回転する
 			Matrix4x4 rotateMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
-			move = TransformNormal(move, rotateMatrix);
+			velocity_ = TransformNormal(velocity_, rotateMatrix);
 
 			//移動
-			worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, move);
+			worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, velocity_);
 
 			//目標角度の算出
-			destinationAngleY_ = std::atan2(move.x, move.z);
+			destinationAngleY_ = std::atan2(velocity_.x, velocity_.z);
 		}
 	}
 

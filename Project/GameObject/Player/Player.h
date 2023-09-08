@@ -64,6 +64,11 @@ public:
 	Vector3 GetWorldPosition()override;
 
 	/// <summary>
+	/// 箱との衝突判定
+	/// </summary>
+	void OnCollisionBox();
+
+	/// <summary>
 	/// ワールドトランスフォームの取得
 	/// </summary>
 	/// <returns></returns>
@@ -86,6 +91,12 @@ public:
 	/// </summary>
 	/// <param name="transCube"></param>
 	void SetTrancCube(TransCube* transCube) { transCube_ = transCube; };
+
+	/// <summary>
+	/// 移動量を取得
+	/// </summary>
+	/// <returns></returns>
+	const Vector3& GetVelocity() { return velocity_; };
 
 private:
 
@@ -162,5 +173,7 @@ private:
 	GameScene* gameScene_ = nullptr;
 	//敵キャラ
 	TransCube* transCube_ = nullptr;
+	//速度
+	Vector3 velocity_{};
 };
 

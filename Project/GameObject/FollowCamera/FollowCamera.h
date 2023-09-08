@@ -52,5 +52,10 @@ private:
 	Vector3 interTarget_{};
 	//ロックオンターゲット
 	const WorldTransform* rockonTarget_{};
+	//ロックオンのフラグ
+	bool isRockon_ = false;
+	//
+	float minRotateX = 0.0f;
+	float maxRotateX = 0.5f;
 };
 

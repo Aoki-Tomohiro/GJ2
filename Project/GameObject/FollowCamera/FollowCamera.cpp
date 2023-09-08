@@ -43,11 +43,21 @@ void FollowCamera::Update() {
 		}
 	}
 
-	if (rockonTarget_ != nullptr && target_ != nullptr) {
-		Vector3 move = Normalize(Subtract(rockonTarget_->translation_, target_->translation_));
-		destinationAngleY_ = std::atan2(move.x, move.z);
-		float length = Length(Vector3{ move.x, 0, move.z });
-		destinationAngleX_ = std::atan2(-move.y, length);
+	if (isRockon_) {
+		if (rockonTarget_ != nullptr && target_ != nullptr) {
+			Vector3 move = Normalize(Subtract(rockonTarget_->translation_, target_->translation_));
+			destinationAngleY_ = std::atan2(move.x, move.z);
+			float length = Length(Vector3{ move.x, 0, move.z });
+			destinationAngleX_ = std::atan2(-move.y, length);
+		}
+	}
+	else {
+		if (destinationAngleX_ >= maxRotateX) {
+			destinationAngleX_ = maxRotateX;
+		}
+		else if (destinationAngleX_ <= minRotateX) {
+			destinationAngleX_ = minRotateX;
+		}
 	}
 
 	//最短角度補間
@@ -56,6 +66,12 @@ void FollowCamera::Update() {
 
 	//ビュー行列の計算
 	viewProjection_.UpdateMatrix();
+
+	ImGui::Begin("Rockon");
+	ImGui::Checkbox("isRockon", &isRockon_);
+	ImGui::DragFloat("maxRotate", &maxRotateX, 0.01f);
+	ImGui::DragFloat("minRotate", &minRotateX, 0.01f);
+	ImGui::End();
 }
 
 Vector3 FollowCamera::Offset() const{

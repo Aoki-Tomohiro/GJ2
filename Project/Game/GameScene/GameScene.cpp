@@ -59,6 +59,11 @@ void GameScene::Initialize(GameManager* gameManager) {
 	ground_ = std::make_unique<TestGround>();
 	ground_->Initialize();
 
+	//箱の初期化
+	boxManager_ = std::make_unique<BoxManager>();
+	boxManager_->Initialize();
+	boxManager_->SetPlayer(player_.get());
+
 	//衝突マネージャーの生成
 	collisionManager_ = std::make_unique<CollisionManager>();
 };
@@ -80,6 +85,8 @@ void GameScene::Update(GameManager* gameManager) {
 	}
 	//敵キャラの更新
 	transCube_->Update();
+	//箱の更新
+	boxManager_->Update();
 	//追従カメラの更新
 	followCamera_->Update();
 
@@ -144,6 +151,8 @@ void GameScene::Draw(GameManager* gameManager) {
 	}
 	//敵キャラの描画
 	transCube_->Draw(viewProjection_);
+	//箱の描画
+	boxManager_->Draw(viewProjection_);
 	//地面の描画
 	ground_->Draw(viewProjection_);
 

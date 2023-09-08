@@ -1,9 +1,12 @@
 #pragma once
 #include"Model/Model.h"
 #include"state/TransCubeRandBullet/TransCubeRandBulletState.h"
+#include"state/TransCubeGroundAttak/TransCubeGroundAttackState.h"
 #include"Input/Input.h"
 #include"../GameObject/Player/Player.h"
 #include "CollisionManager/Collider.h"
+#include"../GameObject/Enemy/TransCube/GroundAttack/TransCubeGroundAttack.h"
+
 struct TransCubeReticle
 {
 	Vector3 Left = {};
@@ -44,8 +47,11 @@ public:
 	void SetWorldTransform(WorldTransform w) { worldTransform = w; }
 	void SetPlayer(Player* player) { player_ = player; }
 	void Setbullet(std::list<TransCubeBullet*>bullets) { bullets_ = bullets; }
-	
+	void SetGroundBullet(std::list<TransCubeGroundAttack*>groundBullet) { Ground_ = groundBullet; }
+
 	void PushBackBullet(Vector3 velocity, Vector3 pos);
+
+	void PushBackGroundBullet(Vector3 pos);
 
 private:
 
@@ -64,6 +70,7 @@ private:
 	//stateRandBulletの本体
 	std::list<TransCubeBullet*>bullets_;
 
+	std::list<TransCubeGroundAttack*>Ground_;
 
 	Input* input = nullptr;
 	Player *player_ = nullptr;

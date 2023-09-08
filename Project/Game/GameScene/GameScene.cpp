@@ -45,8 +45,12 @@ void GameScene::Initialize(GameManager* gameManager) {
 	//敵キャラの初期化
 	modelTransCube_ = std::make_unique<Model>();
 	modelTransCube_->CreateFromOBJ("Project/Resources/EnemyObj/TransCube", "TransCube.obj");
+
 	transCube_ = std::make_unique<TransCube>();
+	transCube_->SetPlayer(player_.get());
+
 	transCube_->Initialize();
+
 	player_->SetTrancCube(transCube_.get());
 
 	//追従カメラの初期化
@@ -83,6 +87,8 @@ void GameScene::Update(GameManager* gameManager) {
 	for (std::unique_ptr<PlayerBullet>& bullet : playerBullets_) {
 		bullet->Update();
 	}
+
+	transCube_.get()->SetPlayer(player_.get());
 	//敵キャラの更新
 	transCube_->Update();
 	//箱の更新

@@ -20,7 +20,7 @@ void TransCube::Initialize()
 	worldTransform.translation_ = { 0,0,0 };
 	model_->CreateFromOBJ("Project/Resources/EnemyObj/TransCube", "TransCube.obj");
 	
-	state_ =std::make_unique< TransCubeRandBulletState>();
+	state_ =std::make_unique<TransCubeGroundAttackState>();
 	state_->Initialize(this);
 	
 	input = Input::GetInstance();
@@ -66,6 +66,11 @@ void TransCube::Update()
 	{
 		bullet->Update();
 	}
+	for (TransCubeGroundAttack* bullet : Ground_)
+	{
+		bullet->Update();
+	}
+
 }
 
 void TransCube::Draw(ViewProjection view)
@@ -74,6 +79,12 @@ void TransCube::Draw(ViewProjection view)
 	{
 		bullet->Draw(view);
 	}
+	for (TransCubeGroundAttack* bullet : Ground_)
+	{
+		bullet->Draw(view);
+	}
+
+
 	state_->Draw(this, view);
 	model_->Draw(worldTransform, view);
 
@@ -101,11 +112,21 @@ void TransCube::OnCollision() {
 
 }
 
+
+
 void TransCube::PushBackBullet(Vector3 velocity,Vector3 pos)
 {
 	TransCubeBullet* bullet = new TransCubeBullet();
 	bullet->Initialize(velocity, pos);
 	bullets_.push_back(bullet);
+}
+
+void TransCube::PushBackGroundBullet(Vector3 pos)
+{
+	TransCubeGroundAttack* bullet = new TransCubeGroundAttack();
+	bullet->Initialize(pos);
+	Ground_.push_back(bullet);
+
 }
 
 void TransCube::ReticlePosFanc()

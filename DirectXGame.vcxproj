@@ -119,10 +119,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Project\GameObject\Box\Box.cpp" />
     <ClCompile Include="Project\GameObject\Box\BoxManager.cpp" />
-    <ClCompile Include="Project\GameObject\Enemy\TransCube\GroundAttack\TransCubeGroundAttackState.cpp" />
+    <ClCompile Include="Project\GameObject\Enemy\TransCube\GroundAttack\TransCubeGroundAttack.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\TransCube\RandBullet\TransCubeBullet.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\TransCube\state\ITransCubeState.cpp" />
-    <ClCompile Include="Project\GameObject\Enemy\TransCube\state\TransCubeGroundAttak\TransCubeGroundAttack.cpp" />
+    <ClCompile Include="Project\GameObject\Enemy\TransCube\state\TransCubeGroundAttak\TransCubeGroundAttackState.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\TransCube\state\TransCubeRandBullet\TransCubeRandBulletState.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\TransCube\TransCube.cpp" />
     <ClCompile Include="Project\GameObject\FollowCamera\FollowCamera.cpp" />
@@ -165,10 +165,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Math\MathFunction.h" />
     <ClInclude Include="Project\GameObject\Box\Box.h" />
     <ClInclude Include="Project\GameObject\Box\BoxManager.h" />
-    <ClInclude Include="Project\GameObject\Enemy\TransCube\GroundAttack\TransCubeGroundAttackState.h" />
+    <ClInclude Include="Project\GameObject\Enemy\TransCube\GroundAttack\TransCubeGroundAttack.h" />
     <ClInclude Include="Project\GameObject\Enemy\TransCube\RandBullet\TransCubeBullet.h" />
     <ClInclude Include="Project\GameObject\Enemy\TransCube\state\ITransCubeState.h" />
-    <ClInclude Include="Project\GameObject\Enemy\TransCube\state\TransCubeGroundAttak\TransCubeGroundAttack.h" />
+    <ClInclude Include="Project\GameObject\Enemy\TransCube\state\TransCubeGroundAttak\TransCubeGroundAttackState.h" />
     <ClInclude Include="Project\GameObject\Enemy\TransCube\state\TransCubeRandBullet\TransCubeRandBulletState.h" />
     <ClInclude Include="Project\GameObject\Enemy\TransCube\TransCube.h" />
     <ClInclude Include="Project\GameObject\FollowCamera\FollowCamera.h" />

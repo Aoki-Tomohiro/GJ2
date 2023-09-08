@@ -1,5 +1,6 @@
 #pragma once
-#include"../GameObject/Enemy/TransCube/TransCube.h"
+#include"Model/Model.h"
+//#include"../GameObject/Enemy/TransCube/TransCube.h"
 #include"../GameObject/Player/Player.h"
 
 class TransCubeGroundAttack
@@ -16,6 +17,15 @@ public:
 
 
 private:
+
+	Model* BulletGround_;
+	Model* Bullet_;
+
+	WorldTransform worldTransformBulletGround_;
+	WorldTransform worldTransformBullet_;
+
+	
+
 
 };
 

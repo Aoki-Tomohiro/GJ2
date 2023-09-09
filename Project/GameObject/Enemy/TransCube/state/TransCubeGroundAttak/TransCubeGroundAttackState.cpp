@@ -16,6 +16,7 @@ void TransCubeGroundAttackState::Update(TransCube* state){
 	if (BulletCount>=15){
 		state->StateFlag(true);
 	}
+	state->GetWorldTransform().rotation_.y-=0.01f;
 }
 
 void TransCubeGroundAttackState::Draw(TransCube* state, ViewProjection view){

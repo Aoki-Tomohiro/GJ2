@@ -37,6 +37,10 @@ public:
 	void SetPlayer(Player* player) { player_ = player; };
 
 private:
+	//並べるエリアのモデル
+	std::unique_ptr<Model> model_ = nullptr;
+	//ワールドトランスフォーム
+	WorldTransform worldTransform_{};
 	//箱のリスト
 	std::list<std::unique_ptr<Box>> boxs_{};
 	//箱のスポーンタイマー

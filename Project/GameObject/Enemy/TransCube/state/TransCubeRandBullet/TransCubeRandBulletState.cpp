@@ -41,9 +41,6 @@ void TransCubeRandBulletState::Update(TransCube* state)
 
 	}
 
-
-
-
 	WorldTransform GetCubeWorldTransform = state->GetWorldTransform();
 
 	GetCubeWorldTransform.rotation_.y += rotateSpeed;
@@ -68,6 +65,10 @@ void TransCubeRandBulletState::Update(TransCube* state)
 	{
 		rotateSpeed -= rotateSpeed * 0.02f;
 	}
+	if (ModeTimer>1500)
+	{
+		state->StateFlag(true);
+	}
 	
 }
 
@@ -85,7 +86,6 @@ void TransCubeRandBulletState::SetParent(const WorldTransform* parent)
 
 void TransCubeRandBulletState::Deleate(TransCube* state)
 {
-	
 
 	for (TransCubeBullet* bullet : state->Getbullets())
 	{

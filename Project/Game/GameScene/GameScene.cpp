@@ -45,8 +45,12 @@ void GameScene::Initialize(GameManager* gameManager) {
 	//敵キャラの初期化
 	modelTransCube_ = std::make_unique<Model>();
 	modelTransCube_->CreateFromOBJ("Project/Resources/EnemyObj/TransCube", "TransCube.obj");
+
 	transCube_ = std::make_unique<TransCube>();
+	transCube_->SetPlayer(player_.get());
+
 	transCube_->Initialize();
+
 	player_->SetTrancCube(transCube_.get());
 
 	//追従カメラの初期化
@@ -83,31 +87,20 @@ void GameScene::Update(GameManager* gameManager) {
 	for (std::unique_ptr<PlayerBullet>& bullet : playerBullets_) {
 		bullet->Update();
 	}
+
+	transCube_.get()->SetPlayer(player_.get());
 	//敵キャラの更新
 	transCube_->Update();
+
 	//箱の更新
 	boxManager_->Update();
 	//追従カメラの更新
 	followCamera_->Update();
 
+
 	//衝突マネージャーのリストをクリア
 	collisionManager_->ClearColliderList();
-	//自キャラを衝突マネージャーのリストに追加
-	collisionManager_->SetColliderList(player_.get());
-	//自弾を衝突マネージャーのリストに追加
-	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets_) {
-		collisionManager_->SetColliderList(bullet.get());
-	}
-
-	//敵キャラを衝突マネージャーのリストに追加
-	collisionManager_->SetColliderList(transCube_.get());
-
-	//
-	for (TransCubeBullet* bullet : transCube_.get()->Getbullets())
-	{
-		collisionManager_->SetColliderList(bullet);
-	}
-
+	SetCollisions();
 	//衝突判定
 	collisionManager_->CheckAllCollisions();
 
@@ -182,4 +175,19 @@ void GameScene::Draw(GameManager* gameManager) {
 void GameScene::AddPlayerBullet(PlayerBullet* playerBullet) {
 	//自機の弾を追加する
 	playerBullets_.push_back(std::unique_ptr<PlayerBullet>(playerBullet));
+}
+
+void GameScene::SetCollisions()
+{
+	//自キャラ
+	collisionManager_->SetColliderList(player_.get());
+	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets_) {
+		collisionManager_->SetColliderList(bullet.get());
+	}
+
+	//敵
+	collisionManager_->SetColliderList(transCube_.get());
+	for (TransCubeBullet* bullet : transCube_.get()->Getbullets()){
+		collisionManager_->SetColliderList(bullet);
+	}
 }

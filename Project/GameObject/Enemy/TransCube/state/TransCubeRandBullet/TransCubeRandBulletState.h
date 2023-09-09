@@ -24,6 +24,7 @@ public:
 	void SetParent(const WorldTransform* parent)override;
 
 	void Deleate(TransCube* state)override;
+	
 
 private:
 
@@ -46,6 +47,8 @@ private:
 	float rotateSpeed = 0.0f;
 
 	BulletMode mode_ = {};
+
+
 };
 
 

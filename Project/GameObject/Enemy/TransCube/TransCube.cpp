@@ -7,8 +7,7 @@ TransCube::TransCube()
 
 TransCube::~TransCube()
 {
-	state_.get()->Deleate(this);
-	state_.release();
+	state_->Deleate(this);;
 	delete model_;
 }
 
@@ -17,12 +16,15 @@ void TransCube::Initialize()
 	model_ = new Model();
 	worldTransform.matWorld_ = MakeIdentity4x4();
 	worldTransform.scale_ = { 5,5,5 };
-	worldTransform.translation_ = { 0,0,0 };
+	worldTransform.translation_ = { 0,0,40 };
 	model_->CreateFromOBJ("Project/Resources/EnemyObj/TransCube", "TransCube.obj");
 	
-	state_ =std::make_unique< TransCubeRandBulletState>();
-	state_->Initialize(this);
+	TransCubeGroundAttackState* state = new TransCubeGroundAttackState();
+	state_ = state;
+	state->Initialize(this);
+	stateFlag = false;
 	
+
 	input = Input::GetInstance();
 
 	//衝突属性を設定
@@ -34,26 +36,66 @@ void TransCube::Initialize()
 
 void TransCube::Update()
 {
-	if (input->IsPushKey(DIK_F))
-	{
-		worldTransform.translation_.x -= 1.00f;
-	}
-	if (input->IsPushKey(DIK_T))
-	{
-		worldTransform.translation_.z += 1.05f;
-	}
-	if (input->IsPushKey(DIK_G))
-	{
-		worldTransform.translation_.x += 1.05f;
-	}
-	if (input->IsPushKey(DIK_V))
-	{
-		worldTransform.translation_.z -= 1.05f;
-	}
-	ReticlePosFanc();
+	ImGui::Begin("TransCube");
+	ImGui::SliderFloat3("translate", &worldTransform.translation_.x, -10, 10);
+	ImGui::Checkbox("state",&stateFlag);
+	ImGui::End();
 
-	worldTransform.UpdateMatrix();
-	state_->Update(this);
+	if (MoveFlag)
+	{
+		Flame++;
+		worldTransform.translation_.x = BeforePos.x + (AfterPos.x - BeforePos.x) * LerpMove(Flame/ EndFlame);
+		worldTransform.translation_.z = BeforePos.z + (AfterPos.z - BeforePos.z) * LerpMove(Flame / EndFlame);
+		
+		if (Flame == EndFlame){
+			Flame = 0;
+			MoveFlag = false;
+		}
+	}
+
+	if (stateFlag){
+		int rS = std::rand() % 2;
+		if (rS== STransCubeGroundAttack) {
+			TransCubeGroundAttackState* state = new TransCubeGroundAttackState();
+			ChangeState(state);
+		}
+		if (rS == STransCubeRandBullet) {
+			TransCubeRandBulletState* state = new  TransCubeRandBulletState();
+			ChangeState(state);
+		}
+
+		int rM = std::rand() % 4;
+		BeforePos.x = worldTransform.translation_.x;
+		BeforePos.z = worldTransform.translation_.z;
+
+		const Vector3 LeTopPos = { -60,0,60 };
+		const Vector3 RiTopPos = { 60,0,60 };
+		const Vector3 LeBomPos = { -60,0,-60 };
+		const Vector3 RiBomPos = { 60,0,-60 };
+
+		if (rM==0){
+			AfterPos = LeTopPos;
+		}
+		if (rM==1){
+			AfterPos = RiTopPos;
+		}
+		if (rM==2){
+			AfterPos = LeBomPos;
+		}
+		if (rM==3){
+			AfterPos = RiBomPos;
+		}
+		MoveFlag = true;
+		stateFlag = false;
+	}
+
+	GroundBullets_.remove_if([](TransCubeGroundAttack* GroundBullet) {
+		if (GroundBullet->IsDead()) {
+			delete GroundBullet;
+			return true;
+		}
+		return false;
+	});
 
 	bullets_.remove_if([](TransCubeBullet* bullet) {
 		if (bullet->IsDead()) {
@@ -62,10 +104,21 @@ void TransCube::Update()
 		}
 		return false;
 	});
+
+	ReticlePosFanc();
+	worldTransform.UpdateMatrix();
+
+	state_->Update(this);
+
 	for (TransCubeBullet* bullet : bullets_)
 	{
 		bullet->Update();
 	}
+	for (TransCubeGroundAttack* bullet : GroundBullets_)
+	{
+		bullet->Update();
+	}
+
 }
 
 void TransCube::Draw(ViewProjection view)
@@ -74,17 +127,21 @@ void TransCube::Draw(ViewProjection view)
 	{
 		bullet->Draw(view);
 	}
+	for (TransCubeGroundAttack* bullet : GroundBullets_)
+	{
+		bullet->Draw(view);
+	}
 	state_->Draw(this, view);
 	model_->Draw(worldTransform, view);
 
 }
 
-void TransCube::ChangeRandBulletState()
+void TransCube::ChangeState(ITransCubeState* state)
 {
-
-	state_.release();
-	state_ = std::make_unique<TransCubeRandBulletState>();
-	state_.get()->Initialize(this);
+	state_->Deleate(this);
+	delete state_;
+	state_ = state;
+	state_->Initialize(this);
 }
 
 Vector3 TransCube::GetWorldPosition()
@@ -101,11 +158,21 @@ void TransCube::OnCollision() {
 
 }
 
+
+
 void TransCube::PushBackBullet(Vector3 velocity,Vector3 pos)
 {
 	TransCubeBullet* bullet = new TransCubeBullet();
 	bullet->Initialize(velocity, pos);
 	bullets_.push_back(bullet);
+}
+
+void TransCube::PushBackGroundBullet(Vector3 pos)
+{
+	TransCubeGroundAttack* bullet = new TransCubeGroundAttack();
+	bullet->Initialize(pos);
+	GroundBullets_.push_back(bullet);
+
 }
 
 void TransCube::ReticlePosFanc()
@@ -181,4 +248,20 @@ void TransCube::ReticlePosFanc()
 
 	DirectionReticlePos_.LworldTransform.UpdateMatrix();
 
+}
+
+void TransCube::BulletKill()
+{
+
+
+}
+
+float TransCube::LerpMove(float pos)
+{
+	float result;
+
+	result = pos < 0.5 ? 4 * pos * pos * pos : 1 - std::powf(-2.0f * pos + 2, 3) / 2.0f;
+
+    return result;
+	
 }

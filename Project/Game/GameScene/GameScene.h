@@ -53,6 +53,9 @@ public:
 	void AddPlayerBullet(PlayerBullet* playerBullet);
 
 private:
+
+	void SetCollisions();
+
 	//TextureManager
 	TextureManager* textureManager_ = nullptr;
 	//Audio

@@ -16,7 +16,7 @@ void TransCube::Initialize()
 	model_ = new Model();
 	worldTransform.matWorld_ = MakeIdentity4x4();
 	worldTransform.scale_ = { 5,5,5 };
-	worldTransform.translation_ = { 0,0,0 };
+	worldTransform.translation_ = { 0,0,40 };
 	model_->CreateFromOBJ("Project/Resources/EnemyObj/TransCube", "TransCube.obj");
 	
 	TransCubeGroundAttackState* state = new TransCubeGroundAttackState();
@@ -39,23 +39,53 @@ void TransCube::Update()
 	ImGui::Begin("TransCube");
 	ImGui::SliderFloat3("translate", &worldTransform.translation_.x, -10, 10);
 	ImGui::Checkbox("state",&stateFlag);
-
 	ImGui::End();
 
-	if (stateFlag){
-		int r = std::rand() % 2;
+	if (MoveFlag)
+	{
+		Flame++;
+		worldTransform.translation_.x = BeforePos.x + (AfterPos.x - BeforePos.x) * LerpMove(Flame/ EndFlame);
+		worldTransform.translation_.z = BeforePos.z + (AfterPos.z - BeforePos.z) * LerpMove(Flame / EndFlame);
+		
+		if (Flame == EndFlame){
+			Flame = 0;
+			MoveFlag = false;
+		}
+	}
 
-		if (r== STransCubeGroundAttack) {
-	
+	if (stateFlag){
+		int rS = std::rand() % 2;
+		if (rS== STransCubeGroundAttack) {
 			TransCubeGroundAttackState* state = new TransCubeGroundAttackState();
 			ChangeState(state);
 		}
-		if (r == STransCubeRandBullet) {
-
-	
+		if (rS == STransCubeRandBullet) {
 			TransCubeRandBulletState* state = new  TransCubeRandBulletState();
 			ChangeState(state);
 		}
+
+		int rM = std::rand() % 4;
+		BeforePos.x = worldTransform.translation_.x;
+		BeforePos.z = worldTransform.translation_.z;
+
+		const Vector3 LeTopPos = { -60,0,60 };
+		const Vector3 RiTopPos = { 60,0,60 };
+		const Vector3 LeBomPos = { -60,0,-60 };
+		const Vector3 RiBomPos = { 60,0,-60 };
+
+		if (rM==0){
+			AfterPos = LeTopPos;
+		}
+		if (rM==1){
+			AfterPos = RiTopPos;
+		}
+		if (rM==2){
+			AfterPos = LeBomPos;
+		}
+		if (rM==3){
+			AfterPos = RiBomPos;
+		}
+		MoveFlag = true;
 		stateFlag = false;
 	}
 
@@ -65,23 +95,20 @@ void TransCube::Update()
 			return true;
 		}
 		return false;
-		});
+	});
+
 	bullets_.remove_if([](TransCubeBullet* bullet) {
 		if (bullet->IsDead()) {
 			delete bullet;
 			return true;
 		}
 		return false;
-		});
-
-
+	});
 
 	ReticlePosFanc();
 	worldTransform.UpdateMatrix();
 
 	state_->Update(this);
-
-	//BulletKill();
 
 	for (TransCubeBullet* bullet : bullets_)
 	{
@@ -227,4 +254,14 @@ void TransCube::BulletKill()
 {
 
 
+}
+
+float TransCube::LerpMove(float pos)
+{
+	float result;
+
+	result = pos < 0.5 ? 4 * pos * pos * pos : 1 - std::powf(-2.0f * pos + 2, 3) / 2.0f;
+
+    return result;
+	
 }

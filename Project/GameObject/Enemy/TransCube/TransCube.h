@@ -28,8 +28,8 @@ enum SStateChange
 	STransCubeGroundAttack = 1
 };
 
-class Player;
 
+class Player;
 class TransCube : public Collider
 {
 public:
@@ -70,6 +70,8 @@ private:
 	void ReticlePosFanc();
 	void BulletKill();
 
+	float LerpMove(float pos);
+
 	Model*model_;
 	WorldTransform worldTransform = {};
 
@@ -90,4 +92,9 @@ private:
 
 	bool stateFlag = true;
 
+	Vector3 BeforePos = {};
+	Vector3 AfterPos = {};
+	float Flame = 0;
+	float EndFlame = 180;
+	bool MoveFlag = false;
 };

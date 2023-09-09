@@ -42,7 +42,7 @@ void TransCubeGroundAttack::Update()
 		BulletTimer = 0;
 		DrawTimer++;
 		if (DrawTimer>=120){
-			//isDead_ = true;
+			isDead_ = true;
 		}
 	}
 	else{

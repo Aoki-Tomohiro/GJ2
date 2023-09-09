@@ -40,7 +40,7 @@ void TransCubeGroundAttackState::Deleate(TransCube* state)
 {
 	for (TransCubeGroundAttack* bullet : state->GetGroundBullets())
 	{
-		bullet->SetDead(true);
+		//bullet->SetDead(true);
 		//delete bullet;
     }
 }

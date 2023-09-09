@@ -97,7 +97,6 @@ void GameScene::Update(GameManager* gameManager) {
 	//追従カメラの更新
 	followCamera_->Update();
 
-
 	//衝突マネージャーのリストをクリア
 	collisionManager_->ClearColliderList();
 	SetCollisions();

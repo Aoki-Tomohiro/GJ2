@@ -181,6 +181,7 @@ void GameScene::SetCollisions()
 {
 	//自キャラ
 	collisionManager_->SetColliderList(player_.get());
+	collisionManager_->SetColliderListAABB(player_.get());
 	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets_) {
 		collisionManager_->SetColliderList(bullet.get());
 	}
@@ -190,4 +191,8 @@ void GameScene::SetCollisions()
 	for (TransCubeBullet* bullet : transCube_.get()->Getbullets()){
 		collisionManager_->SetColliderList(bullet);
 	}
+	for (TransCubeGroundAttack* bullet : transCube_.get()->GetGroundBullets()) {
+		collisionManager_->SetColliderListAABB(bullet);
+		
+    }
 }

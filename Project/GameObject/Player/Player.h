@@ -18,6 +18,7 @@ public:
 		kAttack,//攻撃状態
 		kDash,//ダッシュ状態
 		kJump,//ジャンプ状態
+		kBoxPush//箱を押してる状態
 	};
 
 	//ダッシュ用ワーク
@@ -98,8 +99,19 @@ public:
 	/// <returns></returns>
 	const Vector3& GetVelocity() { return velocity_; };
 
-private:
+	/// <summary>
+	/// 移動
+	/// </summary>
+	/// <param name="velocity"></param>
+	void Move(const Vector3& velocity) { worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, velocity); };
 
+	/// <summary>
+	/// ボックスを押しているかのフラグを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsBoxPush() { return isBoxPush_; };
+
+private:
 	/// <summary>
 	/// 通常行動初期化
 	/// </summary>
@@ -141,6 +153,16 @@ private:
 	void BehaviorJumpUpdate();
 
 	/// <summary>
+	/// 箱を押す状態の初期化
+	/// </summary>
+	void BehaviorBoxPushInitialize();
+
+	/// <summary>
+	/// 箱を押す状態の更新
+	/// </summary>
+	void BehaviorBoxPushUpdate();
+
+	/// <summary>
 	/// 発射処理
 	/// </summary>
 	/// <returns></returns>
@@ -175,5 +197,7 @@ private:
 	TransCube* transCube_ = nullptr;
 	//速度
 	Vector3 velocity_{};
+	//箱に触れているか
+	bool isBoxPush_ = false;
 };
 

@@ -24,6 +24,9 @@ void Player::Initialize(const std::vector<Model*> models) {
 }
 
 void Player::Update() {
+	//ボックスのフラグをfalseにする
+	isBoxPush_ = false;
+
 	//Behaviorの遷移処理
 	if (behaviorRequest_) {
 		//振る舞いを変更する
@@ -42,6 +45,9 @@ void Player::Update() {
 			break;
 		case Behavior::kJump:
 			BehaviorJumpInitialize();
+			break;
+		case Behavior::kBoxPush:
+			BehaviorBoxPushInitialize();
 			break;
 		}
 		//振る舞いリクエストをリセット
@@ -62,6 +68,9 @@ void Player::Update() {
 		break;
 	case Behavior::kJump:
 		BehaviorJumpUpdate();
+		break;
+	case Behavior::kBoxPush:
+		BehaviorBoxPushUpdate();
 		break;
 	}
 
@@ -96,7 +105,8 @@ Vector3 Player::GetWorldPosition() {
 }
 
 void Player::OnCollisionBox() {
-
+	isBoxPush_ = true;
+	behaviorRequest_ = Behavior::kBoxPush;
 }
 
 void Player::BehaviorRootInitialize() {
@@ -306,6 +316,55 @@ void Player::BehaviorJumpUpdate() {
 		worldTransformBase_.translation_.y = 0.0f;
 		behaviorRequest_ = Behavior::kRoot;
 	}
+}
+
+void Player::BehaviorBoxPushInitialize() {
+
+}
+
+void Player::BehaviorBoxPushUpdate() {
+	XINPUT_STATE joyState{};
+	if (Input::GetInstance()->GetJoystickState(joyState)) {
+		//しきい値
+		const float threshold = 0.7f;
+		//移動フラグ
+		bool isMoving = false;
+		//移動量
+		velocity_ = {
+			(float)joyState.Gamepad.sThumbLX / SHRT_MAX,
+			0.0f,
+			(float)joyState.Gamepad.sThumbLY / SHRT_MAX,
+		};
+
+		//スティックの押し込みが遊び範囲を超えていたら移動フラグをtureにする
+		if (Length(velocity_) > threshold) {
+			isMoving = true;
+		}
+
+		if (isMoving) {
+			//速さ
+			const float kSpeed = 0.2f;
+
+			//移動量に速さを反映
+			velocity_ = Multiply(Normalize(velocity_), kSpeed);
+
+			//移動ベクトルをカメラの角度だけ回転する
+			Matrix4x4 rotateMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
+			velocity_ = TransformNormal(velocity_, rotateMatrix);
+
+			//移動
+			worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, velocity_);
+
+			//目標角度の算出
+			destinationAngleY_ = std::atan2(velocity_.x, velocity_.z);
+		}
+	}
+
+	//移動方向に見た目を合わせる
+	worldTransformBase_.rotation_.y = LerpShortAngle(worldTransformBase_.rotation_.y, destinationAngleY_, 0.5f);
+
+	//通常状態に戻す
+	behaviorRequest_ = Behavior::kRoot;
 }
 
 void Player::Fire() {

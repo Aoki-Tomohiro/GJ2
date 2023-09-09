@@ -19,8 +19,48 @@ void BoxManager::Update() {
 		if (playerPos.x - 1.0f <= boxPos.x + 1.0f && playerPos.x + 1.0f >= boxPos.x - 1.0f &&
 			playerPos.y - 1.0f <= boxPos.y + 1.0f && playerPos.y + 1.0f >= boxPos.y - 1.0f &&
 			playerPos.z - 1.0f <= boxPos.z + 1.0f && playerPos.z + 1.0f >= boxPos.z - 1.0f) {
-			player_->OnCollisionBox();
-			box->OnCollision(player_->GetVelocity());
+			if (player_->GetIsBoxPush() == false) {
+				player_->OnCollisionBox();
+				box->OnCollisionPlayer(player_->GetVelocity());
+			}
+			//else {
+			//	Vector3 velocity = Normalize(Subtract(playerPos, boxPos));
+			//	float length = 2.0f - Length(Subtract(boxPos, playerPos));
+			//	velocity = Multiply(velocity, length);
+			//	player_->Move(velocity);
+			//}
+		}
+	}
+
+	//すべての箱の当たり判定
+	std::list<std::unique_ptr<Box>>::iterator itrA = boxs_.begin();
+	for (; itrA != boxs_.end(); ++itrA) {
+		Box* boxA = itrA->get();
+		Vector3 boxAPos = boxA->GetWorldPosition();
+		std::list<std::unique_ptr<Box>>::iterator itrB = itrA;
+		itrB++;
+		for (; itrB != boxs_.end(); ++itrB) {
+			Box* boxB = itrB->get();
+			Vector3 boxBPos = boxB->GetWorldPosition();
+
+			if (boxAPos.x - 1.0f <= boxBPos.x + 1.0f && boxAPos.x + 1.0f >= boxBPos.x - 1.0f &&
+				boxAPos.y - 1.0f <= boxBPos.y + 1.0f && boxAPos.y + 1.0f >= boxBPos.y - 1.0f &&
+				boxAPos.z - 1.0f <= boxBPos.z + 1.0f && boxAPos.z + 1.0f >= boxBPos.z - 1.0f) {
+				Vector3 boxAVelocity = Normalize(Subtract(boxAPos, boxBPos));
+				float boxALength = 2.0f - Length(Subtract(boxBPos, boxAPos));
+				boxAVelocity = Multiply(boxAVelocity, boxALength);
+				if (boxA->GetOnPlayer()) {
+					boxA->OnCollisionBox(boxAVelocity);
+					player_->Move(boxAVelocity);
+				}
+				Vector3 boxBVelocity = Normalize(Subtract(boxBPos, boxAPos));
+				float boxBLength = 2.0f - Length(Subtract(boxAPos, boxBPos));
+				boxBVelocity = Multiply(boxBVelocity, boxBLength);
+				if (boxB->GetOnPlayer()) {
+					boxB->OnCollisionBox(boxBVelocity);
+					player_->Move(boxBVelocity);
+				}
+			}
 		}
 	}
 

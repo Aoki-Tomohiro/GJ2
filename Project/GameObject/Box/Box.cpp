@@ -11,6 +11,7 @@ void Box::Initialize() {
 }
 
 void Box::Update() {
+	onPlayer_ = false;
 	//ワールドトランスフォームの更新
 	worldTransform_.UpdateMatrix();
 }
@@ -30,6 +31,11 @@ Vector3 Box::GetWorldPosition() {
 	return worldPos;
 }
 
-void Box::OnCollision(const Vector3& move) {
-	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
+void Box::OnCollisionPlayer(const Vector3& velocity) {
+	onPlayer_ = true;
+	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity);
+}
+
+void Box::OnCollisionBox(const Vector3& velocity) {
+	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity);
 }

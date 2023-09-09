@@ -27,14 +27,29 @@ public:
 	Vector3 GetWorldPosition();
 
 	/// <summary>
-	/// 衝突判定
+	/// 自キャラとの当たり判定
 	/// </summary>
-	void OnCollision(const Vector3& move);
+	/// <param name="move"></param>
+	void OnCollisionPlayer(const Vector3& velocity);
+
+	/// <summary>
+	/// 箱との当たり判定
+	/// </summary>
+	/// <param name="onPlayer"></param>
+	/// <param name="velocity"></param>
+	void OnCollisionBox(const Vector3& velocity);
+
+	/// <summary>
+	/// 自機と触れているかのフラグを取得
+	/// </summary>
+	bool GetOnPlayer() { return onPlayer_; };
 
 private:
 	//箱のモデル
 	std::unique_ptr<Model> model_ = nullptr;
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_{};
+	//
+	bool onPlayer_ = false;
 };
 

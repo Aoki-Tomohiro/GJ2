@@ -54,6 +54,7 @@ public:
 	std::list<TransCubeBullet*>Getbullets() { return bullets_; }
 	std::list<TransCubeGroundAttack*>&GetGroundBullets() { return GroundBullets_; }
 
+
 	void SetWorldTransform(WorldTransform w) { worldTransform = w; }
 	void SetPlayer(Player* player) { player_ = player; }
 	void Setbullet(std::list<TransCubeBullet*>bullets) { bullets_ = bullets; }

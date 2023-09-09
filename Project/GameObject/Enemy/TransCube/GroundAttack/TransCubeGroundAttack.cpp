@@ -30,6 +30,14 @@ void TransCubeGroundAttack::Initialize(Vector3 position)
 	worldTransformBullet_.translation_ = position;
 	worldTransformBulletGround_.translation_.y = 0.1f;
 	worldTransformBullet_.translation_.y = -10.0f;
+
+	//衝突属性を設定
+	SetCollisionAttribute(kCollisionAttributeEnemyBullet);
+	//衝突対象を自分の属性以外に設定
+	SetCollisionMask(kCollisionMaskEnemyBullet);
+	AABB AABBBulletSizeSet = { { -1.0f,-4.0f,-1.0f } ,{ 1.0f,4.0f,1.0f } };
+
+	SetAABB(AABBBulletSizeSet);
 }
 
 void TransCubeGroundAttack::Update()
@@ -57,4 +65,20 @@ void TransCubeGroundAttack::Update()
 void TransCubeGroundAttack::Draw(ViewProjection view){
 	BulletGround_->Draw(worldTransformBulletGround_, view);
 	Bullet_->Draw(worldTransformBullet_, view);
+}
+
+Vector3 TransCubeGroundAttack::GetWorldPosition()
+{
+	Vector3 result;
+	 
+	result.x = worldTransformBullet_.matWorld_.m[3][0];
+	result.y = worldTransformBullet_.matWorld_.m[3][1];
+	result.z = worldTransformBullet_.matWorld_.m[3][2];
+	return result;
+
+}
+
+void TransCubeGroundAttack::OnCollision()
+{
+
 }

@@ -2,8 +2,10 @@
 #include"Model/Model.h"
 //#include"../GameObject/Enemy/TransCube/TransCube.h"
 #include"../GameObject/Player/Player.h"
+#include"CollisionManager/Collider.h"
+#include"CollisionManager/CollisionConfig.h"
 
-class TransCubeGroundAttack
+class TransCubeGroundAttack :public Collider
 {
 public:
 	TransCubeGroundAttack();
@@ -18,6 +20,8 @@ public:
 	bool IsDead() const { return isDead_; }
 	void SetDead(bool Flag) { isDead_ = Flag; }
 
+	Vector3 GetWorldPosition()override;
+	void OnCollision()override;
 
 private:
 

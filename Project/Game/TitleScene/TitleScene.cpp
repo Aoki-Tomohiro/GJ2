@@ -86,7 +86,8 @@ void TitleScene::Update(GameManager* gameManager) {
 	//スペースでステージ選択へ
 	//今はそのままゲームシーンへ
 	if (input_->IsPushKeyEnter(DIK_SPACE)) {
-		gameManager->ChangeScene(new SelectScene());
+		//gameManager->ChangeScene(new SelectScene());
+		sprite_->SetColor({ 1.0f,1.0f,1.0f,0.0f });
 	}
 	
 

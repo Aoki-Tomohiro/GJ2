@@ -29,6 +29,11 @@ struct Matrix4x4 {
 	float m[4][4];
 };
 
+struct AABB {
+	Vector3 min;
+	Vector3 max;
+};
+
 //struct Transform {
 //	Vector3 scale;
 //	Vector3 rotate;

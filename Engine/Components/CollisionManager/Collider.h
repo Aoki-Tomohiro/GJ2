@@ -28,6 +28,18 @@ public:
 	void SetRadius(float radius) { radius_ = radius; };
 
 	/// <summary>
+	/// AABBのサイズを取得
+	/// </summary>
+	/// <returns></returns>
+	AABB GetAABB() { return aabb_; };
+
+	/// <summary>
+	/// AABBのサイズを設定
+	/// </summary>
+	/// <param name="aabb"></param>
+	void SetAABB(AABB& aabb) { aabb_ = aabb; };
+
+	/// <summary>
 	/// 衝突属性(自分)を取得
 	/// </summary>
 	/// <returns></returns>
@@ -54,6 +66,8 @@ public:
 private:
 	//衝突半径
 	float radius_ = 1.0f;
+	//AABB
+	AABB aabb_{ {-1.0f,-1.0f,-1.0f},{1.0f,1.0f,1.0f} };
 	//衝突属性(自分)
 	uint32_t collisionAttribute_ = 0xffffffff;
 	//衝突マスク(相手)

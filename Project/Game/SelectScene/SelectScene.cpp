@@ -137,28 +137,43 @@ void SelectScene::Update(GameManager* gameManager) {
 	else {
 	}
 
-	cursorSprite_->SetTranslation({ cursorPosition.x,cursorPosition.y });
 
 	ImGui::Begin("Select");
 	ImGui::Text("Select");
 	ImGui::Text("Space To GameScene");
 	ImGui::Text("SelectKey Left Or Right");
-	
 
 	
 	//2つ用意で
 	if (input_->IsPushKeyEnter(DIK_SPACE)) {
 		gameManager->ChangeScene(new GameScene());
+		//GameSceneに行くときに引っかかる
 	}
 
 	//左右キーで移動
 	if (input_->IsPushKeyEnter(DIK_RIGHT)) {
-		cursorSprite_->SetTranslation({ cursorPosition.x + WIDTH_INTERVAL_,cursorPosition.y });
 		ImGui::Text("Right");
+		//中にGetterを入れたら大丈夫だった
+		if (cursorSprite_->GetTranslation().x < stageIconPosition[1].x) {
+			cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x+ WIDTH_INTERVAL_,cursorPosition.y });
+		
+		}
+		else{
+			cursorSprite_->SetTranslation(cursorSprite_->GetTranslation());
+		}
+		
 	}
 	if (input_->IsPushKeyEnter(DIK_LEFT)) {
-		cursorSprite_->SetTranslation({ cursorPosition.x - WIDTH_INTERVAL_,cursorPosition.y });
 		ImGui::Text("Left");
+
+		if (cursorSprite_->GetTranslation().x > 400.0f) {
+			cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x - WIDTH_INTERVAL_,cursorPosition.y });
+		}
+		else{
+			cursorSprite_->SetTranslation(cursorSprite_->GetTranslation());
+		}
+		
+
 	}
 	ImGui::End();
 

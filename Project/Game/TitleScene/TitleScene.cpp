@@ -83,6 +83,8 @@ void TitleScene::Update(GameManager* gameManager) {
 
 	XINPUT_STATE joyState{};
 
+	if(!Input)
+
 	//スペースでステージ選択へ
 	//今はそのままゲームシーンへ
 	if (input_->IsPushKeyEnter(DIK_SPACE)) {

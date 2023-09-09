@@ -19,9 +19,12 @@ void TransCube::Initialize()
 	worldTransform.translation_ = { 0,0,0 };
 	model_->CreateFromOBJ("Project/Resources/EnemyObj/TransCube", "TransCube.obj");
 	
-	state_ =new TransCubeGroundAttackState();
-	state_->Initialize(this);
+	TransCubeGroundAttackState* state = new TransCubeGroundAttackState();
+	state_ = state;
+	state->Initialize(this);
+	stateFlag = false;
 	
+
 	input = Input::GetInstance();
 
 	//衝突属性を設定
@@ -36,15 +39,33 @@ void TransCube::Update()
 	ImGui::Begin("TransCube");
 	ImGui::SliderFloat3("translate", &worldTransform.translation_.x, -10, 10);
 	ImGui::Checkbox("state",&stateFlag);
-	if (stateFlag)
-	{
-	    TransCubeRandBulletState* state = new  TransCubeRandBulletState();
-		ChangeState(state);
-		//stateFlag = false;
-	}
 
 	ImGui::End();
 
+	if (stateFlag){
+		int r = std::rand() % 2;
+
+		if (r== STransCubeGroundAttack) {
+	
+			TransCubeGroundAttackState* state = new TransCubeGroundAttackState();
+			ChangeState(state);
+		}
+		if (r == STransCubeRandBullet) {
+
+	
+			TransCubeRandBulletState* state = new  TransCubeRandBulletState();
+			ChangeState(state);
+		}
+		stateFlag = false;
+	}
+
+	GroundBullets_.remove_if([](TransCubeGroundAttack* GroundBullet) {
+		if (GroundBullet->IsDead()) {
+			delete GroundBullet;
+			return true;
+		}
+		return false;
+		});
 	bullets_.remove_if([](TransCubeBullet* bullet) {
 		if (bullet->IsDead()) {
 			delete bullet;
@@ -53,13 +74,7 @@ void TransCube::Update()
 		return false;
 		});
 
-	GroundBullets_.remove_if([](TransCubeGroundAttack* bullet) {
-		if (bullet->IsDead()) {
-			delete bullet;
-			return true;
-		}
-		return false;
-	});
+
 
 	ReticlePosFanc();
 	worldTransform.UpdateMatrix();

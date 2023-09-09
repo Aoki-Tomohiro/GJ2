@@ -17,6 +17,8 @@ public:
 
 	bool IsDead() const { return isDead_; }
 	void SetDead(bool Flag) { isDead_ = Flag; }
+
+
 private:
 
 	Model* BulletGround_;
@@ -27,5 +29,7 @@ private:
 
 	bool isDead_ = false;
 
+	int32_t BulletTimer = 0;
+	int32_t DrawTimer = 0;
 };
 

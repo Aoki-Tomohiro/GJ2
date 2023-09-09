@@ -8,6 +8,8 @@
 #include"../GameObject/Enemy/TransCube/GroundAttack/TransCubeGroundAttack.h"
 
 #include"ImGuiManager/ImGuiManager.h"
+#include<random>
+
 struct TransCubeReticle
 {
 	Vector3 Left = {};
@@ -20,6 +22,11 @@ struct TransCubeReticle
 	WorldTransform BworldTransform = {};
 };
 
+enum SStateChange
+{
+	STransCubeRandBullet = 0,
+	STransCubeGroundAttack = 1
+};
 
 class Player;
 
@@ -56,6 +63,8 @@ public:
 
 	void PushBackGroundBullet(Vector3 pos);
 
+	void StateFlag(bool Flag) { stateFlag = Flag; }
+
 private:
 
 	void ReticlePosFanc();
@@ -79,6 +88,6 @@ private:
 	Input* input = nullptr;
 	Player *player_ = nullptr;
 
-	bool stateFlag = false;
+	bool stateFlag = true;
 
 };

@@ -65,6 +65,10 @@ void TransCubeRandBulletState::Update(TransCube* state)
 	{
 		rotateSpeed -= rotateSpeed * 0.02f;
 	}
+	if (ModeTimer>1500)
+	{
+		state->StateFlag(true);
+	}
 	
 }
 

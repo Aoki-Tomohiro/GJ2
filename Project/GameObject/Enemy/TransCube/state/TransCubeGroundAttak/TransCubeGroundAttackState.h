@@ -21,7 +21,10 @@ public:
 
 private:
 
+	void Fire(TransCube* state);
 
+	int32_t CoolTime = 0;
+	int32_t BulletCount = 0;
 
 };
 

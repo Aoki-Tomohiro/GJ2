@@ -359,9 +359,6 @@
     <ClInclude Include="Project\GameObject\Box\BoxManager.h">
       <Filter>ヘッダー ファイル\Project\GameObject\Box</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\LoadTestObject\LoadTestObject.h">
-      <Filter>ソース ファイル\Project\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="Project\GameObject\Enemy\TransCube\TransCube.h">
       <Filter>ソース ファイル\Project\GameObject\TransCube</Filter>
     </ClInclude>

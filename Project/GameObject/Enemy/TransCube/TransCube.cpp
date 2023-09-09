@@ -7,7 +7,16 @@ TransCube::TransCube()
 
 TransCube::~TransCube()
 {
-	state_->Deleate(this);;
+	//state_->Deleate(this);;
+	for (TransCubeBullet* bullet : bullets_){
+		delete bullet;
+    }
+
+	for (TransCubeGroundAttack* bullet : GroundBullets_)
+	{
+		delete bullet;
+	}
+	delete state_;
 	delete model_;
 }
 

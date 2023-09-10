@@ -90,8 +90,22 @@ private:
 	uint32_t backToTitleTexture_ = 0u;
 		
 	
+	//黒色の背景
+	Sprite* backSprite_ = nullptr;
+	uint32_t backTextureHandle_ = 0u;
 
-	
+	//Trigger専用のタイマー
+	int32_t triggerButtonBTime_ = 0;
+	float_t fadeOutTime_ = 0;
+
+	//FadeOut用
+	bool isFadeOutMode_ = false;
+	float COLOR_BIND = 1.0f;
+	Vector4 transparency_ = { 0.0f,0.0f,0.0f,0.0f };
+	float fadeOutInterval_ = 0.0f;
+
+	const int SECOND_ = 60;
+	int32_t loadingTime = 0;
 
 
 };

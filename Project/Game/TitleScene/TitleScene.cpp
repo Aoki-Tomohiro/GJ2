@@ -17,6 +17,7 @@ TitleScene::TitleScene() {
 /// </summary>
 TitleScene::~TitleScene() {
 	delete sprite_;
+	delete backSprite_;
 }
 
 /// <summary>
@@ -37,14 +38,36 @@ void TitleScene::Initialize(GameManager* gameManager) {
 	debugCamera_ = new DebugCamera();
 
 
-	sprite_ = new Sprite();
+	//Timer系の変数
+	triggerButtonBTime_ = 0;
+	fadeOutTime_ = 0;
+	isFadeOutMode_ = false;
+
+	//透明度
+	COLOR_BIND = 1.0f;
+	transparency_ = { COLOR_BIND,COLOR_BIND,COLOR_BIND,0.0f };
+	fadeOutInterval_ = 10.0 / 256.0f;
+
+
+	const int SECOND_ = 60;
+	int32_t loadingTime = 0;
+
 
 	//スプライトの初期化
+	backSprite_ = new Sprite();
 	position_ = { 0.0f,0.0f };
+	backTextureHandle_ = textureManager_->Load("Project/Resources/Black/BlackTexture.png");
+	backSprite_->Create(backTextureHandle_, position_);
+	
+	sprite_ = new Sprite();
+	
 	textureHandle_=textureManager_->Load("Project/Resources/Title/TitleLogo/TitleLogo.png");
 
 	sprite_->Create(textureHandle_, position_);
 	
+
+
+
 }
 
 /// <summary>
@@ -79,18 +102,43 @@ void TitleScene::Update(GameManager* gameManager) {
 	ImGui::Begin("Title");
 	ImGui::Text("Title");
 	ImGui::Text("Space To SlectScene");
+	ImGui::InputFloat4("Transparency", &transparency_.x);
 	ImGui::End();
 
 	XINPUT_STATE joyState{};
 
-	if(!Input)
+	if (Input::GetInstance()->GetJoystickState(joyState)) {
 
-	//スペースでステージ選択へ
-	//今はそのままゲームシーンへ
-	if (input_->IsPushKeyEnter(DIK_SPACE)) {
-		//gameManager->ChangeScene(new SelectScene());
-		sprite_->SetColor({ 1.0f,1.0f,1.0f,0.0f });
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+			triggerButtonBTime_ += 1;
+			
+		}
+		
 	}
+
+	//トリガー代わり
+	if (triggerButtonBTime_ == 1) {
+		isFadeOutMode_ = true;
+			
+	}
+
+	if (isFadeOutMode_ == true) {
+		transparency_.w += fadeOutInterval_;
+		
+
+		///ローディング
+		if (transparency_.w >= 1.0f) {
+			loadingTime += 1;
+		}
+	}
+	//スプライトの透明度をここで設定
+	backSprite_->SetColor({COLOR_BIND,COLOR_BIND,COLOR_BIND,transparency_.w});
+		
+	if (loadingTime > SECOND_ * 3) {
+		gameManager->ChangeScene(new SelectScene());	
+	}
+		
+	
 	
 
 
@@ -100,12 +148,9 @@ void TitleScene::Update(GameManager* gameManager) {
 /// 描画
 /// </summary>
 void TitleScene::Draw(GameManager* gameManager) {
-	//Skydome
-	//modelSkydome_->Draw(worldTransform_, viewProjection_);
-
-
 	sprite_->Draw();
 
+	backSprite_->Draw();
 }
 
 

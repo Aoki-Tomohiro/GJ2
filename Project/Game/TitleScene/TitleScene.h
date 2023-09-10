@@ -61,8 +61,12 @@ private:
 	ViewProjection viewProjection_{};
 
 	//Skydome
-	std::unique_ptr<Model> modelSkydome_ = nullptr;
 	WorldTransform worldTransform_{};
+
+
+	//黒色の背景
+	Sprite* backSprite_ = nullptr;
+	uint32_t backTextureHandle_ = 0u;
 
 
 	//タイトル画面の画像
@@ -74,5 +78,17 @@ private:
 	//位置
 	Vector2 position_ = {};
 
+	//Trigger専用のタイマー
+	int32_t triggerButtonBTime_ = 0;
+	float_t fadeOutTime_ = 0;
+
+	//FadeOut用
+	bool isFadeOutMode_ = false;
+	float COLOR_BIND = 1.0f;
+	Vector4 transparency_ = { 0.0f,0.0f,0.0f,0.0f };
+	float fadeOutInterval_ = 0.0f;
+
+	const int SECOND_ = 60;
+	int32_t loadingTime = 0;
 
 };

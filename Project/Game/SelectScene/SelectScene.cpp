@@ -19,7 +19,7 @@ SelectScene::~SelectScene() {
 	delete sprite_;
 
 	
-
+	delete backSprite_;
 	
 	delete stageIconSprite_[0];
 	delete stageIconSprite_[1];
@@ -63,10 +63,33 @@ void SelectScene::Initialize(GameManager* gameManager) {
 	
 
 	//スプライトの初期化
+	//Fade用
+	backSprite_ = new Sprite();
+	backTextureHandle_ = textureManager_->Load("Project/Resources/Black/BlackTexture.png");
+	Vector2 backTexturePosition = { 0.0f,0.0f };
+	backSprite_->Create(backTextureHandle_, backTexturePosition);
+
 	
-	
-	
+
+	//Timer系の変数
+	triggerButtonBTime_ = 0;
+	fadeOutTime_ = 0;
+	isFadeOutMode_ = false;
+
+	//透明度
+	COLOR_BIND = 1.0f;
+	transparency_ = { COLOR_BIND,COLOR_BIND,COLOR_BIND,0.0f };
+	fadeOutInterval_ = 10.0 / 256.0f;
+
+
+	const int SECOND_ = 60;
+	int32_t loadingTime = 0;
+
+
+
+
 	//背景的なスプライト
+	//敵のシルエットが描かれているのが良いかも
 	sprite_ = new Sprite();
 	textureHandle_=textureManager_->Load("Project/Resources/Select/Select.png");
 	Vector2 position_ = {0.0f,0.0f};
@@ -147,8 +170,44 @@ void SelectScene::Update(GameManager* gameManager) {
 	//2つ用意で
 	if (input_->IsPushKeyEnter(DIK_SPACE)) {
 		gameManager->ChangeScene(new GameScene());
-		//GameSceneに行くときに引っかかる
 	}
+
+	XINPUT_STATE joyState{};
+
+	if (Input::GetInstance()->GetJoystickState(joyState)) {
+
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+			triggerButtonBTime_ += 1;
+			
+		}
+		
+	}
+
+	//トリガー代わり
+	if (triggerButtonBTime_ == 1) {
+		isFadeOutMode_ = true;
+			
+	}
+
+	if (isFadeOutMode_ == true) {
+		transparency_.w += fadeOutInterval_;
+		
+
+		///完全に暗くなるとローディングへ
+		if (transparency_.w >= 1.0f) {
+			loadingTime += 1;
+		}
+	}
+	//スプライトの透明度をここで設定
+	backSprite_->SetColor({COLOR_BIND,COLOR_BIND,COLOR_BIND,transparency_.w});
+	
+	//Loading
+	if (loadingTime > SECOND_ * 3) {
+		gameManager->ChangeScene(new GameScene());	
+	}
+		
+	
+
 
 	//左右キーで移動
 	if (input_->IsPushKeyEnter(DIK_RIGHT)) {
@@ -197,8 +256,13 @@ void SelectScene::Draw(GameManager* gameManager) {
 	backToTitleSprite_->Draw();
 	
 	//カーソル
-	//一番後ろに描画しないと見えない
+	//後ろに描画しないと見えない
 	cursorSprite_->Draw();
+
+
+	//Fade用
+	backSprite_->Draw();
+
 }
 
 

@@ -115,6 +115,9 @@
     <Filter Include="ソース ファイル\Project\GameObject\TransCube\TransCubeGroundBullet">
       <UniqueIdentifier>{9c359feb-5c6c-49f1-9af8-12e6d99bf920}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Project\GameObject\Robot">
+      <UniqueIdentifier>{d6f8f5ab-9a8b-462c-90eb-2797441405a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -239,6 +242,9 @@
     </ClCompile>
     <ClCompile Include="Project\GameObject\Enemy\TransCube\GroundAttack\TransCubeGroundAttack.cpp">
       <Filter>ソース ファイル\Project\GameObject\TransCube\TransCubeGroundBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Enemy\Robot\EnemyRobot.cpp">
+      <Filter>ソース ファイル\Project\GameObject\Robot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -376,6 +382,9 @@
     </ClInclude>
     <ClInclude Include="Project\GameObject\Enemy\TransCube\GroundAttack\TransCubeGroundAttack.h">
       <Filter>ソース ファイル\Project\GameObject\TransCube\TransCubeGroundBullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\Robot\EnemyRobot.h">
+      <Filter>ソース ファイル\Project\GameObject\Robot</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

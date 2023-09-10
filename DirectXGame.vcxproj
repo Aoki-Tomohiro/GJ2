@@ -119,6 +119,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Project\GameObject\Box\Box.cpp" />
     <ClCompile Include="Project\GameObject\Box\BoxManager.cpp" />
+    <ClCompile Include="Project\GameObject\Enemy\Robot\EnemyRobot.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\TransCube\GroundAttack\TransCubeGroundAttack.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\TransCube\RandBullet\TransCubeBullet.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\TransCube\state\ITransCubeState.cpp" />
@@ -165,6 +166,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Math\MathFunction.h" />
     <ClInclude Include="Project\GameObject\Box\Box.h" />
     <ClInclude Include="Project\GameObject\Box\BoxManager.h" />
+    <ClInclude Include="Project\GameObject\Enemy\Robot\EnemyRobot.h" />
     <ClInclude Include="Project\GameObject\Enemy\TransCube\GroundAttack\TransCubeGroundAttack.h" />
     <ClInclude Include="Project\GameObject\Enemy\TransCube\RandBullet\TransCubeBullet.h" />
     <ClInclude Include="Project\GameObject\Enemy\TransCube\state\ITransCubeState.h" />

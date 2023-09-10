@@ -425,6 +425,8 @@ Model::ModelData Model::LoadObjFile(const std::string& directoryPath, const std:
 		}
 	}
 	modelData.modelName = filename;
+	//ファイルを閉じる
+	file.close();
 	return modelData;
 }
 

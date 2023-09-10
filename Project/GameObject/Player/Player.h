@@ -15,6 +15,8 @@ class Player : public Collider{
 public:
 	//強化状態の時間
 	static const int kEnhancedStateTime = 60 * 10;
+	//無敵時間
+	static const int kInvincibleTime = 60;
 
 	enum class Behavior {
 		kRoot,//通常状態
@@ -53,6 +55,11 @@ public:
 	/// </summary>
 	/// <param name="viewProjection"></param>
 	void Draw(const ViewProjection& viewProjection);
+
+	/// <summary>
+	/// スプライトの描画
+	/// </summary>
+	void DrawUI();
 
 	/// <summary>
 	/// 衝突判定
@@ -174,6 +181,16 @@ private:
 	/// <returns></returns>
 	void Fire();
 
+	/// <summary>
+	/// 体力ゲージの更新
+	/// </summary>
+	void UpdateLife();
+
+	/// <summary>
+	/// 無敵時間の更新
+	/// </summary>
+	void UpdateInvincible();
+
 private:
 	//モデル
 	std::vector<Model*> models_{};
@@ -208,5 +225,16 @@ private:
 	//強化状態
 	bool isEnhancedState_ = false;
 	int32_t enhancedStateTimer_ = 0;
+	//体力
+	int32_t playerLife_ = 5;
+	//無敵時間
+	bool isInvincible_ = false;
+	int32_t invincibleTimer_ = 0;
+	//体力のスプライト
+	uint32_t textureHandleHP1_ = 0;
+	uint32_t textureHandleHP2_ = 0;
+	std::unique_ptr<Sprite> spriteHP1_ = nullptr;
+	std::unique_ptr<Sprite> spriteHP2_ = nullptr;
+	Vector2 spriteScale_{ 1.0f,1.0f };
 };
 

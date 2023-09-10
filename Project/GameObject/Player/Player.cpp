@@ -18,6 +18,13 @@ void Player::Initialize(const std::vector<Model*> models) {
 	worldTransformR_arm_.parent_ = &worldTransformBody_;
 	worldTransformR_arm_.translation_.x = 0.5f;
 	worldTransformR_arm_.translation_.y = 1.8f;
+	//スプライトの作成
+	textureHandleHP1_ = TextureManager::GetInstance()->Load("Project/Resources/PlayerHP1.png");
+	textureHandleHP2_ = TextureManager::GetInstance()->Load("Project/Resources/PlayerHP2.png");
+	spriteHP1_ = std::make_unique<Sprite>();
+	spriteHP1_->Create(textureHandleHP1_, { 50.0f,652.0f });
+	spriteHP2_ = std::make_unique<Sprite>();
+	spriteHP2_->Create(textureHandleHP2_, { 52.0f,654.0f });
 	//衝突属性を設定
 	SetCollisionAttribute(kCollisionAttributePlayer);
 	//衝突対象を自分の属性以外に設定
@@ -83,9 +90,16 @@ void Player::Update() {
 	worldTransformL_arm_.UpdateMatrix();
 	worldTransformR_arm_.UpdateMatrix();
 
+	//体力ゲージの更新
+	UpdateLife();
+
+	//無敵時間の処理
+	UpdateInvincible();
+
 	ImGui::Begin("Player");
 	ImGui::Checkbox("isEnhanced", &isEnhancedState_);
 	ImGui::Text("enhancedTimer : %d", enhancedStateTimer_);
+	ImGui::DragFloat2("Sprite : uvScale", &spriteScale_.x, 0.001f);
 	ImGui::End();
 }
 
@@ -97,8 +111,17 @@ void Player::Draw(const ViewProjection& viewProjection) {
 	models_[3]->Draw(worldTransformR_arm_, viewProjection);
 }
 
-void Player::OnCollision() {
+void Player::DrawUI() {
+	spriteHP1_->Draw();
+	spriteHP2_->Draw();
+}
 
+void Player::OnCollision() {
+	if (isInvincible_ == false) {
+		isInvincible_ = true;
+		invincibleTimer_ = kInvincibleTime;
+		playerLife_--;
+	}
 }
 
 Vector3 Player::GetWorldPosition() {
@@ -428,5 +451,38 @@ void Player::Fire() {
 
 		// 弾を登録する
 		gameScene_->AddPlayerBullet(newBullet);
+	}
+}
+
+void Player::UpdateLife() {
+	switch (playerLife_) {
+	case 0:
+		spriteScale_.x = Lerp(spriteScale_.x, 0.0f, 0.1f);
+		spriteHP2_->SetScale(spriteScale_);
+		break;
+	case 1:
+		spriteScale_.x = Lerp(spriteScale_.x, 0.2f, 0.1f);
+		spriteHP2_->SetScale(spriteScale_);
+		break;
+	case 2:
+		spriteScale_.x = Lerp(spriteScale_.x, 0.4f, 0.1f);
+		spriteHP2_->SetScale(spriteScale_);
+		break;
+	case 3:
+		spriteScale_.x = Lerp(spriteScale_.x, 0.6f, 0.1f);
+		spriteHP2_->SetScale(spriteScale_);
+		break;
+	case 4:
+		spriteScale_.x = Lerp(spriteScale_.x, 0.8f, 0.1f);
+		spriteHP2_->SetScale(spriteScale_);
+		break;
+	}
+}
+
+void Player::UpdateInvincible() {
+	if (isInvincible_) {
+		if (--invincibleTimer_ <= 0) {
+			isInvincible_ = false;
+		}
 	}
 }

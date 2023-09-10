@@ -24,6 +24,13 @@ void TextureManager::Initialize() {
 }
 
 uint32_t TextureManager::Load(const std::string& filePath) {
+	//すでに読み込んでいるテクスチャの場合
+	for (Texture texture : textures_) {
+		if (texture.textureName == filePath) {
+			return texture.srvIndex;
+		}
+	}
+
 	//srvIndexをインクリメント
 	srvIndex_++;
 	//テクスチャファイルを読んでプログラムを扱えるようにする
@@ -44,6 +51,11 @@ uint32_t TextureManager::Load(const std::string& filePath) {
 
 	//SRVの作成
 	TextureManager::CreateShaderResourceView(textures_[srvIndex_].resource, metadata, srvIndex_);
+
+	//テクスチャの名前を保存
+	textures_[srvIndex_].textureName = filePath;
+	//テクスチャのsrvIndexを保存
+	textures_[srvIndex_].srvIndex = srvIndex_;
 
 	return srvIndex_;
 }

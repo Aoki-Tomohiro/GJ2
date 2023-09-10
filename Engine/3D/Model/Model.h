@@ -27,6 +27,7 @@ public:
 	struct ModelData {
 		std::vector<VertexData> vertices;
 		MaterialData material;
+		std::string modelName;
 	};
 
 	/// <summary>
@@ -142,10 +143,10 @@ private:
 	static Microsoft::WRL::ComPtr<ID3D12PipelineState> sPipelineState_;
 	//コマンドリスト
 	static ID3D12GraphicsCommandList* sCommandList_;
+	//モデルデータ
+	static std::list<ModelData> modelDatas_;
 	//ライティング
 	std::unique_ptr<DirectionalLight> directionalLight_ = nullptr;
-	//モデルデータ
-	ModelData modelData_;
 	//メッシュ
 	std::unique_ptr<Mesh> vertex_ = nullptr;
 	//マテリアル

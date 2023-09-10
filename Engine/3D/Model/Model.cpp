@@ -12,6 +12,8 @@ Microsoft::WRL::ComPtr<ID3D12RootSignature> Model::sRootSignature_;
 Microsoft::WRL::ComPtr<ID3D12PipelineState> Model::sPipelineState_;
 //コマンドリスト
 ID3D12GraphicsCommandList* Model::sCommandList_;
+//モデルデータ
+std::list<Model::ModelData> Model::modelDatas_{};
 
 void Model::Initialize() {
 	//DxcCompilerの初期化
@@ -316,22 +318,43 @@ void Model::CreateSphere() {
 }
 
 void Model::CreateFromOBJ(const std::string& directoryPath, const std::string& filename) {
-	//DirectionalLightの作成
-	directionalLight_ = std::make_unique<DirectionalLight>();
-	directionalLight_->Initialize();
+	//すでに読み込んだモデルの場合
+	for (ModelData modelData : modelDatas_) {
+		if (modelData.modelName == filename) {
+			//メッシュの作成
+			vertex_ = std::make_unique<Mesh>();
+			vertex_->Create(modelData.vertices);
+			//マテリアルの作成
+			material_ = std::make_unique<Material>();
+			material_->Create();
+			//行列の作成
+			transformationMatrix_ = std::make_unique<TransformationMatrix>();
+			transformationMatrix_->Initialize();
+			//DirectionalLightの作成
+			directionalLight_ = std::make_unique<DirectionalLight>();
+			directionalLight_->Initialize();
+			//テクスチャの読み込み
+			textureHandle_ = TextureManager::GetInstance()->Load(modelData.material.textureFilePath);
+			return;
+		}
+	}
 	//モデルの読み込み
-	modelData_ = Model::LoadObjFile(directoryPath, filename);
+	ModelData modelData = Model::LoadObjFile(directoryPath, filename);
+	modelDatas_.push_back(modelData);
 	//メッシュの作成
 	vertex_ = std::make_unique<Mesh>();
-	vertex_->Create(modelData_.vertices);
+	vertex_->Create(modelData.vertices);
 	//マテリアルの作成
 	material_ = std::make_unique<Material>();
 	material_->Create();
 	//行列の作成
 	transformationMatrix_ = std::make_unique<TransformationMatrix>();
 	transformationMatrix_->Initialize();
+	//DirectionalLightの作成
+	directionalLight_ = std::make_unique<DirectionalLight>();
+	directionalLight_->Initialize();
 	//テクスチャの読み込み
-	textureHandle_ = TextureManager::GetInstance()->Load(modelData_.material.textureFilePath);
+	textureHandle_ = TextureManager::GetInstance()->Load(modelData.material.textureFilePath);
 }
 
 Model::ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string& filename) {
@@ -401,6 +424,7 @@ Model::ModelData Model::LoadObjFile(const std::string& directoryPath, const std:
 			modelData.material = LoadMaterialTemplateFile(directoryPath, materialFilename);
 		}
 	}
+	modelData.modelName = filename;
 	return modelData;
 }
 

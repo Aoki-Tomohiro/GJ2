@@ -151,7 +151,7 @@ void GameScene::Draw(GameManager* gameManager) {
 		bullet->Draw(viewProjection_);
 	}
 	//敵キャラの描画
-	transCube_->Draw(viewProjection_);
+	//transCube_->Draw(viewProjection_);
 	//箱の描画
 	boxManager_->Draw(viewProjection_);
 	//地面の描画

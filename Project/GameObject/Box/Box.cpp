@@ -5,12 +5,31 @@ void Box::Initialize() {
 	model_ = std::make_unique<Model>();
 	model_->CreateSphere();
 	//ワールドトランスフォームの初期化
-	worldTransform_.translation_.x = float(rand() % 101 - 50);
-	worldTransform_.translation_.y = 1.0f;
-	worldTransform_.translation_.z = float(rand() % 101 - 50);
+	int posNum = rand() % 4;
+	if (posNum == kLeftTop) {
+		worldTransform_.translation_.x = float(rand() % 21 - 10) - 40.0f;
+		worldTransform_.translation_.y = 1.0f;
+		worldTransform_.translation_.z = float(rand() % 21 - 10) + 40.0f;
+	}
+	else if (posNum == kRightTop) {
+		worldTransform_.translation_.x = float(rand() % 21 - 10) + 40.0f;
+		worldTransform_.translation_.y = 1.0f;
+		worldTransform_.translation_.z = float(rand() % 21 - 10) + 40.0f;
+	}
+	else if (posNum == kLeftBottom) {
+		worldTransform_.translation_.x = float(rand() % 21 - 10) - 40.0f;
+		worldTransform_.translation_.y = 1.0f;
+		worldTransform_.translation_.z = float(rand() % 21 - 10) - 40.0f;
+	}
+	else if (posNum == kRightBottom) {
+		worldTransform_.translation_.x = float(rand() % 21 - 10) + 40.0f;
+		worldTransform_.translation_.y = 1.0f;
+		worldTransform_.translation_.z = float(rand() % 21 - 10) - 40.0f;
+	}
 }
 
 void Box::Update() {
+	onPlayer_ = false;
 	//ワールドトランスフォームの更新
 	worldTransform_.UpdateMatrix();
 }
@@ -30,6 +49,11 @@ Vector3 Box::GetWorldPosition() {
 	return worldPos;
 }
 
-void Box::OnCollision(const Vector3& move) {
-	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
+void Box::OnCollisionPlayer(const Vector3& velocity) {
+	onPlayer_ = true;
+	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity);
+}
+
+void Box::OnCollisionBox(const Vector3& velocity) {
+	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity);
 }

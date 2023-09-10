@@ -9,6 +9,8 @@ public:
 		Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource;
 		D3D12_CPU_DESCRIPTOR_HANDLE cpuHandleSRV;
 		D3D12_GPU_DESCRIPTOR_HANDLE gpuHandleSRV;
+		std::string textureName;
+		int32_t srvIndex;
 	};
 
 	//インクリメントサイズ

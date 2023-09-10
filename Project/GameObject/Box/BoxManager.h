@@ -41,11 +41,17 @@ private:
 	std::unique_ptr<Model> model_ = nullptr;
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_{};
+	//エリアのサイズ
+	Vector3 areaSize_{ 2.0f,2.0f,2.0f };
 	//箱のリスト
 	std::list<std::unique_ptr<Box>> boxs_{};
 	//箱のスポーンタイマー
 	int32_t timer_ = boxSpornTime;
 	//自キャラ
 	Player* player_ = nullptr;
+	//フィールドにある箱の数
+	int32_t boxCount_ = 0;
+	//エリアにある箱の数
+	int32_t inBoxCount_ = 0;
 };
 

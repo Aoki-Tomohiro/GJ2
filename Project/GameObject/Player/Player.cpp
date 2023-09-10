@@ -4,6 +4,7 @@
 #include "../GameObject/Enemy/TransCube/TransCube.h"
 #include "Input/Input.h"
 #include "CollisionManager/CollisionConfig.h"
+#include "ImGuiManager/ImGuiManager.h"
 
 void Player::Initialize(const std::vector<Model*> models) {
 	//モデルの初期化
@@ -24,6 +25,13 @@ void Player::Initialize(const std::vector<Model*> models) {
 }
 
 void Player::Update() {
+	//強化状態の処理
+	if (isEnhancedState_) {
+		if (enhancedStateTimer_-- <= 0) {
+			isEnhancedState_ = false;
+		}
+	}
+
 	//ボックスのフラグをfalseにする
 	isBoxPush_ = false;
 
@@ -42,9 +50,6 @@ void Player::Update() {
 			break;
 		case Behavior::kDash:
 			BehaviorDashInitialize();
-			break;
-		case Behavior::kJump:
-			BehaviorJumpInitialize();
 			break;
 		case Behavior::kBoxPush:
 			BehaviorBoxPushInitialize();
@@ -66,9 +71,6 @@ void Player::Update() {
 	case Behavior::kDash:
 		BehaviorDashUpdate();
 		break;
-	case Behavior::kJump:
-		BehaviorJumpUpdate();
-		break;
 	case Behavior::kBoxPush:
 		BehaviorBoxPushUpdate();
 		break;
@@ -80,6 +82,11 @@ void Player::Update() {
 	worldTransformBody_.UpdateMatrix();
 	worldTransformL_arm_.UpdateMatrix();
 	worldTransformR_arm_.UpdateMatrix();
+
+	ImGui::Begin("Player");
+	ImGui::Checkbox("isEnhanced", &isEnhancedState_);
+	ImGui::Text("enhancedTimer : %d", enhancedStateTimer_);
+	ImGui::End();
 }
 
 void Player::Draw(const ViewProjection& viewProjection) {
@@ -135,7 +142,11 @@ void Player::BehaviorRootUpdate() {
 
 		if (isMoving) {
 			//速さ
-			const float kSpeed = 0.3f;
+			float kSpeed = 0.3f;
+			//強化状態の時
+			if (isEnhancedState_) {
+				kSpeed = 0.5f;
+			}
 
 			//移動量に速さを反映
 			velocity_ = Multiply(Normalize(velocity_), kSpeed);
@@ -155,10 +166,21 @@ void Player::BehaviorRootUpdate() {
 	//移動方向に見た目を合わせる
 	worldTransformBase_.rotation_.y = LerpShortAngle(worldTransformBase_.rotation_.y, destinationAngleY_, 0.5f);
 
-	//攻撃行動予約
+	//ジャンプ処理
 	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
-			behaviorRequest_ = Behavior::kAttack;
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
+			if (workJump_.flag == false) {
+				workJump_.power = 1.0f;
+				workJump_.flag = true;
+			}
+		}
+	}
+	if (workJump_.flag) {
+		worldTransformBase_.translation_.y += workJump_.power;
+		workJump_.power -= 0.05f;
+		if (worldTransformBase_.translation_.y <= 0.0f) {
+			worldTransformBase_.translation_.y = 0.0f;
+			workJump_.flag = false;
 		}
 	}
 
@@ -167,7 +189,6 @@ void Player::BehaviorRootUpdate() {
 	if (workDash_.coolTime != behaviorDashCoolTime) {
 		workDash_.coolTime++;
 	}
-
 	if (Input::GetInstance()->GetJoystickState(joyState)) {
 		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) {
 			if (workDash_.coolTime == 300) {
@@ -176,10 +197,10 @@ void Player::BehaviorRootUpdate() {
 		}
 	}
 
-	//ジャンプ行動予約
+	//攻撃行動予約
 	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
-			behaviorRequest_ = Behavior::kJump;
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+			behaviorRequest_ = Behavior::kAttack;
 		}
 	}
 }
@@ -209,7 +230,10 @@ void Player::BehaviorAttackUpdate() {
 
 		if (isMoving) {
 			//速さ
-			const float kSpeed = 0.3f;
+			float kSpeed = 0.2f;
+			if (isEnhancedState_) {
+				kSpeed = 0.4f;
+			}
 
 			//移動量に速さを反映
 			velocity_ = Multiply(Normalize(velocity_), kSpeed);
@@ -230,6 +254,37 @@ void Player::BehaviorAttackUpdate() {
 	//移動方向に見た目を合わせる
 	worldTransformBase_.rotation_.y = LerpShortAngle(worldTransformBase_.rotation_.y, destinationAngleY_, 0.5f);
 
+	//ジャンプ処理
+	if (Input::GetInstance()->GetJoystickState(joyState)) {
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
+			if (workJump_.flag == false) {
+				workJump_.power = 1.0f;
+				workJump_.flag = true;
+			}
+		}
+	}
+	if (workJump_.flag) {
+		worldTransformBase_.translation_.y += workJump_.power;
+		workJump_.power -= 0.05f;
+		if (worldTransformBase_.translation_.y <= 0.0f) {
+			worldTransformBase_.translation_.y = 0.0f;
+			workJump_.flag = false;
+		}
+	}
+
+	//ダッシュ行動予約
+	const uint32_t behaviorDashCoolTime = 300;
+	if (workDash_.coolTime != behaviorDashCoolTime) {
+		workDash_.coolTime++;
+	}
+	if (Input::GetInstance()->GetJoystickState(joyState)) {
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) {
+			if (workDash_.coolTime == 300) {
+				behaviorRequest_ = Behavior::kDash;
+			}
+		}
+	}
+
 	//RBを押し続けているときに弾を発射する
 	if (Input::GetInstance()->GetJoystickState(joyState)) {
 		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
@@ -249,33 +304,10 @@ void Player::BehaviorDashInitialize() {
 }
 
 void Player::BehaviorDashUpdate() {
-	//移動量
-	Vector3 move{ 0.0f,0.0f,1.0f };
-	//移動量を向いている方向に変える
-	move = TransformNormal(move, worldTransformBase_.matWorld_);
-	//移動量を足す
-	worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, move);
-
-	//ダッシュの時間
-	const uint32_t behaviorDashTime = 10;
-
-	//規定の時間経過で通常行動に戻る
-	if (++workDash_.dashParameter_ >= behaviorDashTime) {
-		behaviorRequest_ = Behavior::kRoot;
-	}
-}
-
-void Player::BehaviorJumpInitialize() {
-	workJump_.power = 1.0f;
-}
-
-void Player::BehaviorJumpUpdate() {
 	XINPUT_STATE joyState{};
 	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		//しきい値
-		const float threshold = 0.7f;
-		//移動フラグ
-		bool isMoving = false;
+		//速さ
+		float kSpeed = 1.0f;
 		//移動量
 		velocity_ = {
 			(float)joyState.Gamepad.sThumbLX / SHRT_MAX,
@@ -283,37 +315,21 @@ void Player::BehaviorJumpUpdate() {
 			(float)joyState.Gamepad.sThumbLY / SHRT_MAX,
 		};
 
-		//スティックの押し込みが遊び範囲を超えていたら移動フラグをtureにする
-		if (Length(velocity_) > threshold) {
-			isMoving = true;
-		}
+		//移動量に速さを反映
+		velocity_ = Multiply(Normalize(velocity_), kSpeed);
 
-		if (isMoving) {
-			//速さ
-			const float kSpeed = 0.3f;
+		//移動ベクトルをカメラの角度だけ回転する
+		Matrix4x4 rotateMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
+		velocity_ = TransformNormal(velocity_, rotateMatrix);
 
-			//移動量に速さを反映
-			velocity_ = Multiply(Normalize(velocity_), kSpeed);
-
-			//移動ベクトルをカメラの角度だけ回転する
-			Matrix4x4 rotateMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
-			velocity_ = TransformNormal(velocity_, rotateMatrix);
-
-			//移動
-			worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, velocity_);
-
-			//目標角度の算出
-			destinationAngleY_ = std::atan2(velocity_.x, velocity_.z);
-		}
+		//移動
+		worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, velocity_);
 	}
 
-	//移動方向に見た目を合わせる
-	worldTransformBase_.rotation_.y = LerpShortAngle(worldTransformBase_.rotation_.y, destinationAngleY_, 0.5f);
-
-	worldTransformBase_.translation_.y += workJump_.power;
-	workJump_.power -= 0.05f;
-	if (worldTransformBase_.translation_.y <= 0.0f) {
-		worldTransformBase_.translation_.y = 0.0f;
+	//ダッシュの時間
+	const uint32_t behaviorDashTime = 10;
+	//規定の時間経過で通常行動に戻る
+	if (++workDash_.dashParameter_ >= behaviorDashTime) {
 		behaviorRequest_ = Behavior::kRoot;
 	}
 }
@@ -363,6 +379,24 @@ void Player::BehaviorBoxPushUpdate() {
 	//移動方向に見た目を合わせる
 	worldTransformBase_.rotation_.y = LerpShortAngle(worldTransformBase_.rotation_.y, destinationAngleY_, 0.5f);
 
+	//ジャンプ処理
+	if (Input::GetInstance()->GetJoystickState(joyState)) {
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
+			if (workJump_.flag == false) {
+				workJump_.power = 1.0f;
+				workJump_.flag = true;
+			}
+		}
+	}
+	if (workJump_.flag) {
+		worldTransformBase_.translation_.y += workJump_.power;
+		workJump_.power -= 0.05f;
+		if (worldTransformBase_.translation_.y <= 0.0f) {
+			worldTransformBase_.translation_.y = 0.0f;
+			workJump_.flag = false;
+		}
+	}
+
 	//通常状態に戻す
 	behaviorRequest_ = Behavior::kRoot;
 }
@@ -371,7 +405,10 @@ void Player::Fire() {
 	// 発射タイマーが０以下の時に弾を発射する
 	if (--bulletTimer_ <= 0) {
 		// 発射タイマーを戻す
-		bulletTimer_ = 10;
+		bulletTimer_ = 20;
+		if (isEnhancedState_) {
+			bulletTimer_ = 10;
+		}
 
 		// 弾の速度
 		const float kBulletSpeed = 1.0f;

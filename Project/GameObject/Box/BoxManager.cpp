@@ -1,5 +1,6 @@
 #include "BoxManager.h"
 #include "../GameObject/Player/Player.h"
+#include "ImGuiManager/ImGuiManager.h"
 #include <ctime>
 
 void BoxManager::Initialize() {
@@ -15,10 +16,25 @@ void BoxManager::Initialize() {
 }
 
 void BoxManager::Update() {
+	//エリア内の箱の数を初期化する
+	inBoxCount_ = 0;
+
+	//死亡フラグが立っている箱を削除
+	boxs_.remove_if([](std::unique_ptr<Box>& box) {
+		if (box->GetIsDead()) {
+			box.reset();
+			return true;
+		}
+		return false;
+		});
+
 	//箱を出現させる
-	if (--timer_ <= 0) {
-		timer_ = boxSpornTime;
-		AddBox();
+	if (boxCount_ < 4 && player_->GetIsEnhancedState() == false) {
+		if (--timer_ <= 0) {
+			timer_ = boxSpornTime;
+			boxCount_++;
+			AddBox();
+		}
 	}
 
 	worldTransform_.UpdateMatrix();
@@ -94,8 +110,31 @@ void BoxManager::Update() {
 		}
 	}
 
-	//箱を特定の場所に運んだら自キャラをパワーアップ
+	//箱とエリアの当たり判定
+	for (const std::unique_ptr<Box>& box : boxs_) {
+		Vector3 pos = box->GetWorldPosition();
+		if (worldTransform_.translation_.x - areaSize_.x <= pos.x + 1.0f && worldTransform_.translation_.x + areaSize_.x >= pos.x - 1.0f &&
+			worldTransform_.translation_.y - areaSize_.y <= pos.y + 1.0f && worldTransform_.translation_.y + areaSize_.y >= pos.y - 1.0f &&
+			worldTransform_.translation_.z - areaSize_.z <= pos.z + 1.0f && worldTransform_.translation_.z + areaSize_.z >= pos.z - 1.0f) {
+			box->SetInArea(true);
+			inBoxCount_++;
+		}
+	}
+	
+	//エリア内に箱が4つある時自キャラを強くする
+	if (inBoxCount_ >= 4) {
+		for (const std::unique_ptr<Box>& box : boxs_) {
+			if (box->GetInArea()) {
+				box->SetIsDead(true);
+				boxCount_ = 0;
+				player_->SetEnhanced();
+			}
+		}
+	}
 
+	ImGui::Begin("BoxManager");
+	ImGui::Text("inBoxCount : %d", inBoxCount_);
+	ImGui::End();
 }
 
 void BoxManager::Draw(const ViewProjection& viewProjection) {

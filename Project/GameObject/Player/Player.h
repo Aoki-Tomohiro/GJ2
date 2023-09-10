@@ -13,12 +13,14 @@ class TransCube;
 /// </summary>
 class Player : public Collider{
 public:
+	//強化状態の時間
+	static const int kEnhancedStateTime = 60 * 10;
+
 	enum class Behavior {
 		kRoot,//通常状態
 		kAttack,//攻撃状態
 		kDash,//ダッシュ状態
-		kJump,//ジャンプ状態
-		kBoxPush//箱を押してる状態
+		kBoxPush,//箱を押してる状態
 	};
 
 	//ダッシュ用ワーク
@@ -70,6 +72,26 @@ public:
 	void OnCollisionBox();
 
 	/// <summary>
+	/// 移動
+	/// </summary>
+	/// <param name="velocity"></param>
+	void Move(const Vector3& velocity) { worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, velocity); };
+
+	/// <summary>
+	/// 強化状態にする
+	/// </summary>
+	void SetEnhanced() { 
+		isEnhancedState_ = true;
+		enhancedStateTimer_ = kEnhancedStateTime;
+	};
+
+	/// <summary>
+	/// 強化状態のフラグを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsEnhancedState() { return isEnhancedState_; };
+
+	/// <summary>
 	/// ワールドトランスフォームの取得
 	/// </summary>
 	/// <returns></returns>
@@ -98,12 +120,6 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	const Vector3& GetVelocity() { return velocity_; };
-
-	/// <summary>
-	/// 移動
-	/// </summary>
-	/// <param name="velocity"></param>
-	void Move(const Vector3& velocity) { worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, velocity); };
 
 	/// <summary>
 	/// ボックスを押しているかのフラグを取得
@@ -141,16 +157,6 @@ private:
 	/// ダッシュ行動更新
 	/// </summary>
 	void BehaviorDashUpdate();
-
-	/// <summary>
-	/// ジャンプ状態初期化
-	/// </summary>
-	void BehaviorJumpInitialize();
-
-	/// <summary>
-	/// ジャンプ状態更新
-	/// </summary>
-	void BehaviorJumpUpdate();
 
 	/// <summary>
 	/// 箱を押す状態の初期化
@@ -199,5 +205,8 @@ private:
 	Vector3 velocity_{};
 	//箱に触れているか
 	bool isBoxPush_ = false;
+	//強化状態
+	bool isEnhancedState_ = false;
+	int32_t enhancedStateTimer_ = 0;
 };
 

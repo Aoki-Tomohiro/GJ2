@@ -1,4 +1,5 @@
 #include"TransCube.h"
+#include "TextureManager/TextureManager.h"
 #include "CollisionManager/CollisionConfig.h"
 
 TransCube::TransCube()
@@ -36,11 +37,19 @@ void TransCube::Initialize()
 
 	input = Input::GetInstance();
 
+	SetRadius(5.0f);
 	//衝突属性を設定
 	SetCollisionAttribute(kCollisionAttributeEnemy);
 	//衝突対象を自分の属性以外に設定
 	SetCollisionMask(kCollisionMaskEnemy);
 
+	//スプライトの作成
+	textureHandleHP1_ = TextureManager::GetInstance()->Load("Project/Resources/TransCubeHP1.png");
+	textureHandleHP2_ = TextureManager::GetInstance()->Load("Project/Resources/TransCubeHP2.png");
+	spriteHP1_ = std::make_unique<Sprite>();
+	spriteHP1_->Create(textureHandleHP1_, { 320.0f,50.0f });
+	spriteHP2_ = std::make_unique<Sprite>();
+	spriteHP2_->Create(textureHandleHP2_, { 322.0f,52.0f });
 }
 
 void TransCube::Update()
@@ -128,6 +137,9 @@ void TransCube::Update()
 		bullet->Update();
 	}
 
+	//体力ゲージの処理
+	spriteScale_.x = Lerp(spriteScale_.x, life_ / 300.0f, 0.01f);
+	spriteHP2_->SetScale(spriteScale_);
 }
 
 void TransCube::Draw(ViewProjection view)
@@ -143,6 +155,11 @@ void TransCube::Draw(ViewProjection view)
 	state_->Draw(this, view);
 	model_->Draw(worldTransform, view);
 
+}
+
+void TransCube::DrawUI() {
+	spriteHP1_->Draw();
+	spriteHP2_->Draw();
 }
 
 void TransCube::ChangeState(ITransCubeState* state)
@@ -164,7 +181,7 @@ Vector3 TransCube::GetWorldPosition()
 }
 
 void TransCube::OnCollision() {
-
+	life_--;
 }
 
 

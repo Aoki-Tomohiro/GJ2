@@ -42,6 +42,8 @@ public:
 
 	void Draw(ViewProjection view);
 
+	void DrawUI();
+
 	void ChangeState(ITransCubeState* state);
 
 	Vector3 GetWorldPosition()override;
@@ -98,4 +100,14 @@ private:
 	float Flame = 0;
 	float EndFlame = 180;
 	bool MoveFlag = false;
+
+	//体力
+	int32_t life_ = 300;
+
+	//体力のスプライト
+	uint32_t textureHandleHP1_ = 0;
+	uint32_t textureHandleHP2_ = 0;
+	std::unique_ptr<Sprite> spriteHP1_ = nullptr;
+	std::unique_ptr<Sprite> spriteHP2_ = nullptr;
+	Vector2 spriteScale_{ 1.0f,1.0f };
 };

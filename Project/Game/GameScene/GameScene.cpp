@@ -167,6 +167,8 @@ void GameScene::Draw(GameManager* gameManager) {
 #pragma region スプライトの描画
 	//自機のHPの描画
 	player_->DrawUI();
+	//ボスのHPの描画
+	transCube_->DrawUI();
 #pragma endregion
 };
 

@@ -40,7 +40,7 @@ GameManager::GameManager() {
 
 
 	//シーンの初期化
-	currentScene_ = new WinScene();
+	currentScene_ = new LoseScene();
 	currentScene_->Initialize(this);
 }
 

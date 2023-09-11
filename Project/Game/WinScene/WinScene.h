@@ -110,8 +110,6 @@ private:
 
 	//titleへ
 	bool titleSceneChange_ = false;
-
-	
 	bool selectSceneChange_ = false;
 
 

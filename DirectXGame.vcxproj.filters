@@ -377,6 +377,9 @@
     <ClInclude Include="Project\GameObject\Enemy\TransCube\GroundAttack\TransCubeGroundAttack.h">
       <Filter>ソース ファイル\Project\GameObject\TransCube\TransCubeGroundBullet</Filter>
     </ClInclude>
+    <ClInclude Include="Project\GameObject\Box\BoxConfig.h">
+      <Filter>ヘッダー ファイル\Project\GameObject\Box</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Project\Resources\Shader\FinalPass.hlsli">

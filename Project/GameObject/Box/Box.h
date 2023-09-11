@@ -14,7 +14,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	void Initialize(uint32_t attribute);
 
 	/// <summary>
 	/// 更新
@@ -75,11 +75,21 @@ public:
 	/// <returns></returns>
 	bool GetIsDead() { return isDead_; };
 
+	/// <summary>
+	/// 属性を取得
+	/// </summary>
+	/// <returns></returns>
+	uint32_t GetAttribute() { return attribute_; };
+
 private:
 	//箱のモデル
 	std::unique_ptr<Model> model_ = nullptr;
+	//テクスチャ
+	uint32_t textureHandle_ = 0;
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_{};
+	//属性
+	uint32_t attribute_;
 	//自キャラと触れているか
 	bool onPlayer_ = false;
 	//エリアに入っているか

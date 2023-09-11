@@ -15,8 +15,7 @@ void EnemyRobot::Initialize()
 	enemy_.BodyWorldTransform.matWorld_ = MakeIdentity4x4();
 	enemy_.BodyWorldTransform.scale_ = { 28,28,28 };
 	enemy_.BodyWorldTransform.translation_ = { 0,20,90 };
-
-	ArmInit();
+	HeadArmInit();
 
 }
 
@@ -62,7 +61,7 @@ void EnemyRobot::UpdateMatrixs()
 
 }
 
-void EnemyRobot::ArmInit()
+void EnemyRobot::HeadArmInit()
 {
 	enemy_.HeadModel = std::make_unique<Model>();
 	enemy_.HeadModel->CreateFromOBJ("Project/Resources/EnemyObj/EnemyRobot/Head", "EnemyRobotHead.obj");

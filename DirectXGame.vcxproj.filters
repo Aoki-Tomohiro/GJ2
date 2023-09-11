@@ -118,6 +118,9 @@
     <Filter Include="ソース ファイル\Project\GameObject\Robot">
       <UniqueIdentifier>{d6f8f5ab-9a8b-462c-90eb-2797441405a8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Project\GameObject\EnemyRobot">
+      <UniqueIdentifier>{641bd78f-d06f-4eb6-a3ec-8ca00bd72f3d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

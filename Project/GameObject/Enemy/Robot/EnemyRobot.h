@@ -41,7 +41,7 @@ private:
 
 	void UpdateMatrixs();
 
-	void ArmInit();
+	void HeadArmInit();
 
 	SEnemyRobot enemy_ = {};
 

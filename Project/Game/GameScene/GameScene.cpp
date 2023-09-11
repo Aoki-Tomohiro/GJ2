@@ -51,12 +51,9 @@ void GameScene::Initialize(GameManager* gameManager) {
 
 	transCube_->Initialize();
 
-	player_->SetTrancCube(transCube_.get());
-
 	//追従カメラの初期化
 	followCamera_ = std::make_unique<FollowCamera>();
 	followCamera_->SetTarget(&player_->GetWorldTransform());
-	followCamera_->SetRockonTarget(&transCube_->GetWorldTransform());
 	player_->SetViewProjection(&followCamera_->GetViewProjection());
 
 	//地面の初期化
@@ -73,6 +70,8 @@ void GameScene::Initialize(GameManager* gameManager) {
 };
 
 void GameScene::Update(GameManager* gameManager) {
+	//追従カメラの更新
+	followCamera_->Update(player_->GetBehavior());
 	//自キャラの更新
 	player_->Update();
 	//デスフラグの立った自弾を削除
@@ -94,8 +93,7 @@ void GameScene::Update(GameManager* gameManager) {
 
 	//箱の更新
 	boxManager_->Update();
-	//追従カメラの更新
-	followCamera_->Update();
+
 
 	//衝突マネージャーのリストをクリア
 	collisionManager_->ClearColliderList();
@@ -188,11 +186,11 @@ void GameScene::SetCollisions()
 
 	//敵
 	collisionManager_->SetColliderList(transCube_.get());
-	for (TransCubeBullet* bullet : transCube_.get()->Getbullets()){
+	for (TransCubeBullet* bullet : transCube_.get()->Getbullets()) {
 		collisionManager_->SetColliderList(bullet);
 	}
 	for (TransCubeGroundAttack* bullet : transCube_.get()->GetGroundBullets()) {
 		collisionManager_->SetColliderListAABB(bullet);
-		
-    }
+
+	}
 }

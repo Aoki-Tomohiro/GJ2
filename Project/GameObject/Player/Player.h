@@ -6,24 +6,23 @@
 #include <optional>
 
 class GameScene;
-class TransCube;
+
+enum class Behavior {
+	kRoot,//通常状態
+	kAttack,//攻撃状態
+	kDash,//ダッシュ状態
+	kBoxPush,//箱を押してる状態
+};
 
 /// <summary>
 /// プレイヤー
 /// </summary>
-class Player : public Collider{
+class Player : public Collider {
 public:
 	//強化状態の時間
 	static const int kEnhancedStateTime = 60 * 10;
 	//無敵時間
 	static const int kInvincibleTime = 60;
-
-	enum class Behavior {
-		kRoot,//通常状態
-		kAttack,//攻撃状態
-		kDash,//ダッシュ状態
-		kBoxPush,//箱を押してる状態
-	};
 
 	//ダッシュ用ワーク
 	struct WorkDash {
@@ -87,7 +86,7 @@ public:
 	/// <summary>
 	/// 強化状態にする
 	/// </summary>
-	void SetEnhanced() { 
+	void SetEnhanced() {
 		isEnhancedState_ = true;
 		enhancedStateTimer_ = kEnhancedStateTime;
 	};
@@ -117,12 +116,6 @@ public:
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; };
 
 	/// <summary>
-	/// 敵キャラをセット
-	/// </summary>
-	/// <param name="transCube"></param>
-	void SetTrancCube(TransCube* transCube) { transCube_ = transCube; };
-
-	/// <summary>
 	/// 移動量を取得
 	/// </summary>
 	/// <returns></returns>
@@ -133,6 +126,12 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	bool GetIsBoxPush() { return isBoxPush_; };
+
+	/// <summary>
+	/// 状態を取得
+	/// </summary>
+	/// <returns></returns>
+	Behavior GetBehavior() { return behavior_; };
 
 private:
 	/// <summary>
@@ -191,6 +190,16 @@ private:
 	/// </summary>
 	void UpdateInvincible();
 
+	/// <summary>
+	/// 3Dレティクルの座標を計算
+	/// </summary>
+	void Set3DReticlePosition();
+
+	/// <summary>
+	/// 3Dレティクルの座標を取得
+	/// </summary>
+	Vector3 Get3DReticleWorldPosition();
+
 private:
 	//モデル
 	std::vector<Model*> models_{};
@@ -216,8 +225,6 @@ private:
 	int32_t bulletTimer_ = 0;
 	//ゲームシーン
 	GameScene* gameScene_ = nullptr;
-	//敵キャラ
-	TransCube* transCube_ = nullptr;
 	//速度
 	Vector3 velocity_{};
 	//箱に触れているか
@@ -236,5 +243,10 @@ private:
 	std::unique_ptr<Sprite> spriteHP1_ = nullptr;
 	std::unique_ptr<Sprite> spriteHP2_ = nullptr;
 	Vector2 spriteScale_{ 1.0f,1.0f };
+	//3Dレティクル
+	WorldTransform worldTransform3DReticle_{};
+	//レティクルのスプライト
+	uint32_t textureHandleReticle_ = 0;
+	std::unique_ptr<Sprite> sprite2DReticle_{};
 };
 

@@ -18,10 +18,21 @@ void Player::Initialize(const std::vector<Model*> models) {
 	worldTransformR_arm_.parent_ = &worldTransformBody_;
 	worldTransformR_arm_.translation_.x = 0.5f;
 	worldTransformR_arm_.translation_.y = 1.8f;
+	//スプライトの作成
+	textureHandleHP1_ = TextureManager::GetInstance()->Load("Project/Resources/PlayerHP1.png");
+	textureHandleHP2_ = TextureManager::GetInstance()->Load("Project/Resources/PlayerHP2.png");
+	spriteHP1_ = std::make_unique<Sprite>();
+	spriteHP1_->Create(textureHandleHP1_, { 50.0f,652.0f });
+	spriteHP2_ = std::make_unique<Sprite>();
+	spriteHP2_->Create(textureHandleHP2_, { 52.0f,654.0f });
 	//衝突属性を設定
 	SetCollisionAttribute(kCollisionAttributePlayer);
 	//衝突対象を自分の属性以外に設定
 	SetCollisionMask(kCollisionMaskPlayer);
+	//レティクル
+	textureHandleReticle_ = TextureManager::GetInstance()->Load("Project/Resources/Reticle.png");
+	sprite2DReticle_ = std::make_unique<Sprite>();
+	sprite2DReticle_->Create(textureHandleReticle_, { 0.0f,0.0f });
 }
 
 void Player::Update() {
@@ -83,9 +94,22 @@ void Player::Update() {
 	worldTransformL_arm_.UpdateMatrix();
 	worldTransformR_arm_.UpdateMatrix();
 
+	//体力ゲージの更新
+	UpdateLife();
+
+	//無敵時間の処理
+	UpdateInvincible();
+
+	//3Dレティクルの座標を計算
+	Set3DReticlePosition();
+
 	ImGui::Begin("Player");
 	ImGui::Checkbox("isEnhanced", &isEnhancedState_);
 	ImGui::Text("enhancedTimer : %d", enhancedStateTimer_);
+	ImGui::DragFloat2("Sprite : uvScale", &spriteScale_.x, 0.001f);
+	ImGui::Text("LT : Aim");
+	ImGui::Text("RT : Shot");
+	ImGui::Text("LB : Dash");
 	ImGui::End();
 }
 
@@ -97,8 +121,20 @@ void Player::Draw(const ViewProjection& viewProjection) {
 	models_[3]->Draw(worldTransformR_arm_, viewProjection);
 }
 
-void Player::OnCollision() {
+void Player::DrawUI() {
+	spriteHP1_->Draw();
+	spriteHP2_->Draw();
+	if (behavior_ == Behavior::kAttack) {
+		sprite2DReticle_->Draw();
+	}
+}
 
+void Player::OnCollision() {
+	if (isInvincible_ == false) {
+		isInvincible_ = true;
+		invincibleTimer_ = kInvincibleTime;
+		playerLife_--;
+	}
 }
 
 Vector3 Player::GetWorldPosition() {
@@ -199,7 +235,10 @@ void Player::BehaviorRootUpdate() {
 
 	//攻撃行動予約
 	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+		//if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+		//	behaviorRequest_ = Behavior::kAttack;
+		//}
+		if (joyState.Gamepad.bLeftTrigger) {
 			behaviorRequest_ = Behavior::kAttack;
 		}
 	}
@@ -246,13 +285,16 @@ void Player::BehaviorAttackUpdate() {
 			worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, velocity_);
 
 			//目標角度の算出
-			Vector3 rotation = Normalize(Subtract(transCube_->GetWorldPosition(), Player::GetWorldPosition()));
+			Vector3 rotation = Normalize(Subtract(Player::Get3DReticleWorldPosition(), Player::GetWorldPosition()));
 			destinationAngleY_ = std::atan2(rotation.x, rotation.z);
 		}
 	}
 
 	//移動方向に見た目を合わせる
 	worldTransformBase_.rotation_.y = LerpShortAngle(worldTransformBase_.rotation_.y, destinationAngleY_, 0.5f);
+
+	//射撃処理
+	Player::Fire();
 
 	//ジャンプ処理
 	if (Input::GetInstance()->GetJoystickState(joyState)) {
@@ -287,8 +329,7 @@ void Player::BehaviorAttackUpdate() {
 
 	//RBを押し続けているときに弾を発射する
 	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
-			Player::Fire();
+		if (joyState.Gamepad.bLeftTrigger != 0) {
 			return;
 		}
 	}
@@ -402,31 +443,115 @@ void Player::BehaviorBoxPushUpdate() {
 }
 
 void Player::Fire() {
-	// 発射タイマーが０以下の時に弾を発射する
-	if (--bulletTimer_ <= 0) {
-		// 発射タイマーを戻す
-		bulletTimer_ = 20;
-		if (isEnhancedState_) {
-			bulletTimer_ = 10;
+	XINPUT_STATE joyState{};
+	if (Input::GetInstance()->GetJoystickState(joyState)) {
+		//RTを押しているとき発射する
+		if (joyState.Gamepad.bRightTrigger) {
+			// 発射タイマーが０以下の時に弾を発射する
+			if (--bulletTimer_ <= 0) {
+				// 発射タイマーを戻す
+				bulletTimer_ = 20;
+				if (isEnhancedState_) {
+					bulletTimer_ = 10;
+				}
+
+				// 弾の速度
+				const float kBulletSpeed = 1.0f;
+				Vector3 velocity(0, 0, kBulletSpeed);
+
+				// 速度ベクトルを自機の向きに合わせて回転させる
+				/*velocity = TransformNormal(velocity, worldTransformBase_.matWorld_);*/
+				/*velocity = Subtract(transCube_->GetWorldPosition(), Player::GetWorldPosition());*/
+				velocity = Subtract(Player::Get3DReticleWorldPosition(), Player::GetWorldPosition());
+				velocity = Normalize(velocity);
+				velocity = Multiply(velocity, kBulletSpeed);
+
+				// 弾を生成し、初期化
+				PlayerBullet* newBullet = new PlayerBullet();
+				Vector3 worldPos{};
+				worldPos = Player::GetWorldPosition();
+				newBullet->Initialize(models_[4], worldPos, velocity);
+
+				// 弾を登録する
+				gameScene_->AddPlayerBullet(newBullet);
+			}
 		}
-
-		// 弾の速度
-		const float kBulletSpeed = 1.0f;
-		Vector3 velocity(0, 0, kBulletSpeed);
-
-		// 速度ベクトルを自機の向きに合わせて回転させる
-		/*velocity = TransformNormal(velocity, worldTransformBase_.matWorld_);*/
-		velocity = Subtract(transCube_->GetWorldPosition(), Player::GetWorldPosition());
-		velocity = Normalize(velocity);
-		velocity = Multiply(velocity, kBulletSpeed);
-
-		// 弾を生成し、初期化
-		PlayerBullet* newBullet = new PlayerBullet();
-		Vector3 worldPos{};
-		worldPos = Player::GetWorldPosition();
-		newBullet->Initialize(models_[4], worldPos, velocity);
-
-		// 弾を登録する
-		gameScene_->AddPlayerBullet(newBullet);
 	}
+}
+
+void Player::UpdateLife() {
+	switch (playerLife_) {
+	case 0:
+		spriteScale_.x = Lerp(spriteScale_.x, 0.0f, 0.1f);
+		spriteHP2_->SetScale(spriteScale_);
+		break;
+	case 1:
+		spriteScale_.x = Lerp(spriteScale_.x, 0.2f, 0.1f);
+		spriteHP2_->SetScale(spriteScale_);
+		break;
+	case 2:
+		spriteScale_.x = Lerp(spriteScale_.x, 0.4f, 0.1f);
+		spriteHP2_->SetScale(spriteScale_);
+		break;
+	case 3:
+		spriteScale_.x = Lerp(spriteScale_.x, 0.6f, 0.1f);
+		spriteHP2_->SetScale(spriteScale_);
+		break;
+	case 4:
+		spriteScale_.x = Lerp(spriteScale_.x, 0.8f, 0.1f);
+		spriteHP2_->SetScale(spriteScale_);
+		break;
+	}
+}
+
+void Player::UpdateInvincible() {
+	if (isInvincible_) {
+		if (--invincibleTimer_ <= 0) {
+			isInvincible_ = false;
+		}
+	}
+}
+
+void Player::Set3DReticlePosition() {
+	// 自機から3Dレティクルへの距離
+	const float kDistancePlayerTo3DReticle = 100.0f;
+	//オフセット
+	Vector3 offset{ 0.0f,0.0f,1.0f };
+	//カメラの角度から回転行列を作成
+	Matrix4x4 rotateXMatrix = MakeRotateXMatrix(viewProjection_->rotation_.x);
+	Matrix4x4 rotateYMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
+	Matrix4x4 rotateZMatrix = MakeRotateZMatrix(viewProjection_->rotation_.z);
+	Matrix4x4 rotateMatrix = Multiply(rotateXMatrix, Multiply(rotateYMatrix, rotateZMatrix));
+	//オフセットを回転行列分回転させる
+	offset = TransformNormal(offset, rotateMatrix);
+	//ベクトルの長さをそろえる
+	offset = Normalize(offset);
+	offset = Multiply(offset, kDistancePlayerTo3DReticle);
+	//3Dレティクルの座標を計算
+	worldTransform3DReticle_.translation_ = Add(viewProjection_->translation_, offset);
+	//3Dレティクルのワールドトランスフォームを更新
+	worldTransform3DReticle_.UpdateMatrix();
+
+	// 3Dレティクルのワールド座標から2Dレティクルのスクリーン座標を計算
+	Vector3 positionReticle = Get3DReticleWorldPosition();
+	// ビューポート行列
+	Matrix4x4 matViewport =
+		MakeViewportMatrix(0, 0, float(WinApp::GetInstance()->kClientWidth), float(WinApp::GetInstance()->kClientHeight), 0, 1);
+	// ビュー行列とプロジェクション行列、ビューポート行列を合成する
+	Matrix4x4 matViewProjectionViewport =
+		Multiply(viewProjection_->matView_, Multiply(viewProjection_->matProjection_, matViewport));
+	// ワールド→スクリーン座標変換(ここで3Dから2Dになる)
+	positionReticle = Transform(positionReticle, matViewProjectionViewport);
+	// スプライトのレティクルに座標設定
+	sprite2DReticle_->SetTranslation(Vector2(positionReticle.x - 48, positionReticle.y - 48));
+}
+
+Vector3 Player::Get3DReticleWorldPosition() {
+	// ワールド座標を入れる変数
+	Vector3 worldPos;
+	// ワールド行列の平行移動成分を取得(ワールド座標)
+	worldPos.x = worldTransform3DReticle_.matWorld_.m[3][0];
+	worldPos.y = worldTransform3DReticle_.matWorld_.m[3][1];
+	worldPos.z = worldTransform3DReticle_.matWorld_.m[3][2];
+	return worldPos;
 }

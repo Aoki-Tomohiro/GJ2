@@ -19,7 +19,10 @@ WinScene::WinScene() {
 /// デストラクタ
 /// </summary>
 WinScene::~WinScene() {
-	
+	delete backSprite_;
+
+
+	delete sprite_;
 }
 
 /// <summary>
@@ -63,12 +66,17 @@ void WinScene::Initialize(GameManager* gameManager) {
 	fadeInterval_ = 10.0 / 256.0f;
 
 
-	const int SECOND_ = 60;
-	int32_t loadingTime = 0;
+	SECOND_ = 60;
+	loadingTime = 0;
 
 	triggerButtonBTime_ = 0;
 	triggerButtonATime_ = 0;
 	fadeOutTime_ = 0;
+
+
+
+	titleSceneChange_ = false;
+	selectSceneChange_ = false;
 
 
 	//BGM
@@ -77,8 +85,9 @@ void WinScene::Initialize(GameManager* gameManager) {
 
 	bgmAudio_->SoundPlayWave(bgmHandle_, true);
 
+	//シーンが変わるときのSE
 	backSEAudio_ = Audio::GetInstance();;
-	backSEHandle_ = audio_->SoundLoadWave("Project/Resources/Music/BGM/Win/Win.wav");;
+	backSEHandle_ = audio_->SoundLoadWave("Project/Resources/Music/SE/Deside/Deside1.wav");
 
 
 
@@ -117,12 +126,11 @@ void WinScene::Update(GameManager* gameManager) {
 	
 	
 	ImGui::Begin("WinScene");
-	ImGui::Text("1:To GameScene");
-	ImGui::Text("2:To SelectScene");
-	ImGui::Text("3:To TitleScene");
-
-
-	ImGui::End();
+	ImGui::Text("B:To SelectScene");
+	ImGui::Text("A:To TitleScene");
+	ImGui::InputInt("loadingTime", &loadingTime);
+	ImGui::InputFloat4("transparency", &transparency_.x);
+	
 
 	XINPUT_STATE joyState{};
 
@@ -140,8 +148,9 @@ void WinScene::Update(GameManager* gameManager) {
 	}
 
 	//トリガー代わり
+	//Bを押したばあい
 	if (triggerButtonBTime_ == 1) {
-		isFadeOutMode_ = true;
+		
 		//StartSE再生
 		//ループ無し
 		backSEAudio_->SoundPlayWave(backSEHandle_, false);
@@ -149,44 +158,73 @@ void WinScene::Update(GameManager* gameManager) {
 		//BGMを止める
 		bgmAudio_->StopAudio(bgmHandle_);
 			
-		if (loadingTime > SECOND_ * 3) {
-			gameManager->ChangeScene(new SelectScene());	
-		}
-	
+		isFadeOutModeToSelect_ = true;
 
-		//BでSelectSceneへ
-		if (input_->IsPushKeyEnter(DIK_2)) {
-			bgmAudio_->StopAudio(bgmHandle_);
-			gameManager->ChangeScene(new SelectScene());
-		}
 	}
 
 	if (triggerButtonATime_ == 1) {
+		
+		//StartSE再生
+		//ループ無し
+		backSEAudio_->SoundPlayWave(backSEHandle_, false);
+
+		//BGMを止める
+		bgmAudio_->StopAudio(bgmHandle_);
+			
+		isFadeOutModeToTitle_ = true;
 
 	}
 
-	if (isFadeOutMode_ == true) {
+	
+	
+	if (isFadeOutModeToSelect_ == true) {
 		transparency_.w += fadeInterval_;
-		
-
 		
 		///ローディング
 		if (transparency_.w >= 1.0f) {
 			loadingTime += 1;
+
+			if (loadingTime > SECOND_ * 3) {
+				selectSceneChange_ = true;
+				
+			}
 		}
+
 	}
+	
+	if (isFadeOutModeToTitle_ == true) {
+		transparency_.w += fadeInterval_;
+		
+		///ローディング
+		if (transparency_.w >= 1.0f) {
+			loadingTime += 1;
+
+			if (loadingTime > SECOND_ * 3) {
+				titleSceneChange_ = true;
+				
+			}
+		}
+
+	}
+
 	//スプライトの透明度をここで設定
 	backSprite_->SetColor({COLOR_BIND,COLOR_BIND,COLOR_BIND,transparency_.w});
-		
 	
-	//AでSelectSceneへ
-	if (input_->IsPushKeyEnter(DIK_3)) {
-		bgmAudio_->StopAudio(bgmHandle_);
+
+	//SceneChange
+	if (selectSceneChange_ == true) {
+		gameManager->ChangeScene(new SelectScene());	
+	}
+	if (titleSceneChange_ == true) {
 		gameManager->ChangeScene(new TitleScene());
 	}
 
 
 
+	
+
+
+	ImGui::End();
 }
 
 /// <summary>
@@ -199,6 +237,8 @@ void WinScene::Draw(GameManager* gameManager) {
 
 	sprite_->Draw();
 
+
+	backSprite_->Draw();
 }
 
 

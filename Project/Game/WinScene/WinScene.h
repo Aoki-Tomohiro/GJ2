@@ -60,8 +60,6 @@ private:
 	//ビュープロジェクション
 	ViewProjection viewProjection_{};
 
-	//Skydome
-	std::unique_ptr<Model> modelSkydome_ = nullptr;
 	WorldTransform worldTransform_{};
 
 
@@ -97,22 +95,24 @@ private:
 	float_t fadeOutTime_ = 0;
 
 	//FadeOut用
-	bool isFadeOutMode_ = false;
+	bool isFadeOutModeToSelect_ = false;
+	bool isFadeOutModeToTitle_ = false;
+
 	float COLOR_BIND = 1.0f;
 	Vector4 transparency_ = { 0.0f,0.0f,0.0f,0.0f };
 	float fadeInterval_ = 0.0f;
 
-	const int SECOND_ = 60;
+	int32_t SECOND_ = 60;
 	int32_t loadingTime = 0;
 
 
 
 
 	//titleへ
-	bool titleChange_ = false;
+	bool titleSceneChange_ = false;
 
 	
-	bool selectChange_ = false;
+	bool selectSceneChange_ = false;
 
 
 

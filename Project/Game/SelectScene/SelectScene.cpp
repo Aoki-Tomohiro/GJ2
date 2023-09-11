@@ -203,6 +203,23 @@ void SelectScene::Update(GameManager* gameManager) {
 
 #pragma region 選択
 	
+	//if (cursorSprite_->GetTranslation().x == backToTitlePosition_.x) {
+	//	triggerButtonLeftTime_ = 0;
+	//	triggerButtonRightTime_ = 0;
+	//	stageNumber_ = 0;
+	//}
+	//if (cursorSprite_->GetTranslation().x == stageIconPosition[0].x) {
+	//	triggerButtonLeftTime_ = 0;
+	//	triggerButtonRightTime_ = 0;
+	//	stageNumber_ = 1;
+	//}
+	//if (cursorSprite_->GetTranslation().x == stageIconPosition[1].x) {
+	//	triggerButtonLeftTime_ = 0;
+	//	triggerButtonRightTime_ = 0;
+	//	stageNumber_ = 2;
+	//}
+
+
 	//2つ用意で
 	if (isFadeInMode_ == false) {
 
@@ -216,11 +233,12 @@ void SelectScene::Update(GameManager* gameManager) {
 				
 			}
 
-
+			
 			//十字ボタンで選択
 			//左
 			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) {
 				isTriggerLeft_ = true;
+				triggerButtonLeftTime_ += 1;
 				
 			}
 			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) {
@@ -230,9 +248,10 @@ void SelectScene::Update(GameManager* gameManager) {
 			
 
 
-			if ((stageNumber_ == 0 && isTriggerRight_==true )||
-				(stageNumber_ == 1 && isTriggerRight_==true )) {
-				triggerButtonRightTime_ += 1;
+
+			if ((triggerButtonLeftTime_==1 )) {
+				cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x - WIDTH_INTERVAL_,cursorPosition.y });
+				triggerButtonLeftTime_ = 0;
 			}
 
 		}
@@ -240,6 +259,11 @@ void SelectScene::Update(GameManager* gameManager) {
 		if (isTriggerRight_ == false) {
 			triggerButtonRightTime_ = 0;
 		}
+
+
+
+
+
 
 			//トリガー代わり
 		if (triggerButtonBTime_ == 1) {
@@ -297,27 +321,10 @@ void SelectScene::Update(GameManager* gameManager) {
 
 		}
 
-		if (cursorSprite_->GetTranslation().x == backToTitlePosition_.x) {
-			triggerButtonLeftTime_ = 0;
-			triggerButtonRightTime_ = 0;
-			stageNumber_ = 0;
-		}
-		if (cursorSprite_->GetTranslation().x == stageIconPosition[0].x) {
-			triggerButtonLeftTime_ = 0;
-			triggerButtonRightTime_ = 0;
-			stageNumber_ = 1;
-		}
-		if (cursorSprite_->GetTranslation().x == stageIconPosition[1].x) {
-			triggerButtonLeftTime_ = 0;
-			triggerButtonRightTime_ = 0;
-			stageNumber_ = 2;
-		}
-
+		
 
 	}
 	
-
-	//ステージナンバーを設定する
 
 
 #pragma endregion

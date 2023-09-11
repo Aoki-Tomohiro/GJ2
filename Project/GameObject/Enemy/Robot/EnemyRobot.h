@@ -1,6 +1,8 @@
 #pragma once
 #include"Model/Model.h"
 #include"ImGuiManager/ImGuiManager.h"
+#include"../GameObject/Enemy/Robot/RandBullet/RandBullet.h"
+
 struct  SEnemyRobot
 {
 

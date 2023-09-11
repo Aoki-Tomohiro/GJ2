@@ -6,6 +6,12 @@ EnemyRobot::EnemyRobot()
 
 EnemyRobot::~EnemyRobot()
 {
+	Bullets_.remove_if([](RobotBullet* bullet) {
+		
+			delete bullet;
+			return true;
+	});
+
 }
 
 void EnemyRobot::Initialize()
@@ -16,6 +22,11 @@ void EnemyRobot::Initialize()
 	enemy_.BodyWorldTransform.scale_ = { 28,28,28 };
 	enemy_.BodyWorldTransform.translation_ = { 0,20,90 };
 	HeadArmInit();
+	UpdateMatrixs();
+	state = std::make_unique<EnemyRobotRandBulletState>();
+	state->Initialize(this);
+
+	
 
 }
 
@@ -35,12 +46,20 @@ void EnemyRobot::Update()
 	ImGui::End();
 
 
+	BulletUp();
+	state->Update(this);
 	UpdateMatrixs();
 
 }
 
 void EnemyRobot::Draw(ViewProjection view)
 {
+	state->Draw(this,view);
+	for (RobotBullet* bullet : Bullets_)
+	{
+		bullet->Draw(view);
+
+	}
 	enemy_.HeadModel->Draw(enemy_.HeadWorldTransform, view);
 	enemy_.BodyModel->Draw(enemy_.BodyWorldTransform, view);
 	enemy_.LarmTopModel->Draw(enemy_.LarmWorldTransform, view);
@@ -48,6 +67,16 @@ void EnemyRobot::Draw(ViewProjection view)
 	enemy_.RarmTopModel->Draw(enemy_.RarmWorldTransform, view);
 	enemy_.RarmBoModel->Draw(enemy_.RarmBoWorldTransform, view);
 }
+
+void EnemyRobot::BulletPushBack(Vector3 velocity,Vector3 pos)
+{
+	RobotBullet* bullet = new RobotBullet();
+	bullet->Initialize(velocity, pos);
+	Bullets_.push_back(bullet);
+
+}
+
+
 
 void EnemyRobot::UpdateMatrixs()
 {
@@ -71,7 +100,7 @@ void EnemyRobot::HeadArmInit()
 	enemy_.LarmTopModel->CreateFromOBJ("Project/Resources/EnemyObj/EnemyRobot/LTopArm", "EnemyRobotLArm.obj");
 	enemy_.LarmWorldTransform.parent_= &enemy_.BodyWorldTransform;
 	enemy_.LarmWorldTransform.translation_.x = enemy_.LarmWorldTransform.translation_.x + 0.5f;
-	enemy_.LarmWorldTransform.translation_.y = enemy_.LarmWorldTransform.translation_.y + 0.2f;
+	enemy_.LarmWorldTransform.translation_.y = enemy_.LarmWorldTransform.translation_.y + 0.4f;
 	enemy_.LarmBoModel = std::make_unique <Model>();
 	enemy_.LarmBoModel->CreateFromOBJ("Project/Resources/EnemyObj/EnemyRobot/LBoArm", "LBoArm.obj");
 	enemy_.LarmBoWorldTransform.parent_ = &enemy_.LarmWorldTransform;
@@ -82,13 +111,42 @@ void EnemyRobot::HeadArmInit()
 	enemy_.RarmTopModel->CreateFromOBJ("Project/Resources/EnemyObj/EnemyRobot/RTopArm", "RTopArm.obj");
 	enemy_.RarmWorldTransform.parent_ = &enemy_.BodyWorldTransform;
 	enemy_.RarmWorldTransform.translation_.x = enemy_.RarmWorldTransform.translation_.x - 0.5f;
-	enemy_.RarmWorldTransform.translation_.y = enemy_.RarmWorldTransform.translation_.y + 0.2f;
+	enemy_.RarmWorldTransform.translation_.y = enemy_.RarmWorldTransform.translation_.y + 0.4f;
 	enemy_.RarmBoModel = std::make_unique <Model>();
 	enemy_.RarmBoModel->CreateFromOBJ("Project/Resources/EnemyObj/EnemyRobot/RBoArm", "EnemyRBoArm.obj");
 	enemy_.RarmBoWorldTransform.parent_ = &enemy_.RarmWorldTransform;
-	enemy_.RarmBoWorldTransform.translation_.x = enemy_.LarmBoWorldTransform.translation_.x -1.9f;
+	enemy_.RarmBoWorldTransform.translation_.x = enemy_.RarmBoWorldTransform.translation_.x -1.0f;
 	enemy_.RarmBoWorldTransform.translation_.z = enemy_.RarmBoWorldTransform.translation_.z - 0.3f;
-	enemy_.RarmBoWorldTransform.translation_.y = enemy_.LarmBoWorldTransform.translation_.y+0.002f;
+	enemy_.RarmBoWorldTransform.translation_.y = enemy_.RarmBoWorldTransform.translation_.y+0.1f;
 
 
+}
+
+void EnemyRobot::BulletUp()
+{
+	Bullets_.remove_if([](RobotBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+		});
+
+	for (RobotBullet* bullet : Bullets_) {
+
+		if (bullet->GetPosition().x >= 80 || bullet->GetPosition().x <= -80)
+		{
+			bullet->SetIsDead(true);
+
+		}
+		if (bullet->GetPosition().z >= 80 || bullet->GetPosition().z <= -80)
+		{
+			bullet->SetIsDead(true);
+		}
+
+	}
+	for (RobotBullet* bullet : Bullets_)
+	{
+		bullet->Update();
+	}
 }

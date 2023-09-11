@@ -119,6 +119,19 @@ void TransCube::Update()
 
 	state_->Update(this);
 
+	for (TransCubeBullet* bullet : bullets_) {
+
+		if (bullet->GetPosition().x >= 80 || bullet->GetPosition().x <= -80)
+		{
+			bullet->SetIsDead(true);
+
+		}
+		if (bullet->GetPosition().z >= 80 || bullet->GetPosition().z <= -80)
+		{
+			bullet->SetIsDead(true);
+		}
+
+	}
 	for (TransCubeBullet* bullet : bullets_)
 	{
 		bullet->Update();

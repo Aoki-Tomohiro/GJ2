@@ -30,7 +30,7 @@ public:
 private:
 
 
-	Model* model_ = nullptr;
+	std::unique_ptr<Model> model_ = nullptr;
 	WorldTransform worldTransform_ = {};
 
 	Vector3 velocity_ = {};

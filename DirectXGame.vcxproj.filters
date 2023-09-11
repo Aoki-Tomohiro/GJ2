@@ -258,8 +258,8 @@
     <ClCompile Include="Project\GameObject\Enemy\Robot\RandBullet\RandBullet.cpp">
       <Filter>ソース ファイル\Project\GameObject\Robot</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\Robot\state\IEnemyRobotState.cpp">
-      <Filter>ソース ファイル\Project\GameObject\Robot\State</Filter>
+    <ClCompile Include="Project\GameObject\Enemy\Robot\state\RandBullet\EnemyRobotRandBulletState.cpp">
+      <Filter>ソース ファイル\Project\GameObject\Robot\State\RobotRandBulletState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -404,11 +404,11 @@
     <ClInclude Include="Project\GameObject\Enemy\TransCube\RandBullet\TransCubeBullet.h">
       <Filter>ソース ファイル\Project\GameObject\TransCube</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\Robot\state\IEnemyRobotState.h">
-      <Filter>ソース ファイル\Project\GameObject\Robot\State</Filter>
-    </ClInclude>
     <ClInclude Include="Project\GameObject\Enemy\Robot\RandBullet\RandBullet.h">
       <Filter>ソース ファイル\Project\GameObject\Robot</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\Robot\state\IEnemyRobotState.h">
+      <Filter>ソース ファイル\Project\GameObject\Robot\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -6,13 +6,14 @@ RobotBullet::RobotBullet()
 
 RobotBullet ::~RobotBullet()
 {
-	delete model_;
+	
+
 }
 
 void  RobotBullet::Initialize(Vector3& velocity, Vector3 pos)
 {
 
-	model_ = new Model();
+	model_ = std::make_unique<Model>();
 	//model_->CreateSphere();
 
 	model_->CreateFromOBJ("Project/Resources/EnemyObj/TransCube", "TransCube.obj");

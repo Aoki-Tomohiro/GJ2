@@ -3,6 +3,8 @@
 #include"ImGuiManager/ImGuiManager.h"
 #include"../GameObject/Enemy/Robot/RandBullet/RandBullet.h"
 
+#include"../GameObject/Enemy/Robot/state/RandBullet/EnemyRobotRandBulletState.h"
+
 struct  SEnemyRobot
 {
 
@@ -22,7 +24,6 @@ struct  SEnemyRobot
 	std::unique_ptr<Model> LarmTopModel = nullptr;
 	std::unique_ptr<Model> LarmBoModel = nullptr;
 };
-
 class Player;
 class EnemyRobot
 {
@@ -37,18 +38,24 @@ public:
 	void Draw(ViewProjection view);
 
 	void SetPlayer(Player* player) { player_ = player; }
+	void SetRTEnemyWorldPos(Vector3 enemy) { enemy_.RarmWorldTransform.rotation_ = enemy; }
+
 	Player* GetPlayer() { return player_; }
-
+	SEnemyRobot &GetEnemy() { return enemy_; }
+	void BulletPushBack(Vector3 velocity,Vector3 pos);
 private:
-
+	
 	void UpdateMatrixs();
 
 	void HeadArmInit();
 
+	void BulletUp();
 	SEnemyRobot enemy_ = {};
-
+	std::list<RobotBullet*> Bullets_ = {};
 
 	Player* player_ = nullptr;
+
+	std::unique_ptr<IEnemyRobotState> state = {};
 
 };
 

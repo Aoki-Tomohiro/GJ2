@@ -121,7 +121,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\GameObject\Box\BoxManager.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\Robot\EnemyRobot.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\Robot\RandBullet\RandBullet.cpp" />
-    <ClCompile Include="Project\GameObject\Enemy\Robot\state\IEnemyRobotState.cpp" />
+    <ClCompile Include="Project\GameObject\Enemy\Robot\state\RandBullet\EnemyRobotRandBulletState.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\TransCube\GroundAttack\TransCubeGroundAttack.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\TransCube\RandBullet\TransCubeBullet.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\TransCube\state\ITransCubeState.cpp" />

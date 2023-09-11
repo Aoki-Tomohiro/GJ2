@@ -57,8 +57,8 @@ void SelectScene::Initialize(GameManager* gameManager) {
 	debugCamera_ = new DebugCamera();
 
 
-	//初期では1を選択している
-	stageNumber_ = 1;
+	//初期では0を選択している
+	stageNumber_ = 0;
 
 	
 
@@ -73,13 +73,24 @@ void SelectScene::Initialize(GameManager* gameManager) {
 
 	//Timer系の変数
 	triggerButtonBTime_ = 0;
-	fadeOutTime_ = 0;
+	triggerButtonLeftTime_ = 0;
+	triggerButtonRightTime_ = 0;
+
+	isTriggerLeft_ = false;
+	isTriggerRight_ = false;
+
+	fadeInTime_ = 0.0f;
+	fadeOutTime_ = 0.0f;
+	isFadeInMode_ = true;
 	isFadeOutMode_ = false;
+
+	
 
 	//透明度
 	COLOR_BIND = 1.0f;
-	transparency_ = { COLOR_BIND,COLOR_BIND,COLOR_BIND,0.0f };
-	fadeOutInterval_ = 10.0 / 256.0f;
+	//1.0fで真っ暗
+	transparency_ = { COLOR_BIND,COLOR_BIND,COLOR_BIND,1.0f };
+	fadeInterval_ = 10.0 / 256.0f;
 
 
 	const int SECOND_ = 60;
@@ -102,8 +113,8 @@ void SelectScene::Initialize(GameManager* gameManager) {
 	//タイトルに戻る
 	backToTitleSprite_ = new Sprite();
 	backToTitleTexture_ = textureManager_->Load("Project/Resources/Select/ToTitle.png");
-	Vector2 backToTitlePosition = { 400.0f,500.0f };
-	backToTitleSprite_->Create(backToTitleTexture_, backToTitlePosition);
+	backToTitlePosition_ = { 400.0f,500.0f };
+	backToTitleSprite_->Create(backToTitleTexture_, backToTitlePosition_);
 	
 	
 	
@@ -115,8 +126,8 @@ void SelectScene::Initialize(GameManager* gameManager) {
 	
 	//アイコンの間隔
 	WIDTH_INTERVAL_ = 200.0f;
-	stageIconPosition[0] = { backToTitlePosition.x + WIDTH_INTERVAL_ * 1.0f,backToTitlePosition.y };
-	stageIconPosition[1] = { backToTitlePosition.x + WIDTH_INTERVAL_ * 2.0f,backToTitlePosition.y };
+	stageIconPosition[0] = { backToTitlePosition_.x + WIDTH_INTERVAL_ * 1.0f,backToTitlePosition_.y };
+	stageIconPosition[1] = { backToTitlePosition_.x + WIDTH_INTERVAL_ * 2.0f,backToTitlePosition_.y };
 		
 	stageIconSprite_[0]->Create(stageIconTexture_[0], stageIconPosition[0]);
 	stageIconSprite_[1]->Create(stageIconTexture_[1], stageIconPosition[1]);
@@ -163,45 +174,139 @@ void SelectScene::Update(GameManager* gameManager) {
 
 	ImGui::Begin("Select");
 	ImGui::Text("Select");
-	ImGui::Text("Space To GameScene");
-	ImGui::Text("SelectKey Left Or Right");
+	ImGui::Text("B To GameScene");
+	ImGui::Text("Select Key Left Or Right");
+	ImGui::InputInt("triggerLeftTime", &triggerButtonLeftTime_);
+	ImGui::InputInt("stageNumber_", &stageNumber_);
 
 	
-	//2つ用意で
-	if (input_->IsPushKeyEnter(DIK_SPACE)) {
-		gameManager->ChangeScene(new GameScene());
+	//FadeIn
+	//黒背景が透明になっていっていく
+	//疑似FadeIn
+	if (isFadeInMode_ == true) {
+		transparency_.w -= fadeInterval_;
+	}
+	if (transparency_.w <= 0.0f) {
+		isFadeInMode_ = false;
 	}
 
-	XINPUT_STATE joyState{};
+#pragma region 選択
+	
+	//2つ用意で
+	if (isFadeInMode_ == false) {
 
-	if (Input::GetInstance()->GetJoystickState(joyState)) {
+		XINPUT_STATE joyState{};
 
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-			triggerButtonBTime_ += 1;
+		if (Input::GetInstance()->GetJoystickState(joyState)) {
+
+			//決定
+			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+				triggerButtonBTime_ += 1;
+				
+			}
+
+
+			//十字ボタンで選択
+			//左
+			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) {
+				triggerButtonLeftTime_ += 1;
+				
+			}
+			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) {
+				triggerButtonRightTime_ += 1;
+				
+			}
 			
 		}
 		
-	}
 
-	//トリガー代わり
-	if (triggerButtonBTime_ == 1) {
-		isFadeOutMode_ = true;
+
+			//トリガー代わり
+		if (triggerButtonBTime_ == 1) {
+			isFadeOutMode_ = true;
+		}
+		if (triggerButtonLeftTime_ == 1) {
+			triggerButtonLeftTime_ = 0;
+			isTriggerLeft_ = true;
 			
-	}
+		}
+		if (triggerButtonRightTime_ == 1) {
+			triggerButtonRightTime_ = 0;
+			isTriggerRight_ = true;
+		}
 
+
+		if (isTriggerLeft_ == true) {
+			ImGui::Text("Left");
+			
+			//中にGetterを入れたら大丈夫だった
+			if (cursorSprite_->GetTranslation().x > backToTitlePosition_.x) {
+				cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x - WIDTH_INTERVAL_,cursorPosition.y });
+				
+				isTriggerLeft_ = false;
+			}
+			else{
+				cursorSprite_->SetTranslation(cursorSprite_->GetTranslation());
+				
+				isTriggerLeft_ = false;
+			}
+			
+			
+		}
+
+		if (isTriggerRight_ == true) {
+			ImGui::Text("Right");
+			
+			//中にGetterを入れたら大丈夫だった
+			if (cursorSprite_->GetTranslation().x < stageIconPosition[1].x) {
+				cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x+ WIDTH_INTERVAL_,cursorPosition.y });
+				
+				isTriggerRight_ = false;
+			}
+			else{
+				cursorSprite_->SetTranslation(cursorSprite_->GetTranslation());
+				
+				isTriggerRight_ = false;
+			}
+
+		}
+
+		if (cursorSprite_->GetTranslation().x == backToTitlePosition_.x) {
+			stageNumber_ = 0;
+		}
+		if (cursorSprite_->GetTranslation().x == stageIconPosition[0].x) {
+			stageNumber_ = 1;
+		}
+		if (cursorSprite_->GetTranslation().x == stageIconPosition[1].x) {
+			stageNumber_ = 2;
+		}
+
+
+	}
+	
+
+	//ステージナンバーを設定する
+
+
+#pragma endregion
+
+
+	//FadeOut
 	if (isFadeOutMode_ == true) {
-		transparency_.w += fadeOutInterval_;
-		
+		transparency_.w += fadeInterval_;
+		ImGui::Text("decide");
 
 		///完全に暗くなるとローディングへ
 		if (transparency_.w >= 1.0f) {
 			loadingTime += 1;
 		}
 	}
+
 	//スプライトの透明度をここで設定
 	backSprite_->SetColor({COLOR_BIND,COLOR_BIND,COLOR_BIND,transparency_.w});
 	
-	//Loading
+	
+	//LoadingからGameSceneへ
 	if (loadingTime > SECOND_ * 3) {
 		gameManager->ChangeScene(new GameScene());	
 	}
@@ -209,31 +314,8 @@ void SelectScene::Update(GameManager* gameManager) {
 	
 
 
-	//左右キーで移動
-	if (input_->IsPushKeyEnter(DIK_RIGHT)) {
-		ImGui::Text("Right");
-		//中にGetterを入れたら大丈夫だった
-		if (cursorSprite_->GetTranslation().x < stageIconPosition[1].x) {
-			cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x+ WIDTH_INTERVAL_,cursorPosition.y });
-		
-		}
-		else{
-			cursorSprite_->SetTranslation(cursorSprite_->GetTranslation());
-		}
-		
-	}
-	if (input_->IsPushKeyEnter(DIK_LEFT)) {
-		ImGui::Text("Left");
-
-		if (cursorSprite_->GetTranslation().x > 400.0f) {
-			cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x - WIDTH_INTERVAL_,cursorPosition.y });
-		}
-		else{
-			cursorSprite_->SetTranslation(cursorSprite_->GetTranslation());
-		}
-		
-
-	}
+	
+	
 	ImGui::End();
 
 

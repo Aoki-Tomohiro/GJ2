@@ -88,7 +88,7 @@ private:
 	//タイトルに戻るためのアイコン
 	Sprite* backToTitleSprite_ = nullptr;
 	uint32_t backToTitleTexture_ = 0u;
-		
+	Vector2 backToTitlePosition_ = {};
 	
 	//黒色の背景
 	Sprite* backSprite_ = nullptr;
@@ -96,13 +96,27 @@ private:
 
 	//Trigger専用のタイマー
 	int32_t triggerButtonBTime_ = 0;
-	float_t fadeOutTime_ = 0;
+	int32_t triggerButtonLeftTime_ = 0;
+	int32_t triggerButtonRightTime_ = 0;
+
+	float_t fadeInTime_ = 0.0f;
+	float_t fadeOutTime_ = 0.0f;
+
+	bool isTriggerLeft_ = false;
+	bool isTriggerRight_ = false;
+
+
+
+	float COLOR_BIND = 1.0f;
+	Vector4 transparency_ = { 0.0f,0.0f,0.0f,0.0f };
+
+
+	//FadeIn用
+	bool isFadeInMode_ = false;
 
 	//FadeOut用
 	bool isFadeOutMode_ = false;
-	float COLOR_BIND = 1.0f;
-	Vector4 transparency_ = { 0.0f,0.0f,0.0f,0.0f };
-	float fadeOutInterval_ = 0.0f;
+	float fadeInterval_ = 0.0f;
 
 	const int SECOND_ = 60;
 	int32_t loadingTime = 0;

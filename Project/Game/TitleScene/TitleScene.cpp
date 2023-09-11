@@ -46,7 +46,7 @@ void TitleScene::Initialize(GameManager* gameManager) {
 	//透明度
 	COLOR_BIND = 1.0f;
 	transparency_ = { COLOR_BIND,COLOR_BIND,COLOR_BIND,0.0f };
-	fadeOutInterval_ = 10.0 / 256.0f;
+	fadeInterval_ = 10.0 / 256.0f;
 
 
 	const int SECOND_ = 60;
@@ -123,7 +123,7 @@ void TitleScene::Update(GameManager* gameManager) {
 	}
 
 	if (isFadeOutMode_ == true) {
-		transparency_.w += fadeOutInterval_;
+		transparency_.w += fadeInterval_;
 		
 
 		///ローディング

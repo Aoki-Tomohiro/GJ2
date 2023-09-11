@@ -2,6 +2,7 @@
 
 #include "GameScene/GameScene.h"
 #include "TitleScene/TitleScene.h"
+#include "SelectScene/SelectScene.h"
 
 #include "GlobalVariables/GlobalVariables.h"
 
@@ -37,7 +38,7 @@ GameManager::GameManager() {
 
 
 	//シーンの初期化
-	currentScene_ = new TitleScene();
+	currentScene_ = new SelectScene();
 	currentScene_->Initialize(this);
 }
 

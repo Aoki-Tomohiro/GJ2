@@ -86,7 +86,7 @@ private:
 	bool isFadeOutMode_ = false;
 	float COLOR_BIND = 1.0f;
 	Vector4 transparency_ = { 0.0f,0.0f,0.0f,0.0f };
-	float fadeOutInterval_ = 0.0f;
+	float fadeInterval_ = 0.0f;
 
 	const int SECOND_ = 60;
 	int32_t loadingTime = 0;

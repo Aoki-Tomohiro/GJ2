@@ -164,6 +164,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Externals\imgui\imstb_truetype.h" />
     <ClInclude Include="Engine\Math\MathFunction.h" />
     <ClInclude Include="Project\GameObject\Box\Box.h" />
+    <ClInclude Include="Project\GameObject\Box\BoxConfig.h" />
     <ClInclude Include="Project\GameObject\Box\BoxManager.h" />
     <ClInclude Include="Project\GameObject\Enemy\TransCube\GroundAttack\TransCubeGroundAttack.h" />
     <ClInclude Include="Project\GameObject\Enemy\TransCube\RandBullet\TransCubeBullet.h" />

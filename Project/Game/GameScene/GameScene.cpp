@@ -69,6 +69,18 @@ void GameScene::Initialize(GameManager* gameManager) {
 
 	//衝突マネージャーの生成
 	collisionManager_ = std::make_unique<CollisionManager>();
+
+
+	//Music
+	bgmAudio_ =  Audio::GetInstance();
+	bgmHandle_=audio_->SoundLoadWave("Project/Resources/Music/BGM/Game/GameBGM.wav");
+
+	bgmAudio_->SoundPlayWave(bgmHandle_, true);
+
+
+
+
+
 };
 
 void GameScene::Update(GameManager* gameManager) {
@@ -128,10 +140,12 @@ void GameScene::Update(GameManager* gameManager) {
 
 	//2でSelectSceneへ
 	if (input_->IsPushKeyEnter(DIK_W)) {
+		bgmAudio_->StopAudio(bgmHandle_);
 		gameManager->ChangeScene(new WinScene());
 	}
 	//3でSelectSceneへ
 	if (input_->IsPushKeyEnter(DIK_L)) {
+		bgmAudio_->StopAudio(bgmHandle_);
 		gameManager->ChangeScene(new LoseScene());
 	}
 

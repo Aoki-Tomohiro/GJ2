@@ -139,7 +139,16 @@ void SelectScene::Initialize(GameManager* gameManager) {
 	cursorSprite_->Create(cursorTexture_, cursorPosition);
 
 
+	//Music
+	bgmAudio_ = Audio::GetInstance();
+	bgmHandle_ = audio_->SoundLoadWave("Project/Resources/Music/BGM/Select/SelectBGM.wav");
 
+	bgmAudio_->SoundPlayWave(bgmHandle_, true);
+
+
+	//SE
+	startSEAudio_ =  Audio::GetInstance();
+	startSEHandle_=audio_->SoundLoadWave("Project/Resources/Music/SE/Deside/Start.wav");
 	
 
 }
@@ -177,8 +186,10 @@ void SelectScene::Update(GameManager* gameManager) {
 	ImGui::Text("B To GameScene");
 	ImGui::Text("Select Key Left Or Right");
 	ImGui::InputInt("triggerLeftTime", &triggerButtonLeftTime_);
-	ImGui::InputInt("stageNumber_", &stageNumber_);
+	ImGui::InputInt("triggerRightTime", &triggerButtonRightTime_);
 
+	ImGui::InputInt("stageNumber_", &stageNumber_);
+	
 	
 	//FadeIn
 	//黒背景が透明になっていっていく
@@ -209,75 +220,96 @@ void SelectScene::Update(GameManager* gameManager) {
 			//十字ボタンで選択
 			//左
 			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) {
-				triggerButtonLeftTime_ += 1;
+				isTriggerLeft_ = true;
 				
 			}
 			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) {
-				triggerButtonRightTime_ += 1;
+				isTriggerRight_ = true;
 				
 			}
 			
+
+
+			if ((stageNumber_ == 0 && isTriggerRight_==true )||
+				(stageNumber_ == 1 && isTriggerRight_==true )) {
+				triggerButtonRightTime_ += 1;
+			}
+
 		}
 		
-
+		if (isTriggerRight_ == false) {
+			triggerButtonRightTime_ = 0;
+		}
 
 			//トリガー代わり
 		if (triggerButtonBTime_ == 1) {
 			isFadeOutMode_ = true;
-		}
-		if (triggerButtonLeftTime_ == 1) {
-			triggerButtonLeftTime_ = 0;
-			isTriggerLeft_ = true;
+			//StartSE再生
+			//ループ無し
+			startSEAudio_->SoundPlayWave(startSEHandle_, false);
+
 			
 		}
+		//if (isTriggerLeft_ == true) {
+		//	triggerButtonLeftTime_ += 1;
+		//	
+		//	
+		//}
+		//if (isTriggerRight_ == true) {
+		//	triggerButtonRightTime_ += 1;
+		//	
+		//}
+
+
+		//if (triggerButtonLeftTime_ == 1) {
+		//	ImGui::Text("Left");
+		//	
+		//	//中にGetterを入れたら大丈夫だった
+		//	if (cursorSprite_->GetTranslation().x > backToTitlePosition_.x) {
+		//		cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x - WIDTH_INTERVAL_,cursorPosition.y });
+		//		
+		//		isTriggerLeft_ = false;
+		//	}
+		//	else{
+		//		cursorSprite_->SetTranslation(cursorSprite_->GetTranslation());
+		//		triggerButtonLeftTime_ = 0;
+		//		isTriggerLeft_ = false;
+		//	}
+		//	
+		//	
+		//}
+
 		if (triggerButtonRightTime_ == 1) {
-			triggerButtonRightTime_ = 0;
-			isTriggerRight_ = true;
-		}
-
-
-		if (isTriggerLeft_ == true) {
-			ImGui::Text("Left");
-			
-			//中にGetterを入れたら大丈夫だった
-			if (cursorSprite_->GetTranslation().x > backToTitlePosition_.x) {
-				cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x - WIDTH_INTERVAL_,cursorPosition.y });
-				
-				isTriggerLeft_ = false;
-			}
-			else{
-				cursorSprite_->SetTranslation(cursorSprite_->GetTranslation());
-				
-				isTriggerLeft_ = false;
-			}
-			
-			
-		}
-
-		if (isTriggerRight_ == true) {
 			ImGui::Text("Right");
-			
-			//中にGetterを入れたら大丈夫だった
-			if (cursorSprite_->GetTranslation().x < stageIconPosition[1].x) {
-				cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x+ WIDTH_INTERVAL_,cursorPosition.y });
+			cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x+ WIDTH_INTERVAL_,cursorPosition.y });
 				
-				isTriggerRight_ = false;
-			}
-			else{
+			isTriggerRight_ = false;
+			triggerButtonRightTime_ = 0;
+			//中にGetterを入れたら大丈夫だった
+			//if (cursorSprite_->GetTranslation().x < stageIconPosition[1].x) {
+			//	
+			//}
+			/*else{
 				cursorSprite_->SetTranslation(cursorSprite_->GetTranslation());
 				
 				isTriggerRight_ = false;
-			}
+			}*/
 
 		}
 
 		if (cursorSprite_->GetTranslation().x == backToTitlePosition_.x) {
+			triggerButtonLeftTime_ = 0;
+			triggerButtonRightTime_ = 0;
 			stageNumber_ = 0;
 		}
 		if (cursorSprite_->GetTranslation().x == stageIconPosition[0].x) {
+			triggerButtonLeftTime_ = 0;
+			triggerButtonRightTime_ = 0;
 			stageNumber_ = 1;
 		}
 		if (cursorSprite_->GetTranslation().x == stageIconPosition[1].x) {
+			triggerButtonLeftTime_ = 0;
+			triggerButtonRightTime_ = 0;
 			stageNumber_ = 2;
 		}
 
@@ -293,6 +325,7 @@ void SelectScene::Update(GameManager* gameManager) {
 
 	//FadeOut
 	if (isFadeOutMode_ == true) {
+		bgmAudio_->StopAudio(bgmHandle_);
 		transparency_.w += fadeInterval_;
 		ImGui::Text("decide");
 

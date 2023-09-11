@@ -88,4 +88,13 @@ private:
 	std::unique_ptr<TestGround> ground_ = nullptr;
 
 
+
+	//BGM
+	Audio* bgmAudio_ = nullptr;
+	uint32_t bgmHandle_ = 0u;
+
+
+
+
+
 };

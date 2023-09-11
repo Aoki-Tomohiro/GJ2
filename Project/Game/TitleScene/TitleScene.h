@@ -91,4 +91,15 @@ private:
 	const int SECOND_ = 60;
 	int32_t loadingTime = 0;
 
+
+	//BGM
+	Audio* bgmAudio_ = nullptr;
+	uint32_t bgmHandle_ = 0u;
+
+	//SE
+	Audio* startSEAudio_ = nullptr;
+	uint32_t startSEHandle_ = 0u;
+
+
+
 };

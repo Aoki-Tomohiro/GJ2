@@ -67,6 +67,16 @@ void TitleScene::Initialize(GameManager* gameManager) {
 	
 
 
+	//Music
+	bgmAudio_ =  Audio::GetInstance();
+	bgmHandle_=audio_->SoundLoadWave("Project/Resources/Music/BGM/Title/TitleBGM.wav");
+
+
+
+	//SE
+	startSEAudio_ =  Audio::GetInstance();
+	startSEHandle_=audio_->SoundLoadWave("Project/Resources/Music/SE/Deside/Start.wav");
+	bgmAudio_->SoundPlayWave(bgmHandle_, true);
 
 }
 
@@ -105,6 +115,11 @@ void TitleScene::Update(GameManager* gameManager) {
 	ImGui::InputFloat4("Transparency", &transparency_.x);
 	ImGui::End();
 
+	//BGM再生
+	//ループあり
+	
+
+
 	XINPUT_STATE joyState{};
 
 	if (Input::GetInstance()->GetJoystickState(joyState)) {
@@ -119,6 +134,12 @@ void TitleScene::Update(GameManager* gameManager) {
 	//トリガー代わり
 	if (triggerButtonBTime_ == 1) {
 		isFadeOutMode_ = true;
+		//StartSE再生
+		//ループ無し
+		startSEAudio_->SoundPlayWave(startSEHandle_, false);
+
+		//BGMを止める
+		bgmAudio_->StopAudio(bgmHandle_);
 			
 	}
 
@@ -126,6 +147,7 @@ void TitleScene::Update(GameManager* gameManager) {
 		transparency_.w += fadeInterval_;
 		
 
+		
 		///ローディング
 		if (transparency_.w >= 1.0f) {
 			loadingTime += 1;

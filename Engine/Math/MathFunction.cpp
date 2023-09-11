@@ -62,6 +62,21 @@ Vector3 Normalize(const Vector3& v) {
 	return result;
 }
 
+Matrix4x4 Add(Matrix4x4 m1, Matrix4x4 m2)
+{
+	Matrix4x4 result;
+
+	for (int i = 0; i < 4; i++)
+	{
+		for (int y = 0; y < 4; y++)
+		{
+			result.m[i][y] = m1.m[i][y] + m2.m[i][y];
+		}
+	}
+
+	return result;
+}
+
 //行列の掛け算
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 	Matrix4x4 result;

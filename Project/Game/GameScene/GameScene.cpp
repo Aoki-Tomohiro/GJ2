@@ -43,15 +43,13 @@ void GameScene::Initialize(GameManager* gameManager) {
 	player_->SetGameScene(this);
 
 	//敵キャラの初期化
-	modelTransCube_ = std::make_unique<Model>();
-	modelTransCube_->CreateFromOBJ("Project/Resources/EnemyObj/TransCube", "TransCube.obj");
-
 	transCube_ = std::make_unique<TransCube>();
 	transCube_->SetPlayer(player_.get());
-
 	transCube_->Initialize();
-
 	player_->SetTrancCube(transCube_.get());
+
+	EnemyRobot_ = std::make_unique<EnemyRobot>();
+	EnemyRobot_->Initialize();
 
 	//追従カメラの初期化
 	followCamera_ = std::make_unique<FollowCamera>();
@@ -90,10 +88,13 @@ void GameScene::Update(GameManager* gameManager) {
 
 	transCube_.get()->SetPlayer(player_.get());
 	//敵キャラの更新
-	transCube_->Update();
+	//transCube_->Update();
+	EnemyRobot_->Update();
 
 	//箱の更新
 	boxManager_->Update();
+	
+	
 	//追従カメラの更新
 	followCamera_->Update();
 
@@ -152,6 +153,8 @@ void GameScene::Draw(GameManager* gameManager) {
 	}
 	//敵キャラの描画
 	transCube_->Draw(viewProjection_);
+	EnemyRobot_->Draw(viewProjection_);
+
 	//箱の描画
 	boxManager_->Draw(viewProjection_);
 	//地面の描画

@@ -224,16 +224,6 @@ void SelectScene::Update(GameManager* gameManager) {
 	}
 
 
-	ImGui::Begin("Select");
-	ImGui::Text("Select");
-	ImGui::Text("B To GameScene");
-	ImGui::Text("Select Key Left Or Right");
-	ImGui::InputInt("triggerLeftTime", &triggerButtonLeftTime_);
-
-	ImGui::InputFloat2("cursorPosition", &cursorPosition.x);
-
-	ImGui::InputInt("stageNumber_", &stageNumber_);
-	
 	
 	//FadeIn
 	//黒背景が透明になっていっていく
@@ -426,7 +416,10 @@ void SelectScene::Update(GameManager* gameManager) {
 			loadingTime += 1;
 		}
 	}
-	ImGui::End();
+
+
+
+
 	//スプライトの透明度をここで設定
 	backSprite_->SetColor({COLOR_BIND,COLOR_BIND,COLOR_BIND,transparency_.w});
 	

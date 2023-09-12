@@ -117,12 +117,6 @@ void TitleScene::Update(GameManager* gameManager) {
 
 
 
-	ImGui::Begin("Title");
-	ImGui::Text("Title");
-	ImGui::Text("Space To SlectScene");
-	ImGui::InputFloat4("Transparency", &transparency_.x);
-	ImGui::End();
-
 	//BGM再生
 	//ループあり
 	//FadeIn

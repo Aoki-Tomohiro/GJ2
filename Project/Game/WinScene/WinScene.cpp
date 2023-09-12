@@ -132,13 +132,6 @@ void WinScene::Update(GameManager* gameManager) {
 	//Aボタンでステージ選択へ
 	//今はそのままゲームシーンへ
 	
-	
-	ImGui::Begin("WinScene");
-	ImGui::Text("B:To SelectScene");
-	ImGui::Text("A:To TitleScene");
-	ImGui::InputInt("loadingTime", &loadingTime);
-	ImGui::InputFloat4("transparency", &transparency_.x);
-	
 	//画像の切り替わり
 	winTextureChangeTime_ += 1;
 	if (winTextureChangeTime_ > 0) {
@@ -245,11 +238,6 @@ void WinScene::Update(GameManager* gameManager) {
 	}
 
 
-
-	
-
-
-	ImGui::End();
 }
 
 /// <summary>

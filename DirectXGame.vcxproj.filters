@@ -44,7 +44,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Project\GameObject\Box\Box.cpp" />
     <ClCompile Include="Project\GameObject\Box\BoxManager.cpp" />
-    <ClCompile Include="Project\GameObject\Enemy\Robot\RandBullet\RandBullet.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\TransCube\state\ITransCubeState.cpp" />
     <ClCompile Include="Project\GameObject\FollowCamera\FollowCamera.cpp" />
     <ClCompile Include="Project\GameObject\Ground\TestGround.cpp" />
@@ -86,6 +85,9 @@
     <ClCompile Include="Project\GameObject\Enemy\Robot\Punch\RobotPunch.cpp">
       <Filter>Robot</Filter>
     </ClCompile>
+    <ClCompile Include="Project\GameObject\Enemy\Robot\RandBullet\RandBullet.cpp">
+      <Filter>Robot</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\2D\GlobalVariables\GlobalVariables.h" />
@@ -121,7 +123,6 @@
     <ClInclude Include="Project\GameObject\Box\Box.h" />
     <ClInclude Include="Project\GameObject\Box\BoxConfig.h" />
     <ClInclude Include="Project\GameObject\Box\BoxManager.h" />
-    <ClInclude Include="Project\GameObject\Enemy\Robot\RandBullet\RandBullet.h" />
     <ClInclude Include="Project\GameObject\Enemy\Robot\state\IEnemyRobotState.h" />
     <ClInclude Include="Project\GameObject\Enemy\TransCube\state\ITransCubeState.h" />
     <ClInclude Include="Project\GameObject\FollowCamera\FollowCamera.h" />
@@ -163,6 +164,9 @@
       <Filter>Robot</Filter>
     </ClInclude>
     <ClInclude Include="Project\GameObject\Enemy\Robot\Punch\RobotPunch.h">
+      <Filter>Robot</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\Robot\RandBullet\RandBullet.h">
       <Filter>Robot</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,6 +6,8 @@
 #include"../GameObject/Enemy/Robot/state/RandBullet/EnemyRobotRandBulletState.h"
 #include"../GameObject/Enemy/Robot/state/RobotPunch/EnemyRobotPunchState.h"
 #include"../GameObject/Enemy/Robot/Punch/RobotPunch.h"
+#include"CollisionManager/CollisionConfig.h"
+#include"CollisionManager/Collider.h"
 
 struct  SEnemyRobot
 {
@@ -24,7 +26,7 @@ struct  SEnemyRobot
 	std::unique_ptr<Model> LarmBoModel = nullptr;
 };
 class Player;
-class EnemyRobot
+class EnemyRobot: public Collider
 {
 public:
 	EnemyRobot();
@@ -35,6 +37,12 @@ public:
 	void Update();
 
 	void Draw(ViewProjection view);
+
+
+	Vector3 GetWorldPosition()override;
+	void OnCollision()override;
+
+
 
 	void SetPlayer(Player* player) { player_ = player; }
 	void SetRTEnemyWorldPos(Vector3 enemy) { enemy_.RarmWorldTransform.rotation_ = enemy; }
@@ -54,6 +62,7 @@ public:
 	void BulletPushBack(Vector3 velocity,Vector3 pos);
 	void PunchPushBack(Vector3 pos);
 	std::list<RobotPunch*>GetPunch() { return punch_; }
+	std::list<RobotBullet*>GetBullets() { return Bullets_; }
 
 	Vector3 EasingFanc(Vector3 startv, Vector3 Endv, float &Flame, float EndFlame);
 private:

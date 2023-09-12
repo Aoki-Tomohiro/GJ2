@@ -1,7 +1,8 @@
 #pragma once
+#include "CollisionManager/Collider.h"
 #include"Model/Model.h"
-
-class RobotPunch
+#include"CollisionManager/CollisionConfig.h"
+class RobotPunch: public Collider
 {
 public:
 	RobotPunch();
@@ -12,6 +13,10 @@ public:
 	void Update();
 
 	void Draw(ViewProjection view);
+
+	Vector3 GetWorldPosition()override;
+	void OnCollision()override;
+
 
 	bool IsDead() { return isDead; }
 	void SetIsDead(bool flag) { isDead = flag; }

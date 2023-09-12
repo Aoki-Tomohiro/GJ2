@@ -12,6 +12,11 @@ EnemyRobot::~EnemyRobot()
 			return true;
 	});
 
+	punch_.remove_if([](RobotPunch* bullet) {
+
+		delete bullet;
+		return true;
+	});
 }
 
 void EnemyRobot::Initialize()
@@ -43,6 +48,12 @@ void EnemyRobot::Initialize()
 	CoreWorldTransform.translation_.z = 73;
 	CoreWorldTransform.translation_.y = 30;
 	CoreWorldTransform.scale_ = { 3.0f,3.0f,3.0f };
+
+	//衝突属性を設定
+	SetCollisionAttribute(kCollisionAttributeEnemy);
+	//衝突対象を自分の属性以外に設定
+	SetCollisionMask(kCollisionMaskEnemy);
+
 }
 
 void EnemyRobot::Update()
@@ -121,6 +132,21 @@ void EnemyRobot::Draw(ViewProjection view)
 	enemy_.LarmBoModel->Draw(enemy_.LarmBoWorldTransform, view);
 	enemy_.RarmTopModel->Draw(enemy_.RarmWorldTransform, view);
 	enemy_.RarmBoModel->Draw(enemy_.RarmBoWorldTransform, view);
+}
+
+Vector3 EnemyRobot::GetWorldPosition()
+{
+	Vector3 result;
+
+	result.x = CoreWorldTransform.matWorld_.m[3][0];
+	result.y = CoreWorldTransform.matWorld_.m[3][1];
+	result.z = CoreWorldTransform.matWorld_.m[3][2];
+
+	return result;
+}
+
+void EnemyRobot::OnCollision()
+{
 }
 
 void EnemyRobot::BulletPushBack(Vector3 velocity,Vector3 pos)

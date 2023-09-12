@@ -267,6 +267,18 @@ void GameScene::SetCollisions()
 	}
 	for (TransCubeGroundAttack* bullet : transCube_.get()->GetGroundBullets()) {
 		collisionManager_->SetColliderListAABB(bullet);
-
 	}
+
+
+	collisionManager_->SetColliderList(EnemyRobot_.get());
+	for (RobotBullet* bullet : EnemyRobot_.get()->GetBullets())
+	{
+		collisionManager_->SetColliderList(bullet);
+	}
+	for (RobotPunch* bullet : EnemyRobot_.get()->GetPunch())
+	{
+		collisionManager_->SetColliderListAABB(bullet);
+		
+	}
+
 }

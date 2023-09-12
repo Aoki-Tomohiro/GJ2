@@ -72,13 +72,16 @@ private:
 	float HEIGHT_INTERVAL_;
 
 	//タイトル画面の画像
-	Sprite* sprite_ = nullptr;
-	uint32_t textureHandle_ = 0u;
+	Sprite* silhouetteSprite_[4] = { nullptr };
+	uint32_t silhouetteTextureHandle_[4] = {0u};
 
 	//カーソル
 	Sprite* cursorSprite_ = nullptr;
 	uint32_t cursorTexture_ = 0u;
 	Vector2 cursorPosition = {};
+	int32_t changeTime_ = 0;
+	bool isDraw_ = true;
+
 
 	//StageIcon
 	static const int STAGE_INDEX_ = 3;

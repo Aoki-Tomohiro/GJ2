@@ -18,6 +18,7 @@ TitleScene::TitleScene() {
 TitleScene::~TitleScene() {
 	delete sprite_;
 	delete backSprite_;
+	delete startSprite_;
 }
 
 /// <summary>
@@ -60,13 +61,19 @@ void TitleScene::Initialize(GameManager* gameManager) {
 	backTextureHandle_ = textureManager_->Load("Resources/Black/BlackTexture.png");
 	backSprite_->Create(backTextureHandle_, position_);
 	
-	sprite_ = new Sprite();
-	
-	textureHandle_=textureManager_->Load("Resources/Title/TitleLogo/TitleLogo.png");
 
+
+	sprite_ = new Sprite();
+	textureHandle_=textureManager_->Load("Resources/Title/TitleLogo/TitleLogo.png");
 	sprite_->Create(textureHandle_, position_);
 	
 
+	//Start
+	startSprite_ = new Sprite();
+	startTextureHandle_ = textureManager_->Load("Resources/Title/TitleLogo/TitleStart.png");
+	startSprite_->Create(startTextureHandle_, position_);
+	transparencyChangeTime_ = 0;
+	isStartTexture_ = true;
 
 	//Music
 	bgmAudio_ =  Audio::GetInstance();
@@ -154,6 +161,35 @@ void TitleScene::Update(GameManager* gameManager) {
 			bgmAudio_->StopAudio(bgmHandle_);
 			
 		}
+
+		
+		transparencyChangeTime_ += 1;
+		
+		if (transparencyChangeTime_ > 0) {
+			if (transparencyChangeTime_ > 0 &&
+				transparencyChangeTime_ <= SECOND_/2) {
+				isStartTexture_ = true;
+			}
+			if (transparencyChangeTime_ > SECOND_/2 &&
+				transparencyChangeTime_ <= SECOND_) {
+				isStartTexture_ = false;
+			}
+			if (transparencyChangeTime_ > SECOND_) {
+				transparencyChangeTime_ = 0;
+			}
+			
+
+		}
+
+
+		
+
+
+
+
+
+
+
 	}
 
 	
@@ -190,6 +226,12 @@ void TitleScene::Draw(GameManager* gameManager) {
 	sprite_->Draw();
 
 	backSprite_->Draw();
+
+	if (isStartTexture_ == true) {
+		startSprite_->Draw();
+
+	}
+	
 }
 
 

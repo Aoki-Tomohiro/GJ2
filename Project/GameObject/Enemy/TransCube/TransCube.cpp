@@ -1,4 +1,6 @@
 #include"TransCube.h"
+#include "GameScene/GameScene.h"
+#include "../GameObject/Particle/ParticleEmitter.h"
 #include "CollisionManager/CollisionConfig.h"
 
 TransCube::TransCube()
@@ -40,6 +42,7 @@ void TransCube::Initialize()
 	SetCollisionAttribute(kCollisionAttributeEnemy);
 	//衝突対象を自分の属性以外に設定
 	SetCollisionMask(kCollisionMaskEnemy);
+	SetRadius(5.0f);
 
 }
 
@@ -164,7 +167,10 @@ Vector3 TransCube::GetWorldPosition()
 }
 
 void TransCube::OnCollision() {
-
+	//パーティクルを発生させる
+	ParticleEmitter* particleEmitter = new ParticleEmitter();
+	particleEmitter->Initialize(TransCube::GetWorldPosition());
+	gameScene_->AddParticleEmitter(particleEmitter);
 }
 
 

@@ -30,6 +30,7 @@ enum SStateChange
 
 
 class Player;
+class GameScene;
 class TransCube : public Collider
 {
 public:
@@ -66,6 +67,8 @@ public:
 
 	void StateFlag(bool Flag) { stateFlag = Flag; }
 
+	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; };
+
 private:
 
 	void ReticlePosFanc();
@@ -98,4 +101,5 @@ private:
 	float Flame = 0;
 	float EndFlame = 180;
 	bool MoveFlag = false;
+	GameScene* gameScene_ = nullptr;
 };

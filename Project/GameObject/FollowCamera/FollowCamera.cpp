@@ -58,8 +58,8 @@ void FollowCamera::Update(Behavior behavior) {
 			}
 			else {
 				//回転速度
-				const float kRotSpeedX = 0.006f;
-				const float kRotSpeedY = 0.008f;
+				const float kRotSpeedX = 0.01f;
+				const float kRotSpeedY = 0.03f;
 				//目標角度の算出
 				destinationAngleX_ -= rotation.x * kRotSpeedX;
 				destinationAngleY_ += rotation.y * kRotSpeedY;
@@ -77,12 +77,12 @@ void FollowCamera::Update(Behavior behavior) {
 
 	//最短角度補間
 	if (playerBehavior_ != Behavior::kAttack) {
-		viewProjection_.rotation_.x = LerpShortAngle(viewProjection_.rotation_.x, destinationAngleX_, 0.02f);
-		viewProjection_.rotation_.y = LerpShortAngle(viewProjection_.rotation_.y, destinationAngleY_, 0.04f);
+		viewProjection_.rotation_.x = LerpShortAngle(viewProjection_.rotation_.x, destinationAngleX_, 0.1f);
+		viewProjection_.rotation_.y = LerpShortAngle(viewProjection_.rotation_.y, destinationAngleY_, 0.1f);
 	}
 	else {
-		viewProjection_.rotation_.x = LerpShortAngle(viewProjection_.rotation_.x, destinationAngleX_, 0.02f);
-		viewProjection_.rotation_.y = LerpShortAngle(viewProjection_.rotation_.y, destinationAngleY_, 0.04f);
+		viewProjection_.rotation_.x = LerpShortAngle(viewProjection_.rotation_.x, destinationAngleX_, 0.1f);
+		viewProjection_.rotation_.y = LerpShortAngle(viewProjection_.rotation_.y, destinationAngleY_, 0.1f);
 	}
 
 	//ビュー行列の計算

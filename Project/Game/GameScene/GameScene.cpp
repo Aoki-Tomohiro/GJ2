@@ -48,6 +48,7 @@ void GameScene::Initialize(GameManager* gameManager) {
 
 	transCube_ = std::make_unique<TransCube>();
 	transCube_->SetPlayer(player_.get());
+	transCube_->SetGameScene(this);
 
 	transCube_->Initialize();
 
@@ -94,6 +95,18 @@ void GameScene::Update(GameManager* gameManager) {
 	//箱の更新
 	boxManager_->Update();
 
+	//デスフラグの立ったパーティクルを削除
+	particleEmitters_.remove_if([](std::unique_ptr<ParticleEmitter>& particleEmitter) {
+		if (particleEmitter->isDead()) {
+			particleEmitter.reset();
+			return true;
+		}
+		return false;
+	    });
+	//パーティクルの更新
+	for (std::unique_ptr<ParticleEmitter>& particleEmitter : particleEmitters_) {
+		particleEmitter->Update();
+	}
 
 	//衝突マネージャーのリストをクリア
 	collisionManager_->ClearColliderList();
@@ -154,6 +167,10 @@ void GameScene::Draw(GameManager* gameManager) {
 	boxManager_->Draw(viewProjection_);
 	//地面の描画
 	ground_->Draw(viewProjection_);
+	//パーティクルの描画
+	for (std::unique_ptr<ParticleEmitter>& particleEmitter : particleEmitters_) {
+		particleEmitter->Draw(viewProjection_);
+	}
 
 
 #pragma region ポストプロセス
@@ -173,6 +190,12 @@ void GameScene::Draw(GameManager* gameManager) {
 void GameScene::AddPlayerBullet(PlayerBullet* playerBullet) {
 	//自機の弾を追加する
 	playerBullets_.push_back(std::unique_ptr<PlayerBullet>(playerBullet));
+}
+
+
+void GameScene::AddParticleEmitter(ParticleEmitter* particleEmitter) {
+	//パーティクルを追加する
+	particleEmitters_.push_back(std::unique_ptr<ParticleEmitter>(particleEmitter));
 }
 
 void GameScene::SetCollisions()

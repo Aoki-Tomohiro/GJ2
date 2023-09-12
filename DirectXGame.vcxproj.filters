@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="ヘッダー ファイル">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="リソース ファイル">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -19,23 +15,11 @@
     <Filter Include="ソース ファイル\Engine">
       <UniqueIdentifier>{443c7598-813c-432a-a7e6-7eead849c148}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Engine">
-      <UniqueIdentifier>{452ee920-cd6c-48e2-aa7f-176d2b7f7785}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Engine\Base">
       <UniqueIdentifier>{86b32856-49c2-4aab-b4fc-e0518ba787fc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Base">
-      <UniqueIdentifier>{073e0d2c-6dba-4d43-a6db-1578e4f9ea9e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Project">
       <UniqueIdentifier>{c447ec1b-1b9b-445f-8cf1-f33d091484c6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Project">
-      <UniqueIdentifier>{ccfab659-bdea-4c64-b7b0-193c0101bc80}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Project\Game">
-      <UniqueIdentifier>{08108243-8583-4048-9e11-db747662d5d0}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Project\Game">
       <UniqueIdentifier>{300548da-b1d9-4da2-be30-b399d0c5923f}</UniqueIdentifier>
@@ -43,23 +27,11 @@
     <Filter Include="ソース ファイル\Engine\3D">
       <UniqueIdentifier>{86036bee-e1bb-4994-8a23-c0c5f50c9911}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\3D">
-      <UniqueIdentifier>{b9d1ca8d-b5a3-4301-8609-3b1b70a1c1bb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\2D">
-      <UniqueIdentifier>{0b6e337a-3f0d-4368-946e-191be66eca64}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Engine\2D">
       <UniqueIdentifier>{954681c8-8c67-414f-8e92-83e4de344201}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Components">
-      <UniqueIdentifier>{38e2ab26-eae4-4321-8760-ee4ba8dff962}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Engine\Components">
       <UniqueIdentifier>{80307bda-62f2-4699-a279-53ff28e0a332}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Math">
-      <UniqueIdentifier>{f7cd772d-6755-45f5-868b-223fb2448e99}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Engine\Math">
       <UniqueIdentifier>{338c2ad2-9fdd-4124-8096-bea6f4034ea1}</UniqueIdentifier>
@@ -67,20 +39,11 @@
     <Filter Include="Shader">
       <UniqueIdentifier>{3ba02e86-d136-4605-bc0a-5ec7812bc9c1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Project\GameObject">
-      <UniqueIdentifier>{f41c338d-99d0-4234-a0d7-6b9c6332e0c9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Project\GameObject">
       <UniqueIdentifier>{5f1400e4-9d7d-4af8-ae19-29d4f5135fe8}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Project\GameObject\Player">
       <UniqueIdentifier>{2b410acc-c5d4-4b7b-9215-1cbe1635b813}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Project\GameObject\Player">
-      <UniqueIdentifier>{f906b257-98e0-4462-9f62-9d3d54e1f7d2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Project\GameObject\FollowCamera">
-      <UniqueIdentifier>{62278850-d7c8-4205-9d4a-aa0812cb7ebd}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Project\GameObject\FollowCamera">
       <UniqueIdentifier>{b7201c95-e34e-45fb-9616-a3586fa4a17d}</UniqueIdentifier>
@@ -88,14 +51,8 @@
     <Filter Include="ソース ファイル\Project\GameObject\Ground">
       <UniqueIdentifier>{2a833845-db63-4fa0-818f-6919e75a5a03}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Project\GameObject\Ground">
-      <UniqueIdentifier>{54a1810e-7eb1-4b35-ae90-6134b171335e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Project\GameObject\TransCube">
       <UniqueIdentifier>{7685423f-9f37-4b67-b8c4-292d68d26b61}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Components\CollisionManager">
-      <UniqueIdentifier>{83ee9d0f-7727-4e34-a824-e1079160196e}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Engine\Components\CollisionManager">
       <UniqueIdentifier>{8be040ad-0804-45c4-bc87-a5c2a7baa7a2}</UniqueIdentifier>
@@ -109,11 +66,60 @@
     <Filter Include="ソース ファイル\Project\GameObject\Box">
       <UniqueIdentifier>{cb829fa0-da03-41ad-82bf-02e70d2bb917}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Project\GameObject\TransCube\TransCubeGroundBullet">
+      <UniqueIdentifier>{9c359feb-5c6c-49f1-9af8-12e6d99bf920}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Project\GameObject\Particle">
+      <UniqueIdentifier>{ce6739aa-7922-43db-8979-25c3e6d56971}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine">
+      <UniqueIdentifier>{452ee920-cd6c-48e2-aa7f-176d2b7f7785}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\Base">
+      <UniqueIdentifier>{073e0d2c-6dba-4d43-a6db-1578e4f9ea9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\3D">
+      <UniqueIdentifier>{b9d1ca8d-b5a3-4301-8609-3b1b70a1c1bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\2D">
+      <UniqueIdentifier>{0b6e337a-3f0d-4368-946e-191be66eca64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\Components">
+      <UniqueIdentifier>{38e2ab26-eae4-4321-8760-ee4ba8dff962}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\Components\CollisionManager">
+      <UniqueIdentifier>{83ee9d0f-7727-4e34-a824-e1079160196e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\Math">
+      <UniqueIdentifier>{f7cd772d-6755-45f5-868b-223fb2448e99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Project">
+      <UniqueIdentifier>{ccfab659-bdea-4c64-b7b0-193c0101bc80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Project\Game">
+      <UniqueIdentifier>{08108243-8583-4048-9e11-db747662d5d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Project\GameObject">
+      <UniqueIdentifier>{f41c338d-99d0-4234-a0d7-6b9c6332e0c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Project\GameObject\Player">
+      <UniqueIdentifier>{f906b257-98e0-4462-9f62-9d3d54e1f7d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Project\GameObject\FollowCamera">
+      <UniqueIdentifier>{62278850-d7c8-4205-9d4a-aa0812cb7ebd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Project\GameObject\Ground">
+      <UniqueIdentifier>{54a1810e-7eb1-4b35-ae90-6134b171335e}</UniqueIdentifier>
+    </Filter>
     <Filter Include="ヘッダー ファイル\Project\GameObject\Box">
       <UniqueIdentifier>{6de8f6a5-d1ad-403b-8ab2-6028d6aa0f87}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Project\GameObject\TransCube\TransCubeGroundBullet">
-      <UniqueIdentifier>{9c359feb-5c6c-49f1-9af8-12e6d99bf920}</UniqueIdentifier>
+    <Filter Include="ヘッダー ファイル\Project\GameObject\Particle">
+      <UniqueIdentifier>{f0d526c2-ace0-48c6-a528-bed3957bf40c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -239,6 +245,12 @@
     </ClCompile>
     <ClCompile Include="Project\GameObject\Enemy\TransCube\GroundAttack\TransCubeGroundAttack.cpp">
       <Filter>ソース ファイル\Project\GameObject\TransCube\TransCubeGroundBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Particle\Particle.cpp">
+      <Filter>ソース ファイル\Project\GameObject\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Particle\ParticleEmitter.cpp">
+      <Filter>ソース ファイル\Project\GameObject\Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -379,6 +391,12 @@
     </ClInclude>
     <ClInclude Include="Project\GameObject\Box\BoxConfig.h">
       <Filter>ヘッダー ファイル\Project\GameObject\Box</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Particle\Particle.h">
+      <Filter>ヘッダー ファイル\Project\GameObject\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Particle\ParticleEmitter.h">
+      <Filter>ヘッダー ファイル\Project\GameObject\Particle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

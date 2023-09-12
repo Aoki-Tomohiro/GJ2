@@ -79,6 +79,8 @@ void GameSceneRobot::Initialize(GameManager* gameManager) {
 	bgmHandle_ = audio_->SoundLoadWave("Resources/Music/BGM/Game/GameBGM2.wav");
 
 	bgmAudio_->SoundPlayWave(bgmHandle_, true);
+	doom_ = std::make_unique<Doom>();
+	doom_->Initialize();
 
 };
 

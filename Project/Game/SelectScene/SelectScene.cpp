@@ -426,7 +426,7 @@ void SelectScene::Update(GameManager* gameManager) {
 			loadingTime += 1;
 		}
 	}
-
+	ImGui::End();
 	//スプライトの透明度をここで設定
 	backSprite_->SetColor({COLOR_BIND,COLOR_BIND,COLOR_BIND,transparency_.w});
 	
@@ -434,23 +434,25 @@ void SelectScene::Update(GameManager* gameManager) {
 	//LoadingからTitleSceneへ
 	if (loadingTime > SECOND_ * 3 && stageNumber_ == 0) {
 		gameManager->ChangeScene(new TitleScene());
+		return;
 	}
 	//LoadingからGameSceneへ
 	if (loadingTime > SECOND_ * 3 && stageNumber_ == 1) {
 		gameManager->ChangeScene(new GameScene());	
+		return;
 	}
 	if (loadingTime > SECOND_ * 3 && stageNumber_ == 2) {
 		gameManager->ChangeScene(new GameSceneRobot());
-			
+		return;
 	}	
 	if (loadingTime > SECOND_ * 3 && stageNumber_ == 3) {
 		gameManager->ChangeScene(new ExplanationScene());
-			
+		return;
 	}	
 
 	
 	
-	ImGui::End();
+	
 
 
 }

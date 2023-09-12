@@ -10,7 +10,7 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vecto
 	//モデルの初期化
 	assert(model);
 	model_ = new Model();
-	model_->CreateSphere();
+	model_->CreateFromOBJ("Resources/PlayerBullet", "PlayerBullet.obj");
 	//ワールドトランスフォームの初期化
 	worldTransform_.translation_ = position;
 	worldTransform_.translation_.y += 1.0f;

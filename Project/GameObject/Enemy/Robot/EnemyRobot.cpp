@@ -63,10 +63,25 @@ void EnemyRobot::Initialize()
 	spriteHP1_->Create(textureHandleHP1_, { 320.0f,50.0f });
 	spriteHP2_ = std::make_unique<Sprite>();
 	spriteHP2_->Create(textureHandleHP2_, { 322.0f,52.0f });
+
+	TelopTex = TextureManager::GetInstance()->Load("Resources/Telop/CoreAttackTelop.png");
+	CoreAttackTelop = std::make_unique<Sprite>();
+	CoreAttackTelop->Create(TelopTex, {0.0f,0.0f });
+	TelopFlag = true;
+
 }
 
 void EnemyRobot::Update()
 {
+	if (TelopFlag)
+	{
+		TelopDrawCount -= 0.005f;;
+		CoreAttackTelop->SetColor({ 1,1,1,TelopDrawCount });
+		if (TelopDrawCount<0)
+		{
+			TelopFlag = false;
+		}
+	}
 
 	if (MoveFlag&&isStateEndFlag)
 	{		
@@ -128,6 +143,7 @@ void EnemyRobot::Update()
 
 void EnemyRobot::Draw(ViewProjection view)
 {
+
 	state->Draw(this,view);
 	CoreModel_->Draw(CoreWorldTransform, view);
 	for (RobotBullet* bullet : Bullets_)
@@ -150,6 +166,7 @@ void EnemyRobot::Draw(ViewProjection view)
 void EnemyRobot::DrawUI() {
 	spriteHP1_->Draw();
 	spriteHP2_->Draw();
+	CoreAttackTelop->Draw();
 }
 
 Vector3 EnemyRobot::GetWorldPosition()

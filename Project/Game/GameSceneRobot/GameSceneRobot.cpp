@@ -43,6 +43,7 @@ void GameSceneRobot::Initialize(GameManager* gameManager) {
 	//自弾
 	modelPlayerBullet_ = std::make_unique<Model>();
 	modelPlayerBullet_->CreateSphere();
+
 	//モデルを配列にまとめる
 	playerModels_ = { modelPlayerHead_.get(),modelPlayerBody_.get(),modelPlayerL_arm_.get(),modelPlayerR_arm_.get(),modelPlayerBullet_.get() };
 	//自キャラの初期化
@@ -78,17 +79,6 @@ void GameSceneRobot::Initialize(GameManager* gameManager) {
 	bgmHandle_ = audio_->SoundLoadWave("Resources/Music/BGM/Game/GameBGM2.wav");
 
 	bgmAudio_->SoundPlayWave(bgmHandle_, true);
-
-	enemyDamagedAudio_ = Audio::GetInstance();;
-	enemyDamagedHandle_ = enemyDamagedAudio_->SoundLoadWave("Resources/Music/SE/Damage/EnemyDamaged.wav");
-
-
-	//SceneChange用のフラグ
-	changeToWin_ = false;
-	changeToLose_ = false;
-
-
-
 
 };
 
@@ -195,31 +185,6 @@ void GameSceneRobot::Update(GameManager* gameManager) {
 	ImGui::Text("L:LoseScene");
 	ImGui::End();
 
-
-
-
-	if (player_->GetLife() <= 0) {
-		bgmAudio_->StopAudio(bgmHandle_);
-		
-
-		changeToLose_ = true;
-	}
-	if (EnemyRobot_->GetLife() <= 0) {
-		bgmAudio_->StopAudio(bgmHandle_);
-		changeToWin_ = true;
-		enemyDamagedAudio_->SoundPlayWave(enemyDamagedHandle_, 0);
-	}
-
-
-	if (changeToWin_ == true) {
-		gameManager->ChangeScene(new WinScene());
-	}
-
-
-	if (changeToLose_ == true) {
-		gameManager->ChangeScene(new LoseScene());
-	}
-
 };
 
 void GameSceneRobot::Draw(GameManager* gameManager) {
@@ -239,7 +204,7 @@ void GameSceneRobot::Draw(GameManager* gameManager) {
 
 	//地面の描画
 	ground_->Draw(viewProjection_);
-
+	doom_->Draw(viewProjection_);
 	//パーティクルの描画
 	for (std::unique_ptr<ParticleEmitter>& particleEmitter : particleEmitters_) {
 		particleEmitter->Draw(viewProjection_);

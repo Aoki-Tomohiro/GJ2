@@ -20,6 +20,7 @@
 #include "../GameObject/Particle/ParticleEmitter.h"
 #include "CollisionManager/CollisionManager.h"
 #include <list>
+#include "../GameObject/Doom/Doom.h"
 
 class GameSceneRobot : public IScene{
 public:
@@ -108,6 +109,9 @@ private:
 
 	//パーティクル
 	std::list<std::unique_ptr<ParticleEmitter>> particleEmitters_{};
+
+	//空間
+	std::unique_ptr<Doom> doom_ = nullptr;
 
 	//BGM
 	Audio* bgmAudio_ = nullptr;

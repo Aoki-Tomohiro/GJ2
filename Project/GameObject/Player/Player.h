@@ -8,6 +8,7 @@
 
 
 class GameScene;
+class GameSceneRobot;
 
 enum class Behavior {
 	kRoot,//通常状態
@@ -116,6 +117,12 @@ public:
 	/// </summary>
 	/// <param name="gameScene"></param>
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; };
+
+	/// <summary>
+	/// ゲームシーンをセット
+	/// </summary>
+	/// <param name="gameSceneRobot"></param>
+	void SetGameSceneRobot(GameSceneRobot* gameSceneRobot) { gameSceneRobot_ = gameSceneRobot; };
 
 	/// <summary>
 	/// 移動量を取得
@@ -227,6 +234,7 @@ private:
 	int32_t bulletTimer_ = 0;
 	//ゲームシーン
 	GameScene* gameScene_ = nullptr;
+	GameSceneRobot* gameSceneRobot_ = nullptr;
 	//速度
 	Vector3 velocity_{};
 	//箱に触れているか

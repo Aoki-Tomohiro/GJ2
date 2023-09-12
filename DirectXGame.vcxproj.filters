@@ -88,6 +88,9 @@
     <ClCompile Include="Project\GameObject\Enemy\Robot\RandBullet\RandBullet.cpp">
       <Filter>Robot</Filter>
     </ClCompile>
+    <ClCompile Include="Project\Game\GameSceneRobot\GameSceneRobot.cpp">
+      <Filter>ソースファイル\Project\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\2D\GlobalVariables\GlobalVariables.h" />
@@ -168,6 +171,9 @@
     </ClInclude>
     <ClInclude Include="Project\GameObject\Enemy\Robot\RandBullet\RandBullet.h">
       <Filter>Robot</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Game\GameSceneRobot\GameSceneRobot.h">
+      <Filter>ヘッダーファイル\Project\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -103,6 +103,9 @@ private:
 	bool explanationChange_ = false;
 
 
+	Audio* bgmAudio_ = nullptr;
+	uint32_t bgmHandle_ = 0u;
+
 
 	Audio* selectSEAudio_ = nullptr;
 	uint32_t returnSEHandle_ = 0u;

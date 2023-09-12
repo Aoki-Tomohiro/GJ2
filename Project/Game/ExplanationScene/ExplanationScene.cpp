@@ -73,16 +73,18 @@ void ExplanationScene::Initialize(GameManager* gameManager) {
 
 
 
-
-
-
-
 	explanationSEHandle_=audio_->SoundLoadWave("Project/Resources/Music/SE/Deside/Deside1.wav");
 
+	//BGM
+	bgmAudio_ =  Audio::GetInstance();
+	bgmHandle_ = audio_->SoundLoadWave("Project/Resources/Music/BGM/Explanation/Explanation.wav");
 
-	selectSEAudio_ = Audio::GetInstance();;
+	bgmAudio_->SoundPlayWave(bgmHandle_, 1);
+
+	//SE
+	selectSEAudio_ = Audio::GetInstance();
 	explanationSEHandle_ = audio_->SoundLoadWave("Project/Resources/Music/SE/Select/Select.wav");
-
+	returnSEHandle_= audio_->SoundLoadWave("Project/Resources/Music/SE/Deside/Deside2.wav");
 
 
 
@@ -125,7 +127,7 @@ void ExplanationScene::Update(GameManager* gameManager) {
 			}
 			//1の時移動
 			if ((triggerButtonBTime_==1 )) {
-				selectSEAudio_->SoundPlayWave(explanationSEHandle_, 0);
+				
 
 				isTriggerB_ = true;
 				triggerButtonBTime_ = 0;
@@ -134,6 +136,11 @@ void ExplanationScene::Update(GameManager* gameManager) {
 
 				if (explanationCurrentNumber_ == 2) {
 					isFadeOutMode_ = true;
+					selectSEAudio_->SoundPlayWave(returnSEHandle_, 0);
+					bgmAudio_->StopAudio(bgmHandle_);
+				}
+				else {
+					selectSEAudio_->SoundPlayWave(explanationSEHandle_, 0);
 				}
 
 
@@ -164,7 +171,6 @@ void ExplanationScene::Update(GameManager* gameManager) {
 	//スプライトの透明度をここで設定
 	backSprite_->SetColor({COLOR_BIND,COLOR_BIND,COLOR_BIND,transparency_.w});
 	
-
 
 
 	if (loadingTime > SECOND_ * 3 ) {

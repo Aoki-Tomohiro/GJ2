@@ -94,4 +94,13 @@ private:
 	//箱
 	std::unique_ptr<BoxManager> boxManager_ = nullptr;
 
+
+	//BGM
+	Audio* bgmAudio_ = nullptr;
+	uint32_t bgmHandle_ = 0u;
+
+
+
+
+
 };

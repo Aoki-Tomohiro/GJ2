@@ -553,6 +553,9 @@ void Player::UpdateLife() {
 		spriteHP2_->SetScale(spriteScale_);
 		break;
 	}
+
+	
+
 }
 
 void Player::UpdateInvincible() {

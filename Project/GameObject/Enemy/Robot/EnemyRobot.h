@@ -71,6 +71,13 @@ public:
 	Vector3 EasingFanc(Vector3 startv, Vector3 Endv, float &Flame, float EndFlame);
 
 	void SetGameSceneRobot(GameSceneRobot* gameSceneRobot) { gameSceneRobot_ = gameSceneRobot; };
+
+	int32_t GetLife() {
+		return life_;
+	}
+
+
+
 private:
 	float LerpMove(float pos);
 
@@ -118,7 +125,7 @@ private:
 	WorldTransform CoreWorldTransform = {};
 
 	//体力
-	int32_t life_ = 300;
+	int32_t life_ = 10;
 
 	//体力のスプライト
 	uint32_t textureHandleHP1_ = 0;

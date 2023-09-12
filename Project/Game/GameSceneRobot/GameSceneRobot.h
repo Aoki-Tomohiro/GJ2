@@ -112,4 +112,13 @@ private:
 	//BGM
 	Audio* bgmAudio_ = nullptr;
 	uint32_t bgmHandle_ = 0u;
+
+
+
+	//SceneChange用のフラグ
+	bool changeToWin_ = false;
+	bool changeToLose_ = false;
+
+
+
 };

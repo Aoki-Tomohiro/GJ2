@@ -71,6 +71,12 @@ public:
 
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; };
 
+
+	//敵BoxのHPを取得
+	int32_t GetLife() {
+		return life_;
+	}
+
 private:
 
 	void ReticlePosFanc();

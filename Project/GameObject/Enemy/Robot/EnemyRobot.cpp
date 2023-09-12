@@ -170,6 +170,13 @@ void EnemyRobot::OnCollision()
 	particleEmitter->Initialize(EnemyRobot::GetWorldPosition());
 	gameSceneRobot_->AddParticleEmitter(particleEmitter);
 	life_--;
+
+	//
+	if (life_ <= 0) {
+
+	}
+
+
 }
 
 void EnemyRobot::BulletPushBack(Vector3 velocity,Vector3 pos)

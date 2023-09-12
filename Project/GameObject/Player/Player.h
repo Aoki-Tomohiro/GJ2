@@ -4,6 +4,8 @@
 #include "TransformationMatrix/WorldTransform.h"
 #include "CollisionManager/Collider.h"
 #include <optional>
+#include "Audio/Audio.h"
+
 
 class GameScene;
 
@@ -251,5 +253,23 @@ private:
 	//ダメージエフェクト
 	uint32_t textureHandleDamage_ = 0;
 	std::unique_ptr<Sprite> spriteDamage_ = nullptr;
+
+
+	//Audio
+	Audio* audio_ = nullptr;
+
+	//SE
+	Audio* damegedSE_ = nullptr;
+	uint32_t damagedSEHandle_ = 0u;
+
+	Audio* attackSE_ = nullptr;
+	uint32_t attackSEHandle_ = 0u;
+
+	Audio* dashSE_ = nullptr;
+	uint32_t dashSEHandle_ = 0u;
+
+	Audio* jumpSE_ = nullptr;
+	uint32_t jumpSEHandle_ = 0u;
+
 };
 

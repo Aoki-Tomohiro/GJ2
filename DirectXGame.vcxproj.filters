@@ -251,6 +251,20 @@
     </ClCompile>
     <ClCompile Include="Project\GameObject\Particle\ParticleEmitter.cpp">
       <Filter>ソース ファイル\Project\GameObject\Particle</Filter>
+    <ClCompile Include="Project\Game\LoseScene\LoseScene.cpp">
+      <Filter>ソース ファイル\Project\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Game\SelectScene\SelectScene.cpp">
+      <Filter>ソース ファイル\Project\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Game\WinScene\WinScene.cpp">
+      <Filter>ソース ファイル\Project\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Game\TitleScene\TitleScene.cpp">
+      <Filter>ソース ファイル\Project\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Game\ExplanationScene\ExplanationScene.cpp">
+      <Filter>ソース ファイル\Project\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -397,6 +411,20 @@
     </ClInclude>
     <ClInclude Include="Project\GameObject\Particle\ParticleEmitter.h">
       <Filter>ヘッダー ファイル\Project\GameObject\Particle</Filter>
+    <ClInclude Include="Project\Game\WinScene\WinScene.h">
+      <Filter>ヘッダー ファイル\Project\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Game\LoseScene\LoseScene.h">
+      <Filter>ヘッダー ファイル\Project\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Game\SelectScene\SelectScene.h">
+      <Filter>ヘッダー ファイル\Project\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Game\TitleScene\TitleScene.h">
+      <Filter>ヘッダー ファイル\Project\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Game\ExplanationScene\ExplanationScene.h">
+      <Filter>ヘッダー ファイル\Project\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

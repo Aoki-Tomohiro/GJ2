@@ -1,9 +1,17 @@
 #include "GameScene.h"
 #include <cassert>
 
+#include "GameManager/GameManager.h"
+#include "WinScene/WinScene.h"
+#include "LoseScene/LoseScene.h"
+
 GameScene::GameScene() {};
 
-GameScene::~GameScene() {};
+GameScene::~GameScene() {
+
+
+
+};
 
 void GameScene::Initialize(GameManager* gameManager) {
 	//TextureManagerのインスタンスを取得
@@ -68,6 +76,18 @@ void GameScene::Initialize(GameManager* gameManager) {
 
 	//衝突マネージャーの生成
 	collisionManager_ = std::make_unique<CollisionManager>();
+
+
+	//Music
+	bgmAudio_ = Audio::GetInstance();
+	bgmHandle_=audio_->SoundLoadWave("Project/Resources/Music/BGM/Game/GameBGM2.wav");
+
+	bgmAudio_->SoundPlayWave(bgmHandle_, true);
+
+
+
+
+
 };
 
 void GameScene::Update(GameManager* gameManager) {
@@ -136,6 +156,19 @@ void GameScene::Update(GameManager* gameManager) {
 		viewProjection_.matProjection_ = followCamera_->GetViewProjection().matProjection_;
 	}
 
+
+	//2でSelectSceneへ
+	if (input_->IsPushKeyEnter(DIK_W)) {
+		bgmAudio_->StopAudio(bgmHandle_);
+		gameManager->ChangeScene(new WinScene());
+	}
+	//3でSelectSceneへ
+	if (input_->IsPushKeyEnter(DIK_L)) {
+		bgmAudio_->StopAudio(bgmHandle_);
+		gameManager->ChangeScene(new LoseScene());
+	}
+
+
 	ImGui::Begin(" ");
 	//ポストプロセス
 	ImGui::Checkbox("PostProcess", &postProcess_->isActive);
@@ -152,6 +185,15 @@ void GameScene::Update(GameManager* gameManager) {
 	ImGui::Text("Left Right : RotateX");
 	ImGui::Text("UP DOWN : RotateY");
 	ImGui::End();
+
+
+
+	ImGui::Begin("GameScene");
+	ImGui::Text("W:WinScene");
+	ImGui::Text("L:LoseScene");
+	ImGui::End();
+
+
 };
 
 void GameScene::Draw(GameManager* gameManager) {
@@ -184,6 +226,8 @@ void GameScene::Draw(GameManager* gameManager) {
 #pragma region スプライトの描画
 	//自機のHPの描画
 	player_->DrawUI();
+	//ボスのHPの描画
+	transCube_->DrawUI();
 #pragma endregion
 };
 

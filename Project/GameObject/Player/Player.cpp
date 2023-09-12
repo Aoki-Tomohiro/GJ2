@@ -33,10 +33,29 @@ void Player::Initialize(const std::vector<Model*> models) {
 	textureHandleReticle_ = TextureManager::GetInstance()->Load("Project/Resources/Reticle.png");
 	sprite2DReticle_ = std::make_unique<Sprite>();
 	sprite2DReticle_->Create(textureHandleReticle_, { 0.0f,0.0f });
+
 	//ダメージエフェクト
 	textureHandleDamage_ = TextureManager::GetInstance()->Load("Project/Resources/PlayerDamage.png");
 	spriteDamage_ = std::make_unique<Sprite>();
 	spriteDamage_->Create(textureHandleDamage_, { 0.0f,0.0f });
+
+	//Audioのインスタンスを取得
+	audio_ = Audio::GetInstance();
+
+	damegedSE_ =Audio::GetInstance();
+	damagedSEHandle_ =  audio_->SoundLoadWave("Project/Resources/Music/SE/Damage/PlayerDamaged.wav");
+
+	attackSE_ = Audio::GetInstance();
+	attackSEHandle_ = audio_->SoundLoadWave("Project/Resources/Music/SE/Attack/PlayerAttack.wav");
+
+
+	dashSE_ =  Audio::GetInstance();
+	dashSEHandle_ =  audio_->SoundLoadWave("Project/Resources/Music/SE/Dash/Dash.wav");;
+
+	jumpSE_ =  Audio::GetInstance();
+	jumpSEHandle_ =  audio_->SoundLoadWave("Project/Resources/Music/SE/Jump/Jump.wav");
+
+
 }
 
 void Player::Update() {
@@ -101,6 +120,8 @@ void Player::Update() {
 	//体力ゲージの更新
 	UpdateLife();
 
+	
+
 	//無敵時間の処理
 	UpdateInvincible();
 
@@ -142,6 +163,7 @@ void Player::OnCollision() {
 		invincibleTimer_ = kInvincibleTime;
 		playerLife_--;
 		spriteDamage_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+		damegedSE_->SoundPlayWave(damagedSEHandle_, -0);
 	}
 }
 
@@ -373,6 +395,11 @@ void Player::BehaviorDashUpdate() {
 
 		//移動
 		worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, velocity_);
+
+		dashSE_->SoundPlayWave(dashSEHandle_, 0);
+
+
+
 	}
 
 	//ダッシュの時間
@@ -439,11 +466,13 @@ void Player::BehaviorBoxPushUpdate() {
 	}
 	if (workJump_.flag) {
 		worldTransformBase_.translation_.y += workJump_.power;
+		
 		workJump_.power -= 0.05f;
 		if (worldTransformBase_.translation_.y <= 0.0f) {
 			worldTransformBase_.translation_.y = 0.0f;
 			workJump_.flag = false;
 		}
+		jumpSE_->SoundPlayWave(jumpSEHandle_, 0);
 	}
 
 	//通常状態に戻す
@@ -482,6 +511,13 @@ void Player::Fire() {
 
 				// 弾を登録する
 				gameScene_->AddPlayerBullet(newBullet);
+
+				attackSE_->SoundPlayWave(attackSEHandle_, 0);
+				
+
+
+
+
 			}
 		}
 	}

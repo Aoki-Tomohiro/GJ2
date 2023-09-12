@@ -101,6 +101,15 @@ private:
 	//箱
 	std::unique_ptr<BoxManager> boxManager_ = nullptr;
 
+
 	//パーティクル
 	std::list<std::unique_ptr<ParticleEmitter>> particleEmitters_{};
+
+	//BGM
+	Audio* bgmAudio_ = nullptr;
+	uint32_t bgmHandle_ = 0u;
+
+
+
+
 };

@@ -111,7 +111,7 @@ private:
 	std::list<std::unique_ptr<ParticleEmitter>> particleEmitters_{};
 
 	//空間
-	std::unique_ptr<Doom> doom_ = nullptr;
+	//std::unique_ptr<Doom> doom_ = nullptr;
 
 	//BGM
 	Audio* bgmAudio_ = nullptr;

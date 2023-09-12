@@ -224,12 +224,14 @@ void GameScene::Update(GameManager* gameManager) {
 
 	if (changeToWin_ == true) {
 		gameManager->ChangeScene(new WinScene());
+		return;
 	}
 
 	
 
 	if (changeToLose_ == true) {
 		gameManager->ChangeScene(new LoseScene());
+		return;
 	}
 };
 

@@ -27,9 +27,9 @@ void TransCube::Initialize()
 {
 	model_ = new Model();
 	worldTransform.matWorld_ = MakeIdentity4x4();
-	worldTransform.scale_ = { 5,5,5 };
+	worldTransform.scale_ = { 10,10,10 };
 	worldTransform.translation_ = { 0,0,40 };
-	model_->CreateFromOBJ("Resources/EnemyObj/TransCube", "TransCube.obj");
+	model_->CreateFromOBJ("Resources/EnemyObj/TransCube", "TransCubeHead.obj");
 	
 	TransCubeGroundAttackState* state = new TransCubeGroundAttackState();
 	state_ = state;

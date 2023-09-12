@@ -111,8 +111,14 @@ void GameScene::Update(GameManager* gameManager) {
 
 	transCube_.get()->SetPlayer(player_.get());
 	//敵キャラの更新
+
+	//transCube_->Update();
+	EnemyRobot_->SetPlayer(player_.get());
+	EnemyRobot_->Update();
+
 	transCube_->Update();
 	//EnemyRobot_->Update();
+
 
 	//箱の更新
 	boxManager_->Update();
@@ -268,6 +274,18 @@ void GameScene::SetCollisions()
 	}
 	for (TransCubeGroundAttack* bullet : transCube_.get()->GetGroundBullets()) {
 		collisionManager_->SetColliderListAABB(bullet);
-
 	}
+
+
+	collisionManager_->SetColliderList(EnemyRobot_.get());
+	for (RobotBullet* bullet : EnemyRobot_.get()->GetBullets())
+	{
+		collisionManager_->SetColliderList(bullet);
+	}
+	for (RobotPunch* bullet : EnemyRobot_.get()->GetPunch())
+	{
+		collisionManager_->SetColliderListAABB(bullet);
+		
+	}
+
 }

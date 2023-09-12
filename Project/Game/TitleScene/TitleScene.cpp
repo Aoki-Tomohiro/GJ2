@@ -18,6 +18,7 @@ TitleScene::TitleScene() {
 TitleScene::~TitleScene() {
 	delete sprite_;
 	delete backSprite_;
+	delete startSprite_;
 }
 
 /// <summary>

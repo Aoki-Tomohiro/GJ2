@@ -57,6 +57,7 @@ void TransCube::Update()
 	ImGui::Begin("TransCube");
 	ImGui::SliderFloat3("translate", &worldTransform.translation_.x, -10, 10);
 	ImGui::Checkbox("state",&stateFlag);
+	ImGui::Text("%d", life_);
 	ImGui::End();
 
 	if (MoveFlag)
@@ -138,7 +139,7 @@ void TransCube::Update()
 	}
 
 	//体力ゲージの処理
-	spriteScale_.x = Lerp(spriteScale_.x, life_ / 300.0f, 0.01f);
+	spriteScale_.x = Lerp(spriteScale_.x, life_ / 300.0f, 0.1f);
 	spriteHP2_->SetScale(spriteScale_);
 }
 

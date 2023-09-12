@@ -81,7 +81,7 @@ void GameScene::Initialize(GameManager* gameManager) {
 
 	//Music
 	bgmAudio_ = Audio::GetInstance();
-	bgmHandle_=audio_->SoundLoadWave("Resources/Music/BGM/Game/GameBGM2.wav");
+	bgmHandle_=audio_->SoundLoadWave("Resources/Music/BGM/Game/GameBGM.wav");
 
 	bgmAudio_->SoundPlayWave(bgmHandle_, true);
 

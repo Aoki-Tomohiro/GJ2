@@ -19,7 +19,7 @@ SelectScene::SelectScene() {
 /// </summary>
 SelectScene::~SelectScene() {
 	//Spriteのデストラクタも忘れずに
-	delete sprite_;
+	delete silhouetteSprite_;
 
 	
 	delete backSprite_;
@@ -105,12 +105,19 @@ void SelectScene::Initialize(GameManager* gameManager) {
 
 
 
-	//背景的なスプライト
+	
 	//敵のシルエットが描かれているのが良いかも
-	sprite_ = new Sprite();
-	textureHandle_=textureManager_->Load("Resources/Select/Select.png");
+	for (int i = 0; i < 4; i++) {
+		silhouetteSprite_[i] = new Sprite();
+		
+	}
+	
+	silhouetteTextureHandle_[0]= textureManager_->Load("Resources/Select/Select1.png");
+	silhouetteTextureHandle_[1]= textureManager_->Load("Resources/Select/Select2.png");
+	
 	Vector2 position_ = {0.0f,0.0f};
-	sprite_->Create(textureHandle_, position_);
+	silhouetteSprite_[0]->Create(silhouetteTextureHandle_[0], position_);
+	silhouetteSprite_[1]->Create(silhouetteTextureHandle_[1], position_);
 	
 
 	
@@ -422,7 +429,7 @@ void SelectScene::Update(GameManager* gameManager) {
 void SelectScene::Draw(GameManager* gameManager) {
 	
 	//背景
-	sprite_->Draw();
+	silhouetteSprite_->Draw();
 
 	//StageIcon
 	stageIconSprite_[0]->Draw();

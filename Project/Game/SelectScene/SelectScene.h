@@ -72,8 +72,8 @@ private:
 	float HEIGHT_INTERVAL_;
 
 	//タイトル画面の画像
-	Sprite* sprite_ = nullptr;
-	uint32_t textureHandle_ = 0u;
+	Sprite* silhouetteSprite_[4] = { nullptr };
+	uint32_t silhouetteTextureHandle_[4] = {0u};
 
 	//カーソル
 	Sprite* cursorSprite_ = nullptr;

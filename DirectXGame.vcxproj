@@ -137,6 +137,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\GameObject\Player\PlayerBullet.cpp" />
     <ClCompile Include="Project\Game\ExplanationScene\ExplanationScene.cpp" />
     <ClCompile Include="Project\Game\GameManager\GameManager.cpp" />
+    <ClCompile Include="Project\Game\GameSceneRobot\GameSceneRobot.cpp" />
     <ClCompile Include="Project\Game\GameScene\GameScene.cpp" />
     <ClCompile Include="Project\Game\LoseScene\LoseScene.cpp" />
     <ClCompile Include="Project\Game\SelectScene\SelectScene.cpp" />
@@ -197,6 +198,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\Game\ExplanationScene\ExplanationScene.h" />
     <ClInclude Include="Project\Game\GameManager\GameManager.h" />
     <ClInclude Include="Project\Game\GameManager\IScene.h" />
+    <ClInclude Include="Project\Game\GameSceneRobot\GameSceneRobot.h" />
     <ClInclude Include="Project\Game\GameScene\GameScene.h" />
     <ClInclude Include="Project\Game\LoseScene\LoseScene.h" />
     <ClInclude Include="Project\Game\SelectScene\SelectScene.h" />

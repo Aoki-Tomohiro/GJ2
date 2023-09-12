@@ -1,6 +1,7 @@
 #include "GameManager.h"
 
 #include "GameScene/GameScene.h"
+#include "GameSceneRobot/GameSceneRobot.h"
 #include "TitleScene/TitleScene.h"
 #include "SelectScene/SelectScene.h"
 #include "WinScene/WinScene.h"

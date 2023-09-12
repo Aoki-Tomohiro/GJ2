@@ -69,7 +69,7 @@ void SelectScene::Initialize(GameManager* gameManager) {
 	//スプライトの初期化
 	//Fade用
 	backSprite_ = new Sprite();
-	backTextureHandle_ = textureManager_->Load("Project/Resources/Black/BlackTexture.png");
+	backTextureHandle_ = textureManager_->Load("Resources/Black/BlackTexture.png");
 	Vector2 backTexturePosition = { 0.0f,0.0f };
 	backSprite_->Create(backTextureHandle_, backTexturePosition);
 
@@ -107,7 +107,7 @@ void SelectScene::Initialize(GameManager* gameManager) {
 	//背景的なスプライト
 	//敵のシルエットが描かれているのが良いかも
 	sprite_ = new Sprite();
-	textureHandle_=textureManager_->Load("Project/Resources/Select/Select.png");
+	textureHandle_=textureManager_->Load("Resources/Select/Select.png");
 	Vector2 position_ = {0.0f,0.0f};
 	sprite_->Create(textureHandle_, position_);
 	
@@ -118,7 +118,7 @@ void SelectScene::Initialize(GameManager* gameManager) {
 	//←,?
 	//タイトルに戻る
 	backToTitleSprite_ = new Sprite();
-	backToTitleTexture_ = textureManager_->Load("Project/Resources/Select/ToTitle.png");
+	backToTitleTexture_ = textureManager_->Load("Resources/Select/ToTitle.png");
 	backToTitlePosition_ = { 375.0f,500.0f };
 	backToTitleSprite_->Create(backToTitleTexture_, backToTitlePosition_);
 	
@@ -127,9 +127,9 @@ void SelectScene::Initialize(GameManager* gameManager) {
 	for (int i = 0; i < STAGE_INDEX_; i++) {
 		stageIconSprite_[i] = new Sprite();
 	}
-	stageIconTexture_[0]= textureManager_->Load("Project/Resources/Select/Stage1.png");
-	stageIconTexture_[1]= textureManager_->Load("Project/Resources/Select/Stage2.png");
-	stageIconTexture_[2]= textureManager_->Load("Project/Resources/Select/Explanation.png");
+	stageIconTexture_[0]= textureManager_->Load("Resources/Select/Stage1.png");
+	stageIconTexture_[1]= textureManager_->Load("Resources/Select/Stage2.png");
+	stageIconTexture_[2]= textureManager_->Load("Resources/Select/Explanation.png");
 	
 
 	//アイコンの間隔
@@ -145,7 +145,7 @@ void SelectScene::Initialize(GameManager* gameManager) {
 	
 	//カーソル
 	cursorSprite_ = new Sprite();
-	cursorTexture_ = textureManager_->Load("Project/Resources/Select/Cursor.png");
+	cursorTexture_ = textureManager_->Load("Resources/Select/Cursor.png");
 	cursorPosition = {backToTitlePosition_ };
 	cursorSprite_->Create(cursorTexture_, cursorPosition);
 
@@ -160,20 +160,20 @@ void SelectScene::Initialize(GameManager* gameManager) {
 
 	//Music
 	bgmAudio_ = Audio::GetInstance();
-	bgmHandle_ = audio_->SoundLoadWave("Project/Resources/Music/BGM/Select/SelectBGM.wav");
+	bgmHandle_ = audio_->SoundLoadWave("Resources/Music/BGM/Select/SelectBGM.wav");
 
 	bgmAudio_->SoundPlayWave(bgmHandle_, true);
 
 
 	//SE
 	startSEAudio_ =  Audio::GetInstance();
-	startSEHandle_=audio_->SoundLoadWave("Project/Resources/Music/SE/Deside/Start.wav");
-	returnSEHandle_=audio_->SoundLoadWave("Project/Resources/Music/SE/Deside/Deside2.wav");
-	explanationSEHandle_=audio_->SoundLoadWave("Project/Resources/Music/SE/Deside/Deside1.wav");
+	startSEHandle_=audio_->SoundLoadWave("Resources/Music/SE/Deside/Start.wav");
+	returnSEHandle_=audio_->SoundLoadWave("Resources/Music/SE/Deside/Deside2.wav");
+	explanationSEHandle_=audio_->SoundLoadWave("Resources/Music/SE/Deside/Deside1.wav");
 
 
 	selectSEAudio_ = Audio::GetInstance();;
-	selectSEHandle_ = audio_->SoundLoadWave("Project/Resources/Music/SE/Select/Select.wav");
+	selectSEHandle_ = audio_->SoundLoadWave("Resources/Music/SE/Select/Select.wav");
 
 
 }

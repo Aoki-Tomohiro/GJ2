@@ -57,12 +57,12 @@ void TitleScene::Initialize(GameManager* gameManager) {
 	//スプライトの初期化
 	backSprite_ = new Sprite();
 	position_ = { 0.0f,0.0f };
-	backTextureHandle_ = textureManager_->Load("Project/Resources/Black/BlackTexture.png");
+	backTextureHandle_ = textureManager_->Load("Resources/Black/BlackTexture.png");
 	backSprite_->Create(backTextureHandle_, position_);
 	
 	sprite_ = new Sprite();
 	
-	textureHandle_=textureManager_->Load("Project/Resources/Title/TitleLogo/TitleLogo.png");
+	textureHandle_=textureManager_->Load("Resources/Title/TitleLogo/TitleLogo.png");
 
 	sprite_->Create(textureHandle_, position_);
 	
@@ -70,13 +70,13 @@ void TitleScene::Initialize(GameManager* gameManager) {
 
 	//Music
 	bgmAudio_ =  Audio::GetInstance();
-	bgmHandle_=audio_->SoundLoadWave("Project/Resources/Music/BGM/Title/TitleBGM.wav");
+	bgmHandle_=audio_->SoundLoadWave("Resources/Music/BGM/Title/TitleBGM.wav");
 
 
 
 	//SE
 	startSEAudio_ =  Audio::GetInstance();
-	startSEHandle_=audio_->SoundLoadWave("Project/Resources/Music/SE/Deside/Start.wav");
+	startSEHandle_=audio_->SoundLoadWave("Resources/Music/SE/Deside/Start.wav");
 	bgmAudio_->SoundPlayWave(bgmHandle_, true);
 
 }

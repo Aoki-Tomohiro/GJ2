@@ -47,14 +47,14 @@ void LoseScene::Initialize(GameManager* gameManager) {
 
 	//スプライトの初期化
 	position_ = { 0.0f,0.0f };
-	textureHandle_=textureManager_->Load("Project/Resources/Result/Lose/Lose.png");
+	textureHandle_=textureManager_->Load("Resources/Result/Lose/Lose.png");
 
 	sprite_ = new Sprite();
 	sprite_->Create(textureHandle_, position_);
 	
 
 	backSprite_ = new Sprite();
-	backTextureHandle_ = textureManager_->Load("Project/Resources/Black/BlackTexture.png");
+	backTextureHandle_ = textureManager_->Load("Resources/Black/BlackTexture.png");
 
 	backSprite_->Create(backTextureHandle_, position_);
 
@@ -62,14 +62,14 @@ void LoseScene::Initialize(GameManager* gameManager) {
 
 	//BGM
 	bgmAudio_ = Audio::GetInstance();;
-	bgmHandle_ =  audio_->SoundLoadWave("Project/Resources/Music/BGM/Lose/Lose.wav");
+	bgmHandle_ =  audio_->SoundLoadWave("Resources/Music/BGM/Lose/Lose.wav");
 
 	//SE
 	bgmAudio_->SoundPlayWave(bgmHandle_, true);
 
 	//シーンが変わるときのSE
 	backSEAudio_ = Audio::GetInstance();;
-	backSEHandle_ = audio_->SoundLoadWave("Project/Resources/Music/SE/Deside/Deside1.wav");
+	backSEHandle_ = audio_->SoundLoadWave("Resources/Music/SE/Deside/Deside1.wav");
 
 
 

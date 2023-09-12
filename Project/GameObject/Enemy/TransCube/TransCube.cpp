@@ -29,7 +29,7 @@ void TransCube::Initialize()
 	worldTransform.matWorld_ = MakeIdentity4x4();
 	worldTransform.scale_ = { 5,5,5 };
 	worldTransform.translation_ = { 0,0,40 };
-	model_->CreateFromOBJ("Project/Resources/EnemyObj/TransCube", "TransCube.obj");
+	model_->CreateFromOBJ("Resources/EnemyObj/TransCube", "TransCube.obj");
 	
 	TransCubeGroundAttackState* state = new TransCubeGroundAttackState();
 	state_ = state;
@@ -47,8 +47,8 @@ void TransCube::Initialize()
 	SetRadius(5.0f);
 
 	//スプライトの作成
-	textureHandleHP1_ = TextureManager::GetInstance()->Load("Project/Resources/TransCubeHP1.png");
-	textureHandleHP2_ = TextureManager::GetInstance()->Load("Project/Resources/TransCubeHP2.png");
+	textureHandleHP1_ = TextureManager::GetInstance()->Load("Resources/TransCubeHP1.png");
+	textureHandleHP2_ = TextureManager::GetInstance()->Load("Resources/TransCubeHP2.png");
 	spriteHP1_ = std::make_unique<Sprite>();
 	spriteHP1_->Create(textureHandleHP1_, { 320.0f,50.0f });
 	spriteHP2_ = std::make_unique<Sprite>();

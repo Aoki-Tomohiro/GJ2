@@ -9,12 +9,12 @@ void BoxManager::Initialize() {
 	//ランド関数の初期化
 	std::srand(unsigned int(time(nullptr)));
 	//テクスチャの読み込み
-	textureHandle_ = TextureManager::GetInstance()->Load("Project/Resources/white.png");
+	textureHandle_ = TextureManager::GetInstance()->Load("Resources/white.png");
 	//エリアの初期化
 	for (int i = 0; i < areas_.size(); i++) {
 		//モデルの作成
 		areas_[i].model = std::make_unique<Model>();
-		areas_[i].model->CreateFromOBJ("Project/Resources", "plane.obj");
+		areas_[i].model->CreateFromOBJ("Resources", "plane.obj");
 		//ワールドトランスフォームの初期化
 		areas_[i].worldTransform.translation_ = { i * 4.0f - 4.0f,0.1f,0.0f };
 		areas_[i].worldTransform.rotation_.x = 3.14159265359f / 2.0f;

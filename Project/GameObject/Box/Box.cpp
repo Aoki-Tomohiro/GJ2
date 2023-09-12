@@ -8,7 +8,7 @@ void Box::Initialize(uint32_t attribute) {
 	model_ = std::make_unique<Model>();
 	model_->CreateSphere();
 	//テクスチャの読み込み
-	textureHandle_ = TextureManager::GetInstance()->Load("Project/Resources/white.png");
+	textureHandle_ = TextureManager::GetInstance()->Load("Resources/white.png");
 	//ワールドトランスフォームの初期化
 	int posNum = rand() % 4;
 	if (posNum == kLeftTop) {

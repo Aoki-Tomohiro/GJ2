@@ -44,7 +44,7 @@ void ExplanationScene::Initialize(GameManager* gameManager) {
 	//スプライトの初期化
 	//Fade用
 	backSprite_ = new Sprite();
-	backTextureHandle_ = textureManager_->Load("Project/Resources/Black/BlackTexture.png");
+	backTextureHandle_ = textureManager_->Load("Resources/Black/BlackTexture.png");
 	backSprite_->Create(backTextureHandle_, { 0.0f,0.0f });
 
 	//透明度
@@ -62,8 +62,8 @@ void ExplanationScene::Initialize(GameManager* gameManager) {
 	explanationSprite_[1] = new Sprite();
 
 
-	explanationHandle_[0] = textureManager_->Load("Project/Resources/Explanation/Explanation1.png");
-	explanationHandle_[1] = textureManager_->Load("Project/Resources/Explanation/Explanation2.png");
+	explanationHandle_[0] = textureManager_->Load("Resources/Explanation/Explanation1.png");
+	explanationHandle_[1] = textureManager_->Load("Resources/Explanation/Explanation2.png");
 
 
 	explanationSprite_[0]->Create(explanationHandle_[0] , {0.0f,0.0f});
@@ -73,18 +73,18 @@ void ExplanationScene::Initialize(GameManager* gameManager) {
 
 
 
-	explanationSEHandle_=audio_->SoundLoadWave("Project/Resources/Music/SE/Deside/Deside1.wav");
+	explanationSEHandle_=audio_->SoundLoadWave("Resources/Music/SE/Deside/Deside1.wav");
 
 	//BGM
 	bgmAudio_ =  Audio::GetInstance();
-	bgmHandle_ = audio_->SoundLoadWave("Project/Resources/Music/BGM/Explanation/Explanation.wav");
+	bgmHandle_ = audio_->SoundLoadWave("Resources/Music/BGM/Explanation/Explanation.wav");
 
 	bgmAudio_->SoundPlayWave(bgmHandle_, 1);
 
 	//SE
 	selectSEAudio_ = Audio::GetInstance();
-	explanationSEHandle_ = audio_->SoundLoadWave("Project/Resources/Music/SE/Select/Select.wav");
-	returnSEHandle_= audio_->SoundLoadWave("Project/Resources/Music/SE/Deside/Deside2.wav");
+	explanationSEHandle_ = audio_->SoundLoadWave("Resources/Music/SE/Select/Select.wav");
+	returnSEHandle_= audio_->SoundLoadWave("Resources/Music/SE/Deside/Deside2.wav");
 
 
 

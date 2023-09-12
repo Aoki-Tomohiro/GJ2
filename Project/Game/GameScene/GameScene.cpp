@@ -30,16 +30,16 @@ void GameScene::Initialize(GameManager* gameManager) {
 	//自キャラのモデル作成
 	//頭
 	modelPlayerHead_ = std::make_unique<Model>();
-	modelPlayerHead_->CreateFromOBJ("Project/Resources/Player_Head", "Player_Head.obj");
+	modelPlayerHead_->CreateFromOBJ("Resources/Player_Head", "Player_Head.obj");
 	//体
 	modelPlayerBody_ = std::make_unique<Model>();
-	modelPlayerBody_->CreateFromOBJ("Project/Resources/Player_Body", "Player_Body.obj");
+	modelPlayerBody_->CreateFromOBJ("Resources/Player_Body", "Player_Body.obj");
 	//左腕
 	modelPlayerL_arm_ = std::make_unique<Model>();
-	modelPlayerL_arm_->CreateFromOBJ("Project/Resources/Player_L_arm", "Player_L_arm.obj");
+	modelPlayerL_arm_->CreateFromOBJ("Resources/Player_L_arm", "Player_L_arm.obj");
 	//右腕
 	modelPlayerR_arm_ = std::make_unique<Model>();
-	modelPlayerR_arm_->CreateFromOBJ("Project/Resources/Player_R_arm", "Player_R_arm.obj");
+	modelPlayerR_arm_->CreateFromOBJ("Resources/Player_R_arm", "Player_R_arm.obj");
 	//自弾
 	modelPlayerBullet_ = std::make_unique<Model>();
 	modelPlayerBullet_->CreateSphere();
@@ -81,7 +81,7 @@ void GameScene::Initialize(GameManager* gameManager) {
 
 	//Music
 	bgmAudio_ = Audio::GetInstance();
-	bgmHandle_=audio_->SoundLoadWave("Project/Resources/Music/BGM/Game/GameBGM2.wav");
+	bgmHandle_=audio_->SoundLoadWave("Resources/Music/BGM/Game/GameBGM2.wav");
 
 	bgmAudio_->SoundPlayWave(bgmHandle_, true);
 

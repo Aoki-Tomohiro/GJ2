@@ -19,8 +19,8 @@ void Player::Initialize(const std::vector<Model*> models) {
 	worldTransformR_arm_.translation_.x = 0.5f;
 	worldTransformR_arm_.translation_.y = 1.8f;
 	//スプライトの作成
-	textureHandleHP1_ = TextureManager::GetInstance()->Load("Project/Resources/PlayerHP1.png");
-	textureHandleHP2_ = TextureManager::GetInstance()->Load("Project/Resources/PlayerHP2.png");
+	textureHandleHP1_ = TextureManager::GetInstance()->Load("Resources/PlayerHP1.png");
+	textureHandleHP2_ = TextureManager::GetInstance()->Load("Resources/PlayerHP2.png");
 	spriteHP1_ = std::make_unique<Sprite>();
 	spriteHP1_->Create(textureHandleHP1_, { 50.0f,652.0f });
 	spriteHP2_ = std::make_unique<Sprite>();
@@ -30,12 +30,12 @@ void Player::Initialize(const std::vector<Model*> models) {
 	//衝突対象を自分の属性以外に設定
 	SetCollisionMask(kCollisionMaskPlayer);
 	//レティクル
-	textureHandleReticle_ = TextureManager::GetInstance()->Load("Project/Resources/Reticle.png");
+	textureHandleReticle_ = TextureManager::GetInstance()->Load("Resources/Reticle.png");
 	sprite2DReticle_ = std::make_unique<Sprite>();
 	sprite2DReticle_->Create(textureHandleReticle_, { 0.0f,0.0f });
 
 	//ダメージエフェクト
-	textureHandleDamage_ = TextureManager::GetInstance()->Load("Project/Resources/PlayerDamage.png");
+	textureHandleDamage_ = TextureManager::GetInstance()->Load("Resources/PlayerDamage.png");
 	spriteDamage_ = std::make_unique<Sprite>();
 	spriteDamage_->Create(textureHandleDamage_, { 0.0f,0.0f });
 
@@ -43,17 +43,17 @@ void Player::Initialize(const std::vector<Model*> models) {
 	audio_ = Audio::GetInstance();
 
 	damegedSE_ =Audio::GetInstance();
-	damagedSEHandle_ =  audio_->SoundLoadWave("Project/Resources/Music/SE/Damage/PlayerDamaged.wav");
+	damagedSEHandle_ =  audio_->SoundLoadWave("Resources/Music/SE/Damage/PlayerDamaged.wav");
 
 	attackSE_ = Audio::GetInstance();
-	attackSEHandle_ = audio_->SoundLoadWave("Project/Resources/Music/SE/Attack/PlayerAttack.wav");
+	attackSEHandle_ = audio_->SoundLoadWave("Resources/Music/SE/Attack/PlayerAttack.wav");
 
 
 	dashSE_ =  Audio::GetInstance();
-	dashSEHandle_ =  audio_->SoundLoadWave("Project/Resources/Music/SE/Dash/Dash.wav");;
+	dashSEHandle_ =  audio_->SoundLoadWave("Resources/Music/SE/Dash/Dash.wav");;
 
 	jumpSE_ =  Audio::GetInstance();
-	jumpSEHandle_ =  audio_->SoundLoadWave("Project/Resources/Music/SE/Jump/Jump.wav");
+	jumpSEHandle_ =  audio_->SoundLoadWave("Resources/Music/SE/Jump/Jump.wav");
 
 
 }

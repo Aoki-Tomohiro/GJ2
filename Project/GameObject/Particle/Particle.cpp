@@ -3,7 +3,7 @@
 
 void Particle::Initialize(const Vector3& position) {
 	model_ = std::make_unique<Model>();
-	model_->CreateFromOBJ("Project/Resources/EnemyObj/TransCube", "TransCube.obj");
+	model_->CreateFromOBJ("Resources/EnemyObj/TransCube", "TransCube.obj");
 	//ワールドトランスフォームの初期化
 	worldTransform_.translation_ = position;
 	worldTransform_.rotation_.x = float(rand() % 315) / 100;

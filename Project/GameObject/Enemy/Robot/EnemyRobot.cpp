@@ -17,7 +17,7 @@ EnemyRobot::~EnemyRobot()
 void EnemyRobot::Initialize()
 {
 	enemy_.BodyModel = std::make_unique<Model>();
-	enemy_.BodyModel->CreateFromOBJ("Project/Resources/EnemyObj/EnemyRobot/Body", "EnemyRobotBody.obj");
+	enemy_.BodyModel->CreateFromOBJ("Resources/EnemyObj/EnemyRobot/Body", "EnemyRobotBody.obj");
 	enemy_.BodyWorldTransform.matWorld_ = MakeIdentity4x4();
 	enemy_.BodyWorldTransform.scale_ = { 28,28,28 };
 	enemy_.BodyWorldTransform.translation_ = { 0,20,90 };
@@ -129,28 +129,28 @@ void EnemyRobot::UpdateMatrixs()
 void EnemyRobot::HeadArmInit()
 {
 	enemy_.HeadModel = std::make_unique<Model>();
-	enemy_.HeadModel->CreateFromOBJ("Project/Resources/EnemyObj/EnemyRobot/Head", "EnemyRobotHead.obj");
+	enemy_.HeadModel->CreateFromOBJ("Resources/EnemyObj/EnemyRobot/Head", "EnemyRobotHead.obj");
 	enemy_.HeadWorldTransform.parent_ = &enemy_.BodyWorldTransform;
 
 	enemy_.LarmTopModel = std::make_unique<Model>();
-	enemy_.LarmTopModel->CreateFromOBJ("Project/Resources/EnemyObj/EnemyRobot/LTopArm", "EnemyRobotLArm.obj");
+	enemy_.LarmTopModel->CreateFromOBJ("Resources/EnemyObj/EnemyRobot/LTopArm", "EnemyRobotLArm.obj");
 	enemy_.LarmWorldTransform.parent_= &enemy_.BodyWorldTransform;
 	enemy_.LarmWorldTransform.translation_.x = enemy_.LarmWorldTransform.translation_.x + 0.6f;
 	enemy_.LarmWorldTransform.translation_.y = enemy_.LarmWorldTransform.translation_.y + 0.4f;
 	enemy_.LarmBoModel = std::make_unique <Model>();
-	enemy_.LarmBoModel->CreateFromOBJ("Project/Resources/EnemyObj/EnemyRobot/LBoArm", "LBoArm.obj");
+	enemy_.LarmBoModel->CreateFromOBJ("Resources/EnemyObj/EnemyRobot/LBoArm", "LBoArm.obj");
 	enemy_.LarmBoWorldTransform.parent_ = &enemy_.LarmWorldTransform;
 	enemy_.LarmBoWorldTransform.translation_.x = enemy_.LarmBoWorldTransform.translation_.x + 0.90f;
     enemy_.LarmBoWorldTransform.translation_.y = enemy_.LarmBoWorldTransform.translation_.y + 0.1f;
 	enemy_.LarmBoWorldTransform.translation_.z = enemy_.LarmBoWorldTransform.translation_.z - 0.1f;
 
 	enemy_.RarmTopModel = std::make_unique<Model>();
-	enemy_.RarmTopModel->CreateFromOBJ("Project/Resources/EnemyObj/EnemyRobot/RTopArm", "RTopArm.obj");
+	enemy_.RarmTopModel->CreateFromOBJ("Resources/EnemyObj/EnemyRobot/RTopArm", "RTopArm.obj");
 	enemy_.RarmWorldTransform.parent_ = &enemy_.BodyWorldTransform;
 	enemy_.RarmWorldTransform.translation_.x = enemy_.RarmWorldTransform.translation_.x - 0.5f;
 	enemy_.RarmWorldTransform.translation_.y = enemy_.RarmWorldTransform.translation_.y + 0.4f;
 	enemy_.RarmBoModel = std::make_unique <Model>();
-	enemy_.RarmBoModel->CreateFromOBJ("Project/Resources/EnemyObj/EnemyRobot/RBoArm", "EnemyRBoArm.obj");
+	enemy_.RarmBoModel->CreateFromOBJ("Resources/EnemyObj/EnemyRobot/RBoArm", "EnemyRBoArm.obj");
 	enemy_.RarmBoWorldTransform.parent_ = &enemy_.RarmWorldTransform;
 	enemy_.RarmBoWorldTransform.translation_.x = enemy_.RarmBoWorldTransform.translation_.x -1.0f;
 	enemy_.RarmBoWorldTransform.translation_.z = enemy_.RarmBoWorldTransform.translation_.z - 0.3f;

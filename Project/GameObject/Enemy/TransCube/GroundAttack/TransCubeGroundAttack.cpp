@@ -14,13 +14,13 @@ void TransCubeGroundAttack::Initialize(Vector3 position)
 {
 	BulletGround_ =new Model();
 	Bullet_ = new Model();
-	BulletGround_->CreateSphere();
-	Bullet_->CreateSphere();
+	BulletGround_->CreateFromOBJ("Resources/EnemyObj/TransCube/GroundAttack", "StarGroundAttack.obj");
+	Bullet_->CreateFromOBJ("Resources/EnemyObj/TransCube/GroundAttack", "GroundAttack.obj");
 
 	worldTransformBulletGround_.matWorld_ = MakeIdentity4x4();
 	worldTransformBullet_.matWorld_ = MakeIdentity4x4();
 	worldTransformBulletGround_.scale_ = { 5,0.3f,5 };
-	worldTransformBullet_.scale_ = {2.0f ,8.0f,2.0f };
+	worldTransformBullet_.scale_ = {1.0f ,2.0f,1.0f };
 	BulletTimer = 0;
 	DrawTimer = 0;
 	

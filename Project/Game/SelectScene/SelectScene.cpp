@@ -1,6 +1,7 @@
 #include "SelectScene.h"
 #include "GameManager/GameManager.h"
 #include "GameScene/GameScene.h"
+#include "GameSceneRobot/GameSceneRobot.h"
 #include "TitleScene/TitleScene.h"
 #include "ExplanationScene/ExplanationScene.h"
 #include <imgui.h>
@@ -400,7 +401,7 @@ void SelectScene::Update(GameManager* gameManager) {
 		gameManager->ChangeScene(new GameScene());	
 	}
 	if (loadingTime > SECOND_ * 3 && stageNumber_ == 2) {
-		gameManager->ChangeScene(new GameScene());
+		gameManager->ChangeScene(new GameSceneRobot());
 			
 	}	
 	if (loadingTime > SECOND_ * 3 && stageNumber_ == 3) {

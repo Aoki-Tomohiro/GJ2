@@ -195,6 +195,9 @@
     <ClCompile Include="Project\GameObject\Ground\TestGround.cpp">
       <Filter>ソースファイル\Project\GameObject\Ground</Filter>
     </ClCompile>
+    <ClCompile Include="Project\Game\GameSceneRobot\GameSceneRobot.cpp">
+      <Filter>ソースファイル\Project\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Components\PostProcess\PostProcess.h">
@@ -370,6 +373,9 @@
     </ClInclude>
     <ClInclude Include="Project\GameObject\Ground\TestGround.h">
       <Filter>ヘッダーファイル\Project\GameObject\Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Game\GameSceneRobot\GameSceneRobot.h">
+      <Filter>ヘッダーファイル\Project\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

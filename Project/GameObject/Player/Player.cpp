@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "PlayerBullet.h"
 #include "GameScene/GameScene.h"
+#include "GameSceneRobot/GameSceneRobot.h"
 #include "../GameObject/Enemy/TransCube/TransCube.h"
 #include "Input/Input.h"
 #include "CollisionManager/CollisionConfig.h"
@@ -510,7 +511,12 @@ void Player::Fire() {
 				newBullet->Initialize(models_[4], worldPos, velocity);
 
 				// 弾を登録する
-				gameScene_->AddPlayerBullet(newBullet);
+				if (gameScene_ != nullptr) {
+					gameScene_->AddPlayerBullet(newBullet);
+				}
+				else if (gameSceneRobot_ != nullptr) {
+					gameSceneRobot_->AddPlayerBullet(newBullet);
+				}
 
 				attackSE_->SoundPlayWave(attackSEHandle_, 0);
 				

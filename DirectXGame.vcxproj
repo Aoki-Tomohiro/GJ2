@@ -121,6 +121,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\GameObject\Box\BoxManager.cpp" />
     <ClCompile Include="Project\GameObject\Doom\Doom.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\Robot\EnemyRobot.cpp" />
+    <ClCompile Include="Project\GameObject\Enemy\Robot\Punch\RobotPunch.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\Robot\RandBullet\RandBullet.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\Robot\state\RandBullet\EnemyRobotRandBulletState.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\Robot\state\RobotPunch\EnemyRobotPunchState.cpp" />
@@ -138,6 +139,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\GameObject\Player\PlayerBullet.cpp" />
     <ClCompile Include="Project\Game\ExplanationScene\ExplanationScene.cpp" />
     <ClCompile Include="Project\Game\GameManager\GameManager.cpp" />
+    <ClCompile Include="Project\Game\GameSceneRobot\GameSceneRobot.cpp" />
     <ClCompile Include="Project\Game\GameScene\GameScene.cpp" />
     <ClCompile Include="Project\Game\LoseScene\LoseScene.cpp" />
     <ClCompile Include="Project\Game\SelectScene\SelectScene.cpp" />
@@ -180,6 +182,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\GameObject\Box\BoxManager.h" />
     <ClInclude Include="Project\GameObject\Doom\Doom.h" />
     <ClInclude Include="Project\GameObject\Enemy\Robot\EnemyRobot.h" />
+    <ClInclude Include="Project\GameObject\Enemy\Robot\Punch\RobotPunch.h" />
     <ClInclude Include="Project\GameObject\Enemy\Robot\RandBullet\RandBullet.h" />
     <ClInclude Include="Project\GameObject\Enemy\Robot\state\IEnemyRobotState.h" />
     <ClInclude Include="Project\GameObject\Enemy\Robot\state\RandBullet\EnemyRobotRandBulletState.h" />
@@ -199,6 +202,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\Game\ExplanationScene\ExplanationScene.h" />
     <ClInclude Include="Project\Game\GameManager\GameManager.h" />
     <ClInclude Include="Project\Game\GameManager\IScene.h" />
+    <ClInclude Include="Project\Game\GameSceneRobot\GameSceneRobot.h" />
     <ClInclude Include="Project\Game\GameScene\GameScene.h" />
     <ClInclude Include="Project\Game\LoseScene\LoseScene.h" />
     <ClInclude Include="Project\Game\SelectScene\SelectScene.h" />

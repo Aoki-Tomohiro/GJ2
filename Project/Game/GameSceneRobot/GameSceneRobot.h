@@ -15,25 +15,23 @@
 #include "../GameObject/Player/PlayerBullet.h"
 #include "../GameObject/FollowCamera/FollowCamera.h"
 #include "../GameObject/Ground/TestGround.h"
-#include "../GameObject/Enemy/TransCube/TransCube.h"
+#include"../GameObject/Enemy/Robot/EnemyRobot.h"
 #include "../GameObject/Box/BoxManager.h"
 #include "../GameObject/Particle/ParticleEmitter.h"
 #include "CollisionManager/CollisionManager.h"
 #include <list>
-#include"../GameObject/Enemy/Robot/EnemyRobot.h"
-#include "../GameObject/Doom/Doom.h"
 
-class GameScene : public IScene {
+class GameSceneRobot : public IScene{
 public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	GameScene();
+	GameSceneRobot();
 
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~GameScene();
+	~GameSceneRobot();
 
 	/// <summary>
 	/// 初期化
@@ -62,9 +60,12 @@ public:
 	void AddParticleEmitter(ParticleEmitter* particleEmitter);
 
 private:
-
+	/// <summary>
+	/// コライダーをセット
+	/// </summary>
 	void SetCollisions();
 
+private:
 	//TextureManager
 	TextureManager* textureManager_ = nullptr;
 	//Audio
@@ -92,21 +93,18 @@ private:
 	//自弾
 	std::unique_ptr<Model> modelPlayerBullet_ = nullptr;
 	std::list<std::unique_ptr<PlayerBullet>> playerBullets_{};
+
 	//敵キャラ
-	std::unique_ptr<Model> modelTransCube_;
-	std::unique_ptr<TransCube> transCube_;
+	std::unique_ptr<EnemyRobot> EnemyRobot_;
 
 	//追従カメラ
 	std::unique_ptr<FollowCamera> followCamera_ = nullptr;
+
 	//地面
 	std::unique_ptr<TestGround> ground_ = nullptr;
 
-	//空間
-	std::unique_ptr<Doom> doom_ = nullptr;
-
 	//箱
 	std::unique_ptr<BoxManager> boxManager_ = nullptr;
-
 
 	//パーティクル
 	std::list<std::unique_ptr<ParticleEmitter>> particleEmitters_{};
@@ -114,8 +112,4 @@ private:
 	//BGM
 	Audio* bgmAudio_ = nullptr;
 	uint32_t bgmHandle_ = 0u;
-
-
-
-
 };

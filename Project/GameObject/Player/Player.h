@@ -8,6 +8,7 @@
 
 
 class GameScene;
+class GameSceneRobot;
 
 enum class Behavior {
 	kRoot,//通常状態
@@ -22,7 +23,7 @@ enum class Behavior {
 class Player : public Collider {
 public:
 	//強化状態の時間
-	static const int kEnhancedStateTime = 60 * 20;
+	static const int kEnhancedStateTime = 60 * 15;
 	//無敵時間
 	static const int kInvincibleTime = 60;
 
@@ -30,7 +31,7 @@ public:
 	struct WorkDash {
 		//ダッシュ用の媒介変数
 		uint32_t dashParameter_ = 0;
-		uint32_t coolTime = 300;
+		uint32_t coolTime = 0;
 	};
 
 	//ジャンプ用ワーク
@@ -116,6 +117,12 @@ public:
 	/// </summary>
 	/// <param name="gameScene"></param>
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; };
+
+	/// <summary>
+	/// ゲームシーンをセット
+	/// </summary>
+	/// <param name="gameSceneRobot"></param>
+	void SetGameSceneRobot(GameSceneRobot* gameSceneRobot) { gameSceneRobot_ = gameSceneRobot; };
 
 	/// <summary>
 	/// 移動量を取得
@@ -227,6 +234,7 @@ private:
 	int32_t bulletTimer_ = 0;
 	//ゲームシーン
 	GameScene* gameScene_ = nullptr;
+	GameSceneRobot* gameSceneRobot_ = nullptr;
 	//速度
 	Vector3 velocity_{};
 	//箱に触れているか

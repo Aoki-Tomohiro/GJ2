@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "PlayerBullet.h"
 #include "GameScene/GameScene.h"
+#include "GameSceneRobot/GameSceneRobot.h"
 #include "../GameObject/Enemy/TransCube/TransCube.h"
 #include "Input/Input.h"
 #include "CollisionManager/CollisionConfig.h"
@@ -131,6 +132,7 @@ void Player::Update() {
 	ImGui::Begin("Player");
 	ImGui::Checkbox("isEnhanced", &isEnhancedState_);
 	ImGui::Text("enhancedTimer : %d", enhancedStateTimer_);
+	ImGui::Text("dashCooltime : %d", workDash_.coolTime);
 	ImGui::DragFloat2("Sprite : uvScale", &spriteScale_.x, 0.001f);
 	ImGui::Text("LT : Aim");
 	ImGui::Text("RT : Shot");
@@ -251,13 +253,13 @@ void Player::BehaviorRootUpdate() {
 	}
 
 	//ダッシュ行動予約
-	const uint32_t behaviorDashCoolTime = 300;
+	const uint32_t behaviorDashCoolTime = 180;
 	if (workDash_.coolTime != behaviorDashCoolTime) {
 		workDash_.coolTime++;
 	}
 	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) {
-			if (workDash_.coolTime == 300) {
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+			if (workDash_.coolTime == 180) {
 				behaviorRequest_ = Behavior::kDash;
 			}
 		}
@@ -345,13 +347,13 @@ void Player::BehaviorAttackUpdate() {
 	}
 
 	//ダッシュ行動予約
-	const uint32_t behaviorDashCoolTime = 300;
+	const uint32_t behaviorDashCoolTime = 180;
 	if (workDash_.coolTime != behaviorDashCoolTime) {
 		workDash_.coolTime++;
 	}
 	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) {
-			if (workDash_.coolTime == 300) {
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+			if (workDash_.coolTime == 180) {
 				behaviorRequest_ = Behavior::kDash;
 			}
 		}
@@ -510,7 +512,12 @@ void Player::Fire() {
 				newBullet->Initialize(models_[4], worldPos, velocity);
 
 				// 弾を登録する
-				gameScene_->AddPlayerBullet(newBullet);
+				if (gameScene_ != nullptr) {
+					gameScene_->AddPlayerBullet(newBullet);
+				}
+				else if (gameSceneRobot_ != nullptr) {
+					gameSceneRobot_->AddPlayerBullet(newBullet);
+				}
 
 				attackSE_->SoundPlayWave(attackSEHandle_, 0);
 				

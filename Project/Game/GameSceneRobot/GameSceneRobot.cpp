@@ -1,19 +1,19 @@
-#include "GameScene.h"
+#include "GameSceneRobot.h"
 #include <cassert>
 
 #include "GameManager/GameManager.h"
 #include "WinScene/WinScene.h"
 #include "LoseScene/LoseScene.h"
 
-GameScene::GameScene() {};
+GameSceneRobot::GameSceneRobot() {};
 
-GameScene::~GameScene() {
+GameSceneRobot::~GameSceneRobot() {
 
 
 
 };
 
-void GameScene::Initialize(GameManager* gameManager) {
+void GameSceneRobot::Initialize(GameManager* gameManager) {
 	//TextureManagerのインスタンスを取得
 	textureManager_ = TextureManager::GetInstance();
 	//Audioのインスタンスを取得
@@ -48,31 +48,21 @@ void GameScene::Initialize(GameManager* gameManager) {
 	//自キャラの初期化
 	player_ = std::make_unique<Player>();
 	player_->Initialize(playerModels_);
-	player_->SetGameScene(this);
+	player_->SetGameSceneRobot(this);
 
 	//敵キャラの初期化
-	transCube_ = std::make_unique<TransCube>();
-	transCube_->SetPlayer(player_.get());
-	transCube_->Initialize();
-	
-
-	transCube_->SetGameScene(this);
-	/*transCube_->Initialize();*/
+	EnemyRobot_ = std::make_unique<EnemyRobot>();
+	EnemyRobot_->Initialize();
 
 	//追従カメラの初期化
 	followCamera_ = std::make_unique<FollowCamera>();
-	followCamera_->Initialize({ 0.0f,5.0f,-30.0f });
+	followCamera_->Initialize({ 0.0f,15.0f,-80.0f });
 	followCamera_->SetTarget(&player_->GetWorldTransform());
 	player_->SetViewProjection(&followCamera_->GetViewProjection());
 
 	//地面の初期化
 	ground_ = std::make_unique<TestGround>();
 	ground_->Initialize();
-
-	//Doom
-	doom_ = std::make_unique<Doom>();
-	doom_->Initialize();
-
 
 	//箱の初期化
 	boxManager_ = std::make_unique<BoxManager>();
@@ -82,24 +72,20 @@ void GameScene::Initialize(GameManager* gameManager) {
 	//衝突マネージャーの生成
 	collisionManager_ = std::make_unique<CollisionManager>();
 
-
 	//Music
 	bgmAudio_ = Audio::GetInstance();
-	bgmHandle_=audio_->SoundLoadWave("Resources/Music/BGM/Game/GameBGM.wav");
+	bgmHandle_ = audio_->SoundLoadWave("Resources/Music/BGM/Game/GameBGM2.wav");
 
 	bgmAudio_->SoundPlayWave(bgmHandle_, true);
-
-
-
-
-
 };
 
-void GameScene::Update(GameManager* gameManager) {
+void GameSceneRobot::Update(GameManager* gameManager) {
 	//追従カメラの更新
 	followCamera_->Update(player_->GetBehavior());
+
 	//自キャラの更新
 	player_->Update();
+
 	//デスフラグの立った自弾を削除
 	playerBullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {
 		if (bullet->isDead()) {
@@ -112,20 +98,13 @@ void GameScene::Update(GameManager* gameManager) {
 	for (std::unique_ptr<PlayerBullet>& bullet : playerBullets_) {
 		bullet->Update();
 	}
-
-	transCube_.get()->SetPlayer(player_.get());
+	EnemyRobot_->SetPlayer(player_.get());
 	//敵キャラの更新
-
-	transCube_->Update();
-
-
+	EnemyRobot_->Update();
 
 	//箱の更新
 	boxManager_->Update();
 
-	
-	////追従カメラの更新
-	//followCamera_->Update(player_.get()->GetBehavior());
 	//デスフラグの立ったパーティクルを削除
 	particleEmitters_.remove_if([](std::unique_ptr<ParticleEmitter>& particleEmitter) {
 		if (particleEmitter->isDead()) {
@@ -133,19 +112,18 @@ void GameScene::Update(GameManager* gameManager) {
 			return true;
 		}
 		return false;
-	    });
+		});
 	//パーティクルの更新
 	for (std::unique_ptr<ParticleEmitter>& particleEmitter : particleEmitters_) {
 		particleEmitter->Update();
 	}
 
-
 	//衝突マネージャーのリストをクリア
 	collisionManager_->ClearColliderList();
+	//コライダーをセット
 	SetCollisions();
 	//衝突判定
 	collisionManager_->CheckAllCollisions();
-
 
 	//デバッグカメラの更新
 	debugCamera_->Update();
@@ -182,7 +160,6 @@ void GameScene::Update(GameManager* gameManager) {
 		return;
 	}
 
-
 	ImGui::Begin(" ");
 	//ポストプロセス
 	ImGui::Checkbox("PostProcess", &postProcess_->isActive);
@@ -200,38 +177,34 @@ void GameScene::Update(GameManager* gameManager) {
 	ImGui::Text("UP DOWN : RotateY");
 	ImGui::End();
 
-
-
-	ImGui::Begin("GameScene");
+	ImGui::Begin("GameSceneRobot");
 	ImGui::Text("W:WinScene");
 	ImGui::Text("L:LoseScene");
 	ImGui::End();
-
-
 };
 
-void GameScene::Draw(GameManager* gameManager) {
+void GameSceneRobot::Draw(GameManager* gameManager) {
 	//自キャラの描画
 	player_->Draw(viewProjection_);
+
 	//自弾の描画
 	for (std::unique_ptr<PlayerBullet>& bullet : playerBullets_) {
 		bullet->Draw(viewProjection_);
 	}
+
 	//敵キャラの描画
-	transCube_->Draw(viewProjection_);
+	EnemyRobot_->Draw(viewProjection_);
 
 	//箱の描画
 	boxManager_->Draw(viewProjection_);
+
 	//地面の描画
 	ground_->Draw(viewProjection_);
-	//Doom
-	doom_->Draw(viewProjection_);
 
 	//パーティクルの描画
 	for (std::unique_ptr<ParticleEmitter>& particleEmitter : particleEmitters_) {
 		particleEmitter->Draw(viewProjection_);
 	}
-
 
 #pragma region ポストプロセス
 	//ポストプロセスの描画前処理
@@ -244,24 +217,21 @@ void GameScene::Draw(GameManager* gameManager) {
 #pragma region スプライトの描画
 	//自機のHPの描画
 	player_->DrawUI();
-	//ボスのHPの描画
-	transCube_->DrawUI();
 #pragma endregion
 };
 
-void GameScene::AddPlayerBullet(PlayerBullet* playerBullet) {
+void GameSceneRobot::AddPlayerBullet(PlayerBullet* playerBullet) {
 	//自機の弾を追加する
 	playerBullets_.push_back(std::unique_ptr<PlayerBullet>(playerBullet));
 }
 
 
-void GameScene::AddParticleEmitter(ParticleEmitter* particleEmitter) {
+void GameSceneRobot::AddParticleEmitter(ParticleEmitter* particleEmitter) {
 	//パーティクルを追加する
 	particleEmitters_.push_back(std::unique_ptr<ParticleEmitter>(particleEmitter));
 }
 
-void GameScene::SetCollisions()
-{
+void GameSceneRobot::SetCollisions(){
 	//自キャラ
 	collisionManager_->SetColliderList(player_.get());
 	collisionManager_->SetColliderListAABB(player_.get());
@@ -269,14 +239,15 @@ void GameScene::SetCollisions()
 		collisionManager_->SetColliderList(bullet.get());
 	}
 
-	//敵
-	collisionManager_->SetColliderList(transCube_.get());
-	for (TransCubeBullet* bullet : transCube_.get()->Getbullets()) {
+
+	collisionManager_->SetColliderList(EnemyRobot_.get());
+	for (RobotBullet* bullet : EnemyRobot_.get()->GetBullets())
+	{
 		collisionManager_->SetColliderList(bullet);
 	}
-	for (TransCubeGroundAttack* bullet : transCube_.get()->GetGroundBullets()) {
+	for (RobotPunch* bullet : EnemyRobot_.get()->GetPunch())
+	{
 		collisionManager_->SetColliderListAABB(bullet);
+
 	}
-
-
 }

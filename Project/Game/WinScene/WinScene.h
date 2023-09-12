@@ -91,6 +91,7 @@ private:
 
 
 
+
 	//Trigger専用のタイマー
 	int32_t triggerButtonBTime_ = 0;
 	int32_t triggerButtonATime_ = 0;

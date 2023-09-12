@@ -380,37 +380,37 @@ void SelectScene::Update(GameManager* gameManager) {
 
 		}
 
-		//タイトルへ
-		if (triggerButtonBTime_ == 1 && stageNumber_==0) {
-			isFadeOutMode_ = true;
-			//StartSE再生
-			//ループ無し
-			startSEAudio_->SoundPlayWave(returnSEHandle_, false);
-
-
-
-
-		}
-		if (triggerButtonBTime_ == 1 && stageNumber_==1) {
-			isFadeOutMode_ = true;
-			//StartSE再生
-			//ループ無し
-			startSEAudio_->SoundPlayWave(startSEHandle_, false);
-		}
 		
-		if (triggerButtonBTime_ == 1 && stageNumber_==2) {
-			isFadeOutMode_ = true;
-			startSEAudio_->SoundPlayWave(startSEHandle_, false);
-		}
-
-		//操作説明へ
-		if (triggerButtonBTime_ == 1 && stageNumber_==3) {
-			isFadeOutMode_ = true;
-			startSEAudio_->SoundPlayWave(explanationSEHandle_, false);
-		}
 	}
 	
+	//タイトルへ
+	if (triggerButtonBTime_ == 1 && stageNumber_==0) {
+		isFadeOutMode_ = true;
+		//StartSE再生
+		//ループ無し
+		startSEAudio_->SoundPlayWave(returnSEHandle_, false);
 
+
+
+
+	}
+	if (triggerButtonBTime_ == 1 && stageNumber_==1) {
+		isFadeOutMode_ = true;
+		//StartSE再生
+		//ループ無し
+		startSEAudio_->SoundPlayWave(startSEHandle_, false);
+	}
+	
+	if (triggerButtonBTime_ == 1 && stageNumber_==2) {
+		isFadeOutMode_ = true;
+		startSEAudio_->SoundPlayWave(startSEHandle_, false);
+	}
+
+	//操作説明へ
+	if (triggerButtonBTime_ == 1 && stageNumber_==3) {
+		isFadeOutMode_ = true;
+		startSEAudio_->SoundPlayWave(explanationSEHandle_, false);
+	}
 
 #pragma endregion
 

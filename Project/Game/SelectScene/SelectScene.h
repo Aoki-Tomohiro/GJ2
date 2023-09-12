@@ -79,6 +79,9 @@ private:
 	Sprite* cursorSprite_ = nullptr;
 	uint32_t cursorTexture_ = 0u;
 	Vector2 cursorPosition = {};
+	int32_t changeTime_ = 0;
+	bool isDraw_ = true;
+
 
 	//StageIcon
 	static const int STAGE_INDEX_ = 3;

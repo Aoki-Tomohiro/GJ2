@@ -19,7 +19,10 @@ SelectScene::SelectScene() {
 /// </summary>
 SelectScene::~SelectScene() {
 	//Spriteのデストラクタも忘れずに
-	delete silhouetteSprite_;
+	for (int i = 0; i < 4; i++) {
+		delete silhouetteSprite_[i];
+	}
+	
 
 	
 	delete backSprite_;
@@ -114,10 +117,16 @@ void SelectScene::Initialize(GameManager* gameManager) {
 	
 	silhouetteTextureHandle_[0]= textureManager_->Load("Resources/Select/Select1.png");
 	silhouetteTextureHandle_[1]= textureManager_->Load("Resources/Select/Select2.png");
+	silhouetteTextureHandle_[2]= textureManager_->Load("Resources/Select/Select3.png");
+	silhouetteTextureHandle_[3]= textureManager_->Load("Resources/Select/Select4.png");
 	
+
+
 	Vector2 position_ = {0.0f,0.0f};
 	silhouetteSprite_[0]->Create(silhouetteTextureHandle_[0], position_);
 	silhouetteSprite_[1]->Create(silhouetteTextureHandle_[1], position_);
+	silhouetteSprite_[2]->Create(silhouetteTextureHandle_[2], position_);
+	silhouetteSprite_[3]->Create(silhouetteTextureHandle_[3], position_);
 	
 
 	
@@ -156,7 +165,8 @@ void SelectScene::Initialize(GameManager* gameManager) {
 	cursorTexture_ = textureManager_->Load("Resources/Select/Cursor.png");
 	cursorPosition = {backToTitlePosition_ };
 	cursorSprite_->Create(cursorTexture_, cursorPosition);
-
+	changeTime_ = 0;
+	isDraw_ = true;
 
 
 	
@@ -249,6 +259,10 @@ void SelectScene::Update(GameManager* gameManager) {
 	if (cursorSprite_->GetTranslation().x == stageIconPosition[2].x) {
 		stageNumber_ = 3;
 	}
+
+
+	
+
 
 	//2つ用意で
 	if (isFadeInMode_ == false) {
@@ -348,6 +362,24 @@ void SelectScene::Update(GameManager* gameManager) {
 
 		}
 		
+
+
+		changeTime_ += 1;
+		if (changeTime_ > 0) {
+			if (changeTime_ > 0 && 
+				changeTime_ <= SECOND_/2 ) {
+				isDraw_ = true;
+			}
+			if (changeTime_ > SECOND_/2 && 
+				changeTime_ <= SECOND_ ) {
+				isDraw_ = false;
+			}
+			if (changeTime_ > SECOND_) {
+				changeTime_ = 0;
+			}
+
+		}
+
 		//タイトルへ
 		if (triggerButtonBTime_ == 1 && stageNumber_==0) {
 			isFadeOutMode_ = true;
@@ -429,8 +461,21 @@ void SelectScene::Update(GameManager* gameManager) {
 void SelectScene::Draw(GameManager* gameManager) {
 	
 	//背景
-	silhouetteSprite_->Draw();
+	
+	if (stageNumber_ == 0) {
+		silhouetteSprite_[0]->Draw();
+	}
+	if (stageNumber_ == 1) {
+		silhouetteSprite_[1]->Draw();
+	}
+	if (stageNumber_ == 2) {
+		silhouetteSprite_[2]->Draw();
+	}
+	if (stageNumber_ == 3) {
+		silhouetteSprite_[3]->Draw();
+	}
 
+	
 	//StageIcon
 	stageIconSprite_[0]->Draw();
 	stageIconSprite_[1]->Draw();
@@ -441,8 +486,11 @@ void SelectScene::Draw(GameManager* gameManager) {
 	
 	//カーソル
 	//後ろに描画しないと見えない
-	cursorSprite_->Draw();
+	if (isDraw_ == true) {
+		cursorSprite_->Draw();
 
+	}
+	
 
 	//Fade用
 	backSprite_->Draw();

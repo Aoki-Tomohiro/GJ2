@@ -52,11 +52,11 @@ void EnemyRobotRandBulletState::Update(EnemyRobot* state)
 		Flame++;
 		
 	//R
-		state->GetEnemy().RarmWorldTransform.rotation_ = state->EasingFanc(state, StartRTWorldPos, EndRTWorldPos, Flame, EndFlame);
-		state->GetEnemy().RarmBoWorldTransform.rotation_ = state->EasingFanc(state, StartRBWorldPos, EndRBWorldPos, Flame, EndFlame);
+		state->GetEnemy().RarmWorldTransform.rotation_ = state->EasingFanc( StartRTWorldPos, EndRTWorldPos, Flame, EndFlame);
+		state->GetEnemy().RarmBoWorldTransform.rotation_ = state->EasingFanc(StartRBWorldPos, EndRBWorldPos, Flame, EndFlame);
 	//L
-		state->GetEnemy().LarmWorldTransform.rotation_ = state->EasingFanc(state, StartLTWorldPos, EndLTWorldPos, Flame, EndFlame);
-		state->GetEnemy().LarmBoWorldTransform.rotation_ = state->EasingFanc(state, StartLBWorldPos, EndLBWorldPos, Flame, EndFlame);
+		state->GetEnemy().LarmWorldTransform.rotation_ = state->EasingFanc(StartLTWorldPos, EndLTWorldPos, Flame, EndFlame);
+		state->GetEnemy().LarmBoWorldTransform.rotation_ = state->EasingFanc(StartLBWorldPos, EndLBWorldPos, Flame, EndFlame);
 
 		
 		if (Flame == EndFlame) {

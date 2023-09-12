@@ -23,11 +23,21 @@ void EnemyRobot::Initialize()
 	enemy_.BodyWorldTransform.translation_ = { 0,20,90 };
 	HeadArmInit();
 	UpdateMatrixs();
-	state = std::make_unique<EnemyRobotRandBulletState>();
+	state = std::make_unique<EnemeyRobotPunchState>();
 	state->Initialize(this);
+	MoveFlag = true;
+	StateFlag = false;
+	StateEndFlag = true;
 
-	
+	StartRTWorPos = enemy_.RarmWorldTransform.rotation_;
+	EndRTWorPos = { 0,0,0.5 };
+	StartRBWorPos = enemy_.RarmBoWorldTransform.rotation_;
+	EndRBWorPos = { 0,0,2.0 };
 
+	StartLTWorPos = enemy_.LarmWorldTransform.rotation_;
+	EndLTWorPos = { 0,0,-0.5 };
+	StartLBWorPos = enemy_.LarmBoWorldTransform.rotation_;
+	EndLBWorPos = { 0,0,-2.0 };
 }
 
 void EnemyRobot::Update()
@@ -46,7 +56,25 @@ void EnemyRobot::Update()
 	ImGui::End();
 
 
+	if (MoveFlag&&StateEndFlag)
+	{
+		Flame++;
+
+		enemy_.RarmWorldTransform.rotation_=EasingFanc(StartRTWorPos, EndRTWorPos, Flame, EndFlame);
+		enemy_.RarmBoWorldTransform.rotation_ = EasingFanc(StartRBWorPos, EndRBWorPos, Flame, EndFlame);
+		enemy_.LarmWorldTransform.rotation_ = EasingFanc(StartLTWorPos, EndLTWorPos, Flame, EndFlame);
+		enemy_.LarmBoWorldTransform.rotation_ = EasingFanc(StartLBWorPos, EndLBWorPos, Flame, EndFlame);
+
+		if (Flame==EndFlame)
+		{
+			MoveFlag = false;
+
+
+		}
+	}
+
 	BulletUp();
+	
 	state->Update(this);
 	UpdateMatrixs();
 
@@ -86,7 +114,7 @@ float EnemyRobot::LerpMove(float pos)
 	return result;
 
 }
-Vector3 EnemyRobot::EasingFanc(EnemyRobot* state, Vector3 startv, Vector3 Endv, float &Flame, float EndFlame)
+Vector3 EnemyRobot::EasingFanc( Vector3 startv, Vector3 Endv, float &Flame, float EndFlame)
 {
 	Vector3 result;
 
@@ -119,12 +147,12 @@ void EnemyRobot::HeadArmInit()
 	enemy_.LarmTopModel = std::make_unique<Model>();
 	enemy_.LarmTopModel->CreateFromOBJ("Project/Resources/EnemyObj/EnemyRobot/LTopArm", "EnemyRobotLArm.obj");
 	enemy_.LarmWorldTransform.parent_= &enemy_.BodyWorldTransform;
-	enemy_.LarmWorldTransform.translation_.x = enemy_.LarmWorldTransform.translation_.x + 0.5f;
+	enemy_.LarmWorldTransform.translation_.x = enemy_.LarmWorldTransform.translation_.x + 0.6f;
 	enemy_.LarmWorldTransform.translation_.y = enemy_.LarmWorldTransform.translation_.y + 0.4f;
 	enemy_.LarmBoModel = std::make_unique <Model>();
 	enemy_.LarmBoModel->CreateFromOBJ("Project/Resources/EnemyObj/EnemyRobot/LBoArm", "LBoArm.obj");
 	enemy_.LarmBoWorldTransform.parent_ = &enemy_.LarmWorldTransform;
-	enemy_.LarmBoWorldTransform.translation_.x = enemy_.LarmBoWorldTransform.translation_.x + 0.80f;
+	enemy_.LarmBoWorldTransform.translation_.x = enemy_.LarmBoWorldTransform.translation_.x + 0.90f;
     enemy_.LarmBoWorldTransform.translation_.y = enemy_.LarmBoWorldTransform.translation_.y + 0.1f;
 	enemy_.LarmBoWorldTransform.translation_.z = enemy_.LarmBoWorldTransform.translation_.z - 0.1f;
 

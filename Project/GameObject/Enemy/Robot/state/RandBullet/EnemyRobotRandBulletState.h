@@ -13,10 +13,10 @@ public:
 
 	void Update(EnemyRobot* state)override;
 
-	void Draw(EnemyRobot* state, ViewProjection view);
+	void Draw(EnemyRobot* state, ViewProjection view)override;
 
-	void SetParent(const WorldTransform* parent);
-	void Deleate(EnemyRobot* state);
+	void SetParent(const WorldTransform* parent)override;
+	void Deleate(EnemyRobot* state)override;
 
 private:
 

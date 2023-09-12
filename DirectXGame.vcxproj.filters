@@ -127,6 +127,9 @@
     <Filter Include="ソース ファイル\Project\GameObject\Robot\State\RobotRandBulletState">
       <UniqueIdentifier>{0b01edd0-69b2-4a71-8960-e2615eeb6cf9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Project\GameObject\Robot\State\RobotPunchState">
+      <UniqueIdentifier>{4acbda4c-45f4-4aa1-9b00-677471365d38}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -255,11 +258,14 @@
     <ClCompile Include="Project\GameObject\Enemy\TransCube\RandBullet\TransCubeBullet.cpp">
       <Filter>ソース ファイル\Project\GameObject\TransCube</Filter>
     </ClCompile>
+    <ClCompile Include="Project\GameObject\Enemy\Robot\state\RandBullet\EnemyRobotRandBulletState.cpp">
+      <Filter>ソース ファイル\Project\GameObject\Robot\State\RobotRandBulletState</Filter>
+    </ClCompile>
     <ClCompile Include="Project\GameObject\Enemy\Robot\RandBullet\RandBullet.cpp">
       <Filter>ソース ファイル\Project\GameObject\Robot</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\Robot\state\RandBullet\EnemyRobotRandBulletState.cpp">
-      <Filter>ソース ファイル\Project\GameObject\Robot\State\RobotRandBulletState</Filter>
+    <ClCompile Include="Project\GameObject\Enemy\Robot\state\RobotPunch\EnemyRobotPunchState.cpp">
+      <Filter>ソース ファイル\Project\GameObject\Robot\State\RobotPunchState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -409,6 +415,9 @@
     </ClInclude>
     <ClInclude Include="Project\GameObject\Enemy\Robot\state\IEnemyRobotState.h">
       <Filter>ソース ファイル\Project\GameObject\Robot\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\Robot\state\RobotPunch\EnemyRobotPunchState.h">
+      <Filter>ソース ファイル\Project\GameObject\Robot\State\RobotPunchState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

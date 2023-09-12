@@ -4,7 +4,7 @@
 #include"../GameObject/Enemy/Robot/RandBullet/RandBullet.h"
 
 #include"../GameObject/Enemy/Robot/state/RandBullet/EnemyRobotRandBulletState.h"
-
+#include"../GameObject/Enemy/Robot/state/RobotPunch/EnemyRobotPunchState.h"
 struct  SEnemyRobot
 {
 
@@ -44,7 +44,7 @@ public:
 	SEnemyRobot &GetEnemy() { return enemy_; }
 	void BulletPushBack(Vector3 velocity,Vector3 pos);
 
-	Vector3 EasingFanc(EnemyRobot* state, Vector3 startv, Vector3 Endv, float &Flame, float EndFlame);
+	Vector3 EasingFanc(Vector3 startv, Vector3 Endv, float &Flame, float EndFlame);
 private:
 	float LerpMove(float pos);
 
@@ -60,6 +60,24 @@ private:
 
 	std::unique_ptr<IEnemyRobotState> state = {};
 
+	bool MoveFlag = false;
+	bool StateFlag = false;
+	bool StateEndFlag = false;
+
+	Vector3 StartRTWorPos = {};
+	Vector3 EndRTWorPos = {};
+
+	Vector3 StartRBWorPos = {};
+	Vector3 EndRBWorPos = {};
+
+	Vector3 StartLTWorPos = {};
+	Vector3 EndLTWorPos = {};
+
+	Vector3 StartLBWorPos = {};
+	Vector3 EndLBWorPos = {};
+
+	float Flame = 0.0f;
+	float EndFlame=180.0f;
 };
 
 

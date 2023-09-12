@@ -14,7 +14,7 @@ ExplanationScene::ExplanationScene() {
 /// デストラクタ
 /// </summary>
 ExplanationScene::~ExplanationScene() {
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 3; i++) {
 		delete explanationSprite_[i];
 	}
 
@@ -60,14 +60,19 @@ void ExplanationScene::Initialize(GameManager* gameManager) {
 	//説明
 	explanationSprite_[0] = new Sprite();
 	explanationSprite_[1] = new Sprite();
+	explanationSprite_[2] = new Sprite();
+
 
 
 	explanationHandle_[0] = textureManager_->Load("Resources/Explanation/Explanation1.png");
 	explanationHandle_[1] = textureManager_->Load("Resources/Explanation/Explanation2.png");
+	explanationHandle_[2] = textureManager_->Load("Resources/Explanation/Explanation3.png");
 
 
 	explanationSprite_[0]->Create(explanationHandle_[0] , {0.0f,0.0f});
 	explanationSprite_[1]->Create(explanationHandle_[1] , {0.0f,0.0f});
+	explanationSprite_[2]->Create(explanationHandle_[2] , {0.0f,0.0f});
+
 
 	explanationCurrentNumber_ = 0;
 
@@ -191,9 +196,13 @@ void ExplanationScene::Draw(GameManager* gameManager) {
 		explanationSprite_[0]->Draw();
 	}
 	
-	if (explanationCurrentNumber_ == 1 ||
-		explanationCurrentNumber_ == 2) {
+	if (explanationCurrentNumber_ == 1) {
 		explanationSprite_[1]->Draw();
+	}
+
+	if (explanationCurrentNumber_ == 2 ||
+		explanationCurrentNumber_ == 3) {
+		explanationSprite_[2]->Draw();
 	}
 
 	backSprite_->Draw();

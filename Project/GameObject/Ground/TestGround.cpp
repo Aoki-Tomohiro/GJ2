@@ -5,7 +5,7 @@ void TestGround::Initialize()
 
 	model_ = std::make_unique<Model>();
 
-	model_.get()->CreateFromOBJ("Resources/GroundObj", "TestGround.obj");
+	model_.get()->CreateFromOBJ("Resources/Ground", "Ground.obj");
 	worldTransform.matWorld_ = MakeIdentity4x4();
 	
 	worldTransform.scale_ = { 2,2,2 };

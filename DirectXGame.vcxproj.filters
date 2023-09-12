@@ -91,6 +91,9 @@
     <ClCompile Include="Project\Game\GameSceneRobot\GameSceneRobot.cpp">
       <Filter>ソースファイル\Project\Game</Filter>
     </ClCompile>
+    <ClCompile Include="Project\GameObject\Doom\Doom.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\2D\GlobalVariables\GlobalVariables.h" />
@@ -174,6 +177,9 @@
     </ClInclude>
     <ClInclude Include="Project\Game\GameSceneRobot\GameSceneRobot.h">
       <Filter>ヘッダーファイル\Project\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Doom\Doom.h">
+      <Filter>ソースファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

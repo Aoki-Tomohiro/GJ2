@@ -69,6 +69,11 @@ void GameScene::Initialize(GameManager* gameManager) {
 	ground_ = std::make_unique<TestGround>();
 	ground_->Initialize();
 
+	//Doom
+	doom_ = std::make_unique<Doom>();
+	doom_->Initialize();
+
+
 	//箱の初期化
 	boxManager_ = std::make_unique<BoxManager>();
 	boxManager_->Initialize();
@@ -80,7 +85,7 @@ void GameScene::Initialize(GameManager* gameManager) {
 
 	//Music
 	bgmAudio_ = Audio::GetInstance();
-	bgmHandle_=audio_->SoundLoadWave("Resources/Music/BGM/Game/GameBGM2.wav");
+	bgmHandle_=audio_->SoundLoadWave("Resources/Music/BGM/Game/GameBGM.wav");
 
 	bgmAudio_->SoundPlayWave(bgmHandle_, true);
 
@@ -219,6 +224,9 @@ void GameScene::Draw(GameManager* gameManager) {
 	boxManager_->Draw(viewProjection_);
 	//地面の描画
 	ground_->Draw(viewProjection_);
+	//Doom
+	doom_->Draw(viewProjection_);
+
 	//パーティクルの描画
 	for (std::unique_ptr<ParticleEmitter>& particleEmitter : particleEmitters_) {
 		particleEmitter->Draw(viewProjection_);

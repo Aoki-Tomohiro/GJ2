@@ -239,7 +239,7 @@ void GameSceneRobot::Draw(GameManager* gameManager) {
 
 	//地面の描画
 	ground_->Draw(viewProjection_);
-	doom_->Draw(viewProjection_);
+	//doom_->Draw(viewProjection_);
 	//パーティクルの描画
 	for (std::unique_ptr<ParticleEmitter>& particleEmitter : particleEmitters_) {
 		particleEmitter->Draw(viewProjection_);

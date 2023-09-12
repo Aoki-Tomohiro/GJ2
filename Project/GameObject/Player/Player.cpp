@@ -111,6 +111,14 @@ void Player::Update() {
 		break;
 	}
 
+	//壁の外に出ないようにする
+	const float kMoveLimitX = 80.0f;
+	const float kMoveLimitZ = 80.0f;
+	worldTransformBase_.translation_.x = max(worldTransformBase_.translation_.x, -kMoveLimitX);
+	worldTransformBase_.translation_.x = min(worldTransformBase_.translation_.x, kMoveLimitX);
+	worldTransformBase_.translation_.z = max(worldTransformBase_.translation_.z, -kMoveLimitZ);
+	worldTransformBase_.translation_.z = min(worldTransformBase_.translation_.z, kMoveLimitZ);
+
 	//ワールドトランスフォームの更新
 	worldTransformBase_.UpdateMatrix();
 	worldTransformHead_.UpdateMatrix();
@@ -120,8 +128,6 @@ void Player::Update() {
 
 	//体力ゲージの更新
 	UpdateLife();
-
-	
 
 	//無敵時間の処理
 	UpdateInvincible();

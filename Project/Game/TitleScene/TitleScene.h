@@ -78,6 +78,13 @@ private:
 	//位置
 	Vector2 position_ = {};
 
+	//Bスタート
+	Sprite* startSprite_ = nullptr;
+	uint32_t startTextureHandle_ = 0u;
+	int32_t transparencyChangeTime_ = 0;
+	bool isStartTexture_ = true;
+
+
 	//Trigger専用のタイマー
 	int32_t triggerButtonBTime_ = 0;
 	float_t fadeOutTime_ = 0;

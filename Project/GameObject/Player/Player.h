@@ -22,7 +22,7 @@ enum class Behavior {
 class Player : public Collider {
 public:
 	//強化状態の時間
-	static const int kEnhancedStateTime = 60 * 10;
+	static const int kEnhancedStateTime = 60 * 20;
 	//無敵時間
 	static const int kInvincibleTime = 60;
 
@@ -250,6 +250,9 @@ private:
 	//レティクルのスプライト
 	uint32_t textureHandleReticle_ = 0;
 	std::unique_ptr<Sprite> sprite2DReticle_{};
+	//ダメージエフェクト
+	uint32_t textureHandleDamage_ = 0;
+	std::unique_ptr<Sprite> spriteDamage_ = nullptr;
 
 
 	//Audio

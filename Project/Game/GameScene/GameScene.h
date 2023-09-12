@@ -17,6 +17,7 @@
 #include "../GameObject/Ground/TestGround.h"
 #include "../GameObject/Enemy/TransCube/TransCube.h"
 #include "../GameObject/Box/BoxManager.h"
+#include "../GameObject/Particle/ParticleEmitter.h"
 #include "CollisionManager/CollisionManager.h"
 #include <list>
 
@@ -51,6 +52,12 @@ public:
 	/// 自機の弾を追加する
 	/// </summary>
 	void AddPlayerBullet(PlayerBullet* playerBullet);
+
+	/// <summary>
+	/// パーティクルを追加
+	/// </summary>
+	/// <param name="particleEmitter"></param>
+	void AddParticleEmitter(ParticleEmitter* particleEmitter);
 
 private:
 
@@ -95,10 +102,12 @@ private:
 	std::unique_ptr<BoxManager> boxManager_ = nullptr;
 
 
+	//パーティクル
+	std::list<std::unique_ptr<ParticleEmitter>> particleEmitters_{};
+
 	//BGM
 	Audio* bgmAudio_ = nullptr;
 	uint32_t bgmHandle_ = 0u;
-
 
 
 

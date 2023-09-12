@@ -34,6 +34,11 @@ void Player::Initialize(const std::vector<Model*> models) {
 	sprite2DReticle_ = std::make_unique<Sprite>();
 	sprite2DReticle_->Create(textureHandleReticle_, { 0.0f,0.0f });
 
+	//ダメージエフェクト
+	textureHandleDamage_ = TextureManager::GetInstance()->Load("Project/Resources/PlayerDamage.png");
+	spriteDamage_ = std::make_unique<Sprite>();
+	spriteDamage_->Create(textureHandleDamage_, { 0.0f,0.0f });
+
 	//Audioのインスタンスを取得
 	audio_ = Audio::GetInstance();
 
@@ -147,6 +152,9 @@ void Player::DrawUI() {
 	if (behavior_ == Behavior::kAttack) {
 		sprite2DReticle_->Draw();
 	}
+	if (isInvincible_) {
+		spriteDamage_->Draw();
+	}
 }
 
 void Player::OnCollision() {
@@ -154,6 +162,7 @@ void Player::OnCollision() {
 		isInvincible_ = true;
 		invincibleTimer_ = kInvincibleTime;
 		playerLife_--;
+		spriteDamage_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 		damegedSE_->SoundPlayWave(damagedSEHandle_, -0);
 	}
 }
@@ -484,7 +493,7 @@ void Player::Fire() {
 				}
 
 				// 弾の速度
-				const float kBulletSpeed = 1.0f;
+				const float kBulletSpeed = 3.0f;
 				Vector3 velocity(0, 0, kBulletSpeed);
 
 				// 速度ベクトルを自機の向きに合わせて回転させる
@@ -541,6 +550,7 @@ void Player::UpdateLife() {
 
 void Player::UpdateInvincible() {
 	if (isInvincible_) {
+		spriteDamage_->SetColor({ 1.0f,1.0f,1.0f,invincibleTimer_ / 60.0f });
 		if (--invincibleTimer_ <= 0) {
 			isInvincible_ = false;
 		}

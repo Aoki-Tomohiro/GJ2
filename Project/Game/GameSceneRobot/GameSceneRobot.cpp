@@ -82,6 +82,9 @@ void GameSceneRobot::Initialize(GameManager* gameManager) {
 	doom_ = std::make_unique<Doom>();
 	doom_->Initialize();
 
+	changeToWin_ = false;
+	changeToLose_ = false;
+
 };
 
 void GameSceneRobot::Update(GameManager* gameManager) {
@@ -187,6 +190,28 @@ void GameSceneRobot::Update(GameManager* gameManager) {
 	ImGui::Text("L:LoseScene");
 	ImGui::End();
 
+
+	if (player_->GetLife() <= 0) {
+		bgmAudio_->StopAudio(bgmHandle_);
+		
+
+		changeToLose_ = true;
+	}
+	if (EnemyRobot_->GetLife() <= 0) {
+		bgmAudio_->StopAudio(bgmHandle_);
+		changeToWin_ = true;
+		enemyDamagedAudio_->SoundPlayWave(enemyDamagedHandle_, 0);
+	}
+
+
+	if (changeToWin_ == true) {
+		gameManager->ChangeScene(new WinScene());
+	}
+
+
+	if (changeToLose_ == true) {
+		gameManager->ChangeScene(new LoseScene());
+	}
 };
 
 void GameSceneRobot::Draw(GameManager* gameManager) {

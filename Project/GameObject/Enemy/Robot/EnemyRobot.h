@@ -125,7 +125,7 @@ private:
 	WorldTransform CoreWorldTransform = {};
 
 	//体力
-	int32_t life_ = 3;
+	int32_t life_ = 300;
 
 	//体力のスプライト
 	uint32_t textureHandleHP1_ = 0;

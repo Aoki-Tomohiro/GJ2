@@ -73,10 +73,15 @@ private:
 
 
 	//タイトル画面の画像
-	Sprite* sprite_ = nullptr;
+	Sprite* loseSprite_[2] = {nullptr};
 
 	//テクスチャ用
-	uint32_t textureHandle_ = 0u;
+	uint32_t loseTextureHandle_[2] = { 0u };
+
+	int32_t loseTextureChangeTime_ = 0;
+	int32_t loseTextureNumber_ = 0;
+
+
 
 	//位置
 	Vector2 position_ = {};
@@ -91,6 +96,7 @@ private:
 	uint32_t backSEHandle_ = 0u;
 
 
+	
 
 	//Trigger専用のタイマー
 	int32_t triggerButtonBTime_ = 0;

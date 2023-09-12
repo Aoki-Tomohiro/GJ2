@@ -22,7 +22,9 @@ LoseScene::~LoseScene() {
 	delete backSprite_;
 
 
-	delete sprite_;
+	delete loseSprite_[0];
+	delete loseSprite_[1];
+
 }
 
 /// <summary>
@@ -47,11 +49,22 @@ void LoseScene::Initialize(GameManager* gameManager) {
 
 	//スプライトの初期化
 	position_ = { 0.0f,0.0f };
-	textureHandle_=textureManager_->Load("Resources/Result/Lose/Lose.png");
-
-	sprite_ = new Sprite();
-	sprite_->Create(textureHandle_, position_);
 	
+	loseSprite_[0] = new Sprite();
+	loseSprite_[1] = new Sprite();
+
+	loseTextureHandle_[0] = textureManager_->Load("Resources/Result/Lose/Lose1.png");
+	loseTextureHandle_[1] = textureManager_->Load("Resources/Result/Lose/Lose2.png");
+	
+	
+	loseSprite_[0]->Create(loseTextureHandle_[0], position_);
+	loseSprite_[1]->Create(loseTextureHandle_[1], position_);
+
+	loseTextureChangeTime_ = 0;
+	loseTextureNumber_ = 0;
+
+
+
 
 	backSprite_ = new Sprite();
 	backTextureHandle_ = textureManager_->Load("Resources/Black/BlackTexture.png");
@@ -173,7 +186,20 @@ void LoseScene::Update(GameManager* gameManager) {
 
 
 
-
+	loseTextureChangeTime_ += 1;
+	if (loseTextureChangeTime_ > 0) {
+		if (loseTextureChangeTime_ > 0 && 
+			loseTextureChangeTime_ <=SECOND_/2) {
+			loseTextureNumber_ = 0;
+		}
+		if (loseTextureChangeTime_ > SECOND_/2 && 
+			loseTextureChangeTime_ <=SECOND_) {
+			loseTextureNumber_ = 1;
+		}
+		if (loseTextureChangeTime_ > SECOND_) {
+			loseTextureChangeTime_ = 0;
+		}
+	}
 
 
 
@@ -261,7 +287,13 @@ void LoseScene::Update(GameManager* gameManager) {
 /// 描画
 /// </summary>
 void LoseScene::Draw(GameManager* gameManager) {
-	sprite_->Draw();
+	if (loseTextureNumber_ == 0) {
+		loseSprite_[0]->Draw();
+	}
+	if (loseTextureNumber_ == 1) {
+		loseSprite_[1]->Draw();
+	}
+	
 	backSprite_->Draw();
 }
 

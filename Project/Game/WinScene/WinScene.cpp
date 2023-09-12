@@ -22,7 +22,9 @@ WinScene::~WinScene() {
 	delete backSprite_;
 
 
-	delete sprite_;
+	delete winSprite_[0];
+	delete winSprite_[1];
+
 }
 
 /// <summary>
@@ -52,13 +54,19 @@ void WinScene::Initialize(GameManager* gameManager) {
 
 	//スプライトの初期化
 	//インスタンスを作り忘れないように
-	sprite_ = new Sprite();
-	
-	textureHandle_=textureManager_->Load("Resources/Result/Win/Win.png");
-
-	sprite_->Create(textureHandle_, position_);
+	winSprite_[0] = new Sprite();
+	winSprite_[1] = new Sprite();
 	
 
+	winTextureHandle_[0] = textureManager_->Load("Resources/Result/Win/Win1.png");
+	winTextureHandle_[1] = textureManager_->Load("Resources/Result/Win/Win2.png");
+
+
+	winSprite_[0]->Create(winTextureHandle_[0] , position_);
+	winSprite_[1]->Create(winTextureHandle_[1], position_);
+	
+	winTextureChangeTime_ = 0;
+	winTextureNumber_ = 0;
 
 	//透明度
 	COLOR_BIND = 1.0f;
@@ -130,6 +138,23 @@ void WinScene::Update(GameManager* gameManager) {
 	ImGui::Text("A:To TitleScene");
 	ImGui::InputInt("loadingTime", &loadingTime);
 	ImGui::InputFloat4("transparency", &transparency_.x);
+	
+	//画像の切り替わり
+	winTextureChangeTime_ += 1;
+	if (winTextureChangeTime_ > 0) {
+		if (winTextureChangeTime_>0 && 
+			winTextureChangeTime_<=SECOND_/2 ) {
+			winTextureNumber_ = 0;
+		}
+		if (winTextureChangeTime_>SECOND_/2 && 
+			winTextureChangeTime_<=SECOND_ ) {
+			winTextureNumber_ = 1;
+		}
+		if (winTextureChangeTime_>SECOND_) {
+			winTextureChangeTime_ = 0;
+		}
+
+	}
 	
 
 	XINPUT_STATE joyState{};
@@ -234,9 +259,13 @@ void WinScene::Draw(GameManager* gameManager) {
 	//Skydome
 	//modelSkydome_->Draw(worldTransform_, viewProjection_);
 
-
-	sprite_->Draw();
-
+	if (winTextureNumber_ == 0) {
+		winSprite_[0]->Draw();
+	}
+	if (winTextureNumber_ == 1) {
+		winSprite_[1]->Draw();
+	}
+	
 
 	backSprite_->Draw();
 }

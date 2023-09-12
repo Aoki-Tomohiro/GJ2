@@ -48,6 +48,7 @@ public:
 	void SetStartLT(Vector3 r) { StartLTWorPos = r; }
 	void SetStartLB(Vector3 r) { StartLBWorPos = r; }
 
+
 	Player* GetPlayer() { return player_; }
 	SEnemyRobot &GetEnemy() { return enemy_; }
 	void BulletPushBack(Vector3 velocity,Vector3 pos);

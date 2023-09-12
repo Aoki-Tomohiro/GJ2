@@ -39,12 +39,11 @@ void TransCube::Initialize()
 
 	input = Input::GetInstance();
 
-	SetRadius(5.0f);
 	//衝突属性を設定
 	SetCollisionAttribute(kCollisionAttributeEnemy);
 	//衝突対象を自分の属性以外に設定
 	SetCollisionMask(kCollisionMaskEnemy);
-	SetRadius(5.0f);
+	SetRadius(6.0f);
 
 	//スプライトの作成
 	textureHandleHP1_ = TextureManager::GetInstance()->Load("Resources/TransCubeHP1.png");

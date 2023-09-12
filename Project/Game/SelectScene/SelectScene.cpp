@@ -21,8 +21,10 @@ SelectScene::~SelectScene() {
 	
 	delete backSprite_;
 	
-	delete stageIconSprite_[0];
-	delete stageIconSprite_[1];
+	for (int i = 0; i < STAGE_INDEX_; i++) {
+		delete stageIconSprite_[i];
+	}
+	
 		
 
 	//タイトルに戻るためのアイコン
@@ -109,33 +111,38 @@ void SelectScene::Initialize(GameManager* gameManager) {
 
 	
 	//ステージアイコン
-	//←,1,2,?
+	//1,2,
+	//←,?
 	//タイトルに戻る
 	backToTitleSprite_ = new Sprite();
 	backToTitleTexture_ = textureManager_->Load("Project/Resources/Select/ToTitle.png");
-	backToTitlePosition_ = { 400.0f,500.0f };
+	backToTitlePosition_ = { 400.0f,450.0f };
 	backToTitleSprite_->Create(backToTitleTexture_, backToTitlePosition_);
 	
 	
 	
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < STAGE_INDEX_; i++) {
 		stageIconSprite_[i] = new Sprite();
 	}
 	stageIconTexture_[0]= textureManager_->Load("Project/Resources/Select/Stage1.png");
 	stageIconTexture_[1]= textureManager_->Load("Project/Resources/Select/Stage2.png");
+	stageIconTexture_[2]= textureManager_->Load("Project/Resources/Select/Explanation.png");
 	
+
 	//アイコンの間隔
 	WIDTH_INTERVAL_ = 200.0f;
 	stageIconPosition[0] = { backToTitlePosition_.x + WIDTH_INTERVAL_ * 1.0f,backToTitlePosition_.y };
 	stageIconPosition[1] = { backToTitlePosition_.x + WIDTH_INTERVAL_ * 2.0f,backToTitlePosition_.y };
-		
+	stageIconPosition[2] = { backToTitlePosition_.x + WIDTH_INTERVAL_ * 2.0f,backToTitlePosition_.y };
+
 	stageIconSprite_[0]->Create(stageIconTexture_[0], stageIconPosition[0]);
 	stageIconSprite_[1]->Create(stageIconTexture_[1], stageIconPosition[1]);
+	stageIconSprite_[2]->Create(stageIconTexture_[2], stageIconPosition[2]);
 	
 	//カーソル
 	cursorSprite_ = new Sprite();
 	cursorTexture_ = textureManager_->Load("Project/Resources/Select/Cursor.png");
-	cursorPosition = { 400.0f,500.0f };
+	cursorPosition = {backToTitlePosition_ };
 	cursorSprite_->Create(cursorTexture_, cursorPosition);
 
 
@@ -236,31 +243,55 @@ void SelectScene::Update(GameManager* gameManager) {
 			
 			//十字ボタンで選択
 			//左
-			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) {
-				isTriggerLeft_ = true;
-				triggerButtonLeftTime_ += 1;
+			if (isTriggerLeft_ == false && triggerButtonLeftTime_==0) {
+				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) {
+					isTriggerLeft_ = true;
+					triggerButtonLeftTime_ += 1;
 				
+				}
 			}
-			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) {
-				isTriggerRight_ = true;
+			
+			if (isTriggerRight_ == false) {
+				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) {
 				
+					triggerButtonRightTime_ += 1;
+				}
 			}
+			
 			
 
 
-
+			//1の時移動
 			if ((triggerButtonLeftTime_==1 )) {
-				cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x - WIDTH_INTERVAL_,cursorPosition.y });
+				
+
+				if (isTriggerLeft_ == true) {
+					cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x - WIDTH_INTERVAL_,cursorPosition.y });
+				}
 				triggerButtonLeftTime_ = 0;
+
+				if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT)==0) {
+				
+					isTriggerLeft_ = false;
+					triggerButtonLeftTime_ = 0;
+				}
 			}
+			if ((triggerButtonRightTime_==1 )) {
+				isTriggerRight_ = false;
+			}
+
+
 
 		}
 		
-		if (isTriggerRight_ == false) {
+		/*if (isTriggerLeft_ == true) {
+			cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x - WIDTH_INTERVAL_,cursorPosition.y });
+			triggerButtonLeftTime_ = 0;
+		}*/
+		if (isTriggerRight_ == true) {
+			cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x + WIDTH_INTERVAL_,cursorPosition.y });
 			triggerButtonRightTime_ = 0;
 		}
-
-
 
 
 
@@ -303,23 +334,23 @@ void SelectScene::Update(GameManager* gameManager) {
 		//	
 		//}
 
-		if (triggerButtonRightTime_ == 1) {
-			ImGui::Text("Right");
-			cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x+ WIDTH_INTERVAL_,cursorPosition.y });
-				
-			isTriggerRight_ = false;
-			triggerButtonRightTime_ = 0;
-			//中にGetterを入れたら大丈夫だった
-			//if (cursorSprite_->GetTranslation().x < stageIconPosition[1].x) {
-			//	
-			//}
-			/*else{
-				cursorSprite_->SetTranslation(cursorSprite_->GetTranslation());
-				
-				isTriggerRight_ = false;
-			}*/
+		//if (triggerButtonRightTime_ == 1) {
+		//	ImGui::Text("Right");
+		//	cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x+ WIDTH_INTERVAL_,cursorPosition.y });
+		//		
+		//	isTriggerRight_ = false;
+		//	triggerButtonRightTime_ = 0;
+		//	//中にGetterを入れたら大丈夫だった
+		//	//if (cursorSprite_->GetTranslation().x < stageIconPosition[1].x) {
+		//	//	
+		//	//}
+		//	/*else{
+		//		cursorSprite_->SetTranslation(cursorSprite_->GetTranslation());
+		//		
+		//		isTriggerRight_ = false;
+		//	}*/
 
-		}
+		//}
 
 		
 

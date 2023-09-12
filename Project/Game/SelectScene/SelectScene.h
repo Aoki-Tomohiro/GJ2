@@ -80,9 +80,10 @@ private:
 	Vector2 cursorPosition = {};
 
 	//StageIcon
-	Sprite* stageIconSprite_[2] = { nullptr };
-	uint32_t stageIconTexture_[2] = { 0u };
-	Vector2 stageIconPosition[2] = {};
+	static const int STAGE_INDEX_ = 3;
+	Sprite* stageIconSprite_[STAGE_INDEX_] = { nullptr };
+	uint32_t stageIconTexture_[STAGE_INDEX_] = { 0u };
+	Vector2 stageIconPosition[STAGE_INDEX_] = {};
 
 
 	//タイトルに戻るためのアイコン

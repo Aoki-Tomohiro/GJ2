@@ -131,6 +131,7 @@ void Player::Update() {
 	ImGui::Begin("Player");
 	ImGui::Checkbox("isEnhanced", &isEnhancedState_);
 	ImGui::Text("enhancedTimer : %d", enhancedStateTimer_);
+	ImGui::Text("dashCooltime : %d", workDash_.coolTime);
 	ImGui::DragFloat2("Sprite : uvScale", &spriteScale_.x, 0.001f);
 	ImGui::Text("LT : Aim");
 	ImGui::Text("RT : Shot");
@@ -251,13 +252,13 @@ void Player::BehaviorRootUpdate() {
 	}
 
 	//ダッシュ行動予約
-	const uint32_t behaviorDashCoolTime = 300;
+	const uint32_t behaviorDashCoolTime = 180;
 	if (workDash_.coolTime != behaviorDashCoolTime) {
 		workDash_.coolTime++;
 	}
 	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) {
-			if (workDash_.coolTime == 300) {
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+			if (workDash_.coolTime == 180) {
 				behaviorRequest_ = Behavior::kDash;
 			}
 		}
@@ -345,13 +346,13 @@ void Player::BehaviorAttackUpdate() {
 	}
 
 	//ダッシュ行動予約
-	const uint32_t behaviorDashCoolTime = 300;
+	const uint32_t behaviorDashCoolTime = 180;
 	if (workDash_.coolTime != behaviorDashCoolTime) {
 		workDash_.coolTime++;
 	}
 	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) {
-			if (workDash_.coolTime == 300) {
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+			if (workDash_.coolTime == 180) {
 				behaviorRequest_ = Behavior::kDash;
 			}
 		}

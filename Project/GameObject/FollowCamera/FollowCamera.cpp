@@ -13,7 +13,7 @@ void FollowCamera::Update(Behavior behavior) {
 			interTarget_ = Lerp(interTarget_, target_->translation_, 0.1f);
 		}
 		else {
-			interTarget_ = Lerp(interTarget_, target_->translation_, 0.2f);
+			interTarget_ = Lerp(interTarget_, target_->translation_, 0.4f);
 		}
 	}
 
@@ -27,6 +27,7 @@ void FollowCamera::Update(Behavior behavior) {
 	if (Input::GetInstance()->GetJoystickState(joyState)) {
 		//しきい値
 		const float threshold = 0.7f;
+		const float thresholdAttack = 0.2f;
 		//回転フラグ
 		bool isRotation = false;
 		//回転量
@@ -44,22 +45,25 @@ void FollowCamera::Update(Behavior behavior) {
 			}
 		}
 		else {
-			isRotation = true;
+			//スティックの押し込みが遊び範囲を超えていたら回転フラグをtureにする
+			if (Length(rotation) > thresholdAttack) {
+				isRotation = true;
+			}
 		}
 
 		if (isRotation) {
 			if (playerBehavior_ != Behavior::kAttack) {
 				//回転速度
-				const float kRotSpeedX = 0.04f;
-				const float kRotSpeedY = 0.06f;
+				const float kRotSpeedX = 0.02f;
+				const float kRotSpeedY = 0.04f;
 				//目標角度の算出
 				destinationAngleX_ -= rotation.x * kRotSpeedX;
 				destinationAngleY_ += rotation.y * kRotSpeedY;
 			}
 			else {
 				//回転速度
-				const float kRotSpeedX = 0.01f;
-				const float kRotSpeedY = 0.03f;
+				const float kRotSpeedX = 0.006f;
+				const float kRotSpeedY = 0.008f;
 				//目標角度の算出
 				destinationAngleX_ -= rotation.x * kRotSpeedX;
 				destinationAngleY_ += rotation.y * kRotSpeedY;
@@ -68,6 +72,15 @@ void FollowCamera::Update(Behavior behavior) {
 	}
 
 	//角度制限
+	if (playerBehavior_ != Behavior::kAttack) {
+		minRotateX = -0.16f;
+		maxRotateX = 0.2f;
+	}
+	else {
+		minRotateX = -0.2f;
+		maxRotateX = 0.2f;
+	}
+
 	if (destinationAngleX_ >= maxRotateX) {
 		destinationAngleX_ = maxRotateX;
 	}
@@ -75,14 +88,15 @@ void FollowCamera::Update(Behavior behavior) {
 		destinationAngleX_ = minRotateX;
 	}
 
+
 	//最短角度補間
 	if (playerBehavior_ != Behavior::kAttack) {
-		viewProjection_.rotation_.x = LerpShortAngle(viewProjection_.rotation_.x, destinationAngleX_, 0.1f);
-		viewProjection_.rotation_.y = LerpShortAngle(viewProjection_.rotation_.y, destinationAngleY_, 0.1f);
+		viewProjection_.rotation_.x = LerpShortAngle(viewProjection_.rotation_.x, destinationAngleX_, 0.2f);
+		viewProjection_.rotation_.y = LerpShortAngle(viewProjection_.rotation_.y, destinationAngleY_, 0.2f);
 	}
 	else {
-		viewProjection_.rotation_.x = LerpShortAngle(viewProjection_.rotation_.x, destinationAngleX_, 0.1f);
-		viewProjection_.rotation_.y = LerpShortAngle(viewProjection_.rotation_.y, destinationAngleY_, 0.1f);
+		viewProjection_.rotation_.x = LerpShortAngle(viewProjection_.rotation_.x, destinationAngleX_, 0.4f);
+		viewProjection_.rotation_.y = LerpShortAngle(viewProjection_.rotation_.y, destinationAngleY_, 0.4f);
 	}
 
 	//ビュー行列の計算
@@ -97,10 +111,10 @@ void FollowCamera::Update(Behavior behavior) {
 Vector3 FollowCamera::Offset() {
 	//追従対象からのオフセット
 	if (playerBehavior_ != Behavior::kAttack) {
-		offset_ = Lerp(offset_, { 0.0f,2.0f,-30.0f }, 0.1f);
+		offset_ = Lerp(offset_, normalOffset_, 0.1f);
 	}
 	else {
-		offset_ = Lerp(offset_, { 3.0f,2.0f,-20.0f }, 0.1f);
+		offset_ = Lerp(offset_, aimOffset_, 0.1f);
 	}
 	Vector3 offset = offset_;
 	//回転行列の合成

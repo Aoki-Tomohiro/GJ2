@@ -48,7 +48,10 @@ private:
 	//ロックオンターゲット
 	const WorldTransform* rockonTarget_{};
 	//オフセット
-	Vector3 offset_{ 0.0f,2.0f,-30.0f };
+	Vector3 offset_{};
+	Vector3 normalOffset_{ 0.0f,5.0f,-30.0f };
+	//Vector3 normalOffset_{ 0.0f,15.0f,-80.0f };
+	Vector3 aimOffset_{ 3.0f,5.0f,-15.0f };
 	//角度制限
 	float minRotateX = 0.0f;
 	float maxRotateX = 0.5f;

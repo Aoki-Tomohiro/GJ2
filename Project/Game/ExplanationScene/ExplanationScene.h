@@ -70,8 +70,8 @@ private:
 	uint32_t backTextureHandle_ = 0u;
 
 	//操作説明
-	Sprite* explanationSprite_[2] = { nullptr };
-	uint32_t explanationHandle_[2] = { 0u };
+	Sprite* explanationSprite_[3] = { nullptr };
+	uint32_t explanationHandle_[3] = { 0u };
 	int32_t explanationCurrentNumber_ = 0;
 
 	//Trigger専用のタイマー

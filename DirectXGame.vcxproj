@@ -119,6 +119,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Project\GameObject\Box\Box.cpp" />
     <ClCompile Include="Project\GameObject\Box\BoxManager.cpp" />
+    <ClCompile Include="Project\GameObject\Doom\Doom.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\Robot\EnemyRobot.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\Robot\RandBullet\RandBullet.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\Robot\state\RandBullet\EnemyRobotRandBulletState.cpp" />
@@ -177,6 +178,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\GameObject\Box\Box.h" />
     <ClInclude Include="Project\GameObject\Box\BoxConfig.h" />
     <ClInclude Include="Project\GameObject\Box\BoxManager.h" />
+    <ClInclude Include="Project\GameObject\Doom\Doom.h" />
     <ClInclude Include="Project\GameObject\Enemy\Robot\EnemyRobot.h" />
     <ClInclude Include="Project\GameObject\Enemy\Robot\RandBullet\RandBullet.h" />
     <ClInclude Include="Project\GameObject\Enemy\Robot\state\IEnemyRobotState.h" />

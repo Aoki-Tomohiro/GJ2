@@ -21,6 +21,7 @@
 #include "CollisionManager/CollisionManager.h"
 #include <list>
 #include"../GameObject/Enemy/Robot/EnemyRobot.h"
+#include "../GameObject/Doom/Doom.h"
 
 class GameScene : public IScene {
 public:
@@ -100,6 +101,9 @@ private:
 	std::unique_ptr<FollowCamera> followCamera_ = nullptr;
 	//地面
 	std::unique_ptr<TestGround> ground_ = nullptr;
+
+	//空間
+	std::unique_ptr<Doom> doom_ = nullptr;
 
 	//箱
 	std::unique_ptr<BoxManager> boxManager_ = nullptr;

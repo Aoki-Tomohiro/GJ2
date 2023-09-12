@@ -27,9 +27,9 @@ void TransCube::Initialize()
 {
 	model_ = new Model();
 	worldTransform.matWorld_ = MakeIdentity4x4();
-	worldTransform.scale_ = { 5,5,5 };
+	worldTransform.scale_ = { 10,10,10 };
 	worldTransform.translation_ = { 0,0,40 };
-	model_->CreateFromOBJ("Resources/EnemyObj/TransCube", "TransCube.obj");
+	model_->CreateFromOBJ("Resources/EnemyObj/TransCube", "TransCubeHead.obj");
 	
 	TransCubeGroundAttackState* state = new TransCubeGroundAttackState();
 	state_ = state;
@@ -39,12 +39,11 @@ void TransCube::Initialize()
 
 	input = Input::GetInstance();
 
-	SetRadius(5.0f);
 	//衝突属性を設定
 	SetCollisionAttribute(kCollisionAttributeEnemy);
 	//衝突対象を自分の属性以外に設定
 	SetCollisionMask(kCollisionMaskEnemy);
-	SetRadius(5.0f);
+	SetRadius(6.0f);
 
 	//スプライトの作成
 	textureHandleHP1_ = TextureManager::GetInstance()->Load("Resources/TransCubeHP1.png");

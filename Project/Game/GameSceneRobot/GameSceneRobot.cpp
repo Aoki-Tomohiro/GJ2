@@ -53,6 +53,7 @@ void GameSceneRobot::Initialize(GameManager* gameManager) {
 	//敵キャラの初期化
 	EnemyRobot_ = std::make_unique<EnemyRobot>();
 	EnemyRobot_->Initialize();
+	EnemyRobot_->SetGameSceneRobot(this);
 
 	//追従カメラの初期化
 	followCamera_ = std::make_unique<FollowCamera>();
@@ -217,6 +218,8 @@ void GameSceneRobot::Draw(GameManager* gameManager) {
 #pragma region スプライトの描画
 	//自機のHPの描画
 	player_->DrawUI();
+	//ボスのHPの描画
+	EnemyRobot_->DrawUI();
 #pragma endregion
 };
 

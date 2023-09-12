@@ -1,4 +1,5 @@
 #include "EnemyRobot.h"
+#include "GameSceneRobot/GameSceneRobot.h"
 
 EnemyRobot::EnemyRobot()
 {
@@ -54,6 +55,14 @@ void EnemyRobot::Initialize()
 	//衝突対象を自分の属性以外に設定
 	SetCollisionMask(kCollisionMaskEnemy);
 	SetRadius(3.5f);
+
+	//スプライトの作成
+	textureHandleHP1_ = TextureManager::GetInstance()->Load("Resources/TransCubeHP1.png");
+	textureHandleHP2_ = TextureManager::GetInstance()->Load("Resources/TransCubeHP2.png");
+	spriteHP1_ = std::make_unique<Sprite>();
+	spriteHP1_->Create(textureHandleHP1_, { 320.0f,50.0f });
+	spriteHP2_ = std::make_unique<Sprite>();
+	spriteHP2_->Create(textureHandleHP2_, { 322.0f,52.0f });
 }
 
 void EnemyRobot::Update()
@@ -111,6 +120,10 @@ void EnemyRobot::Update()
 	state->Update(this);
 	UpdateMatrixs();
 	CoreWorldTransform.UpdateMatrix();
+
+	//体力ゲージの処理
+	spriteScale_.x = Lerp(spriteScale_.x, life_ / 300.0f, 0.1f);
+	spriteHP2_->SetScale(spriteScale_);
 }
 
 void EnemyRobot::Draw(ViewProjection view)
@@ -134,6 +147,11 @@ void EnemyRobot::Draw(ViewProjection view)
 	enemy_.RarmBoModel->Draw(enemy_.RarmBoWorldTransform, view);
 }
 
+void EnemyRobot::DrawUI() {
+	spriteHP1_->Draw();
+	spriteHP2_->Draw();
+}
+
 Vector3 EnemyRobot::GetWorldPosition()
 {
 	Vector3 result;
@@ -147,6 +165,11 @@ Vector3 EnemyRobot::GetWorldPosition()
 
 void EnemyRobot::OnCollision()
 {
+	//パーティクルを発生させる
+	ParticleEmitter* particleEmitter = new ParticleEmitter();
+	particleEmitter->Initialize(EnemyRobot::GetWorldPosition());
+	gameSceneRobot_->AddParticleEmitter(particleEmitter);
+	life_--;
 }
 
 void EnemyRobot::BulletPushBack(Vector3 velocity,Vector3 pos)

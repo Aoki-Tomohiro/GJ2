@@ -1,5 +1,6 @@
 #pragma once
 #include"Model/Model.h"
+#include"Sprite/Sprite.h"
 #include"ImGuiManager/ImGuiManager.h"
 #include"../GameObject/Enemy/Robot/RandBullet/RandBullet.h"
 
@@ -26,6 +27,7 @@ struct  SEnemyRobot
 	std::unique_ptr<Model> LarmBoModel = nullptr;
 };
 class Player;
+class GameSceneRobot;
 class EnemyRobot: public Collider
 {
 public:
@@ -37,6 +39,8 @@ public:
 	void Update();
 
 	void Draw(ViewProjection view);
+
+	void DrawUI();
 
 
 	Vector3 GetWorldPosition()override;
@@ -65,6 +69,8 @@ public:
 	std::list<RobotBullet*>GetBullets() { return Bullets_; }
 
 	Vector3 EasingFanc(Vector3 startv, Vector3 Endv, float &Flame, float EndFlame);
+
+	void SetGameSceneRobot(GameSceneRobot* gameSceneRobot) { gameSceneRobot_ = gameSceneRobot; };
 private:
 	float LerpMove(float pos);
 
@@ -110,6 +116,18 @@ private:
 
 	std::unique_ptr<Model> CoreModel_ = nullptr;
 	WorldTransform CoreWorldTransform = {};
+
+	//体力
+	int32_t life_ = 300;
+
+	//体力のスプライト
+	uint32_t textureHandleHP1_ = 0;
+	uint32_t textureHandleHP2_ = 0;
+	std::unique_ptr<Sprite> spriteHP1_ = nullptr;
+	std::unique_ptr<Sprite> spriteHP2_ = nullptr;
+	Vector2 spriteScale_{ 1.0f,1.0f };
+
+	GameSceneRobot* gameSceneRobot_ = nullptr;
 
 };
 

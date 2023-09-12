@@ -101,11 +101,6 @@ void ExplanationScene::Initialize(GameManager* gameManager) {
 /// </summary>
 void ExplanationScene::Update(GameManager* gameManager) {
 	
-	ImGui::Begin("Explanation");
-	ImGui::InputFloat4("transparency", &transparency_.x);
-	ImGui::InputInt("loadingTime", &loadingTime);
-	
-	
 	
 	//FadeIn
 	//黒背景が透明になっていっていく
@@ -139,7 +134,7 @@ void ExplanationScene::Update(GameManager* gameManager) {
 
 				explanationCurrentNumber_ += 1;
 
-				if (explanationCurrentNumber_ == 2) {
+				if (explanationCurrentNumber_ == 3) {
 					isFadeOutMode_ = true;
 					selectSEAudio_->SoundPlayWave(returnSEHandle_, 0);
 					bgmAudio_->StopAudio(bgmHandle_);

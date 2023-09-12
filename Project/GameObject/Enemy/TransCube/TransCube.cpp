@@ -56,11 +56,6 @@ void TransCube::Initialize()
 
 void TransCube::Update()
 {
-	ImGui::Begin("TransCube");
-	ImGui::SliderFloat3("translate", &worldTransform.translation_.x, -10, 10);
-	ImGui::Checkbox("state",&stateFlag);
-	ImGui::Text("%d", life_);
-	ImGui::End();
 
 	if (MoveFlag)
 	{

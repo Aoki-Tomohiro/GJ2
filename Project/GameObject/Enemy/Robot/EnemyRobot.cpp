@@ -24,7 +24,7 @@ void EnemyRobot::Initialize()
 	//EnemyCore->CreateFromOBJ();
 	HeadArmInit();
 	UpdateMatrixs();
-	state = std::make_unique<EnemyRobotRandBulletState>();
+	state = std::make_unique<EnemeyRobotPunchState>();
 	state->Initialize(this);
 	MoveFlag = true;
 
@@ -38,6 +38,11 @@ void EnemyRobot::Initialize()
 	EndLTWorPos = { 0,0,-0.5 };
 	StartLBWorPos = enemy_.LarmBoWorldTransform.rotation_;
 	EndLBWorPos = { 0,0,-2.0 };
+	CoreModel_ = std::make_unique<Model>();
+	CoreModel_->CreateFromOBJ("Resources/EnemyObj/EnemyRobot/Core", "EnemyRobotCore.obj");
+	CoreWorldTransform.translation_.z = 73;
+	CoreWorldTransform.translation_.y = 30;
+	CoreWorldTransform.scale_ = { 3.0f,3.0f,3.0f };
 }
 
 void EnemyRobot::Update()
@@ -54,27 +59,61 @@ void EnemyRobot::Update()
 		if (Flame==EndFlame)
 		{
 			MoveFlag = false;
-			state.release();
-			state = std::make_unique<EnemeyRobotPunchState>();
-			state->Initialize(this);
+			
+			int r = std::rand() % 2;
+
+			if (r == 1)
+			{
+				state.release();
+				state = std::make_unique<EnemyRobotRandBulletState>();
+				state->Initialize(this);
+			}
+			if (r==0)
+			{
+				state.release();
+				state = std::make_unique<EnemeyRobotPunchState>();
+				state->Initialize(this);
+			}
+			MoveFlag = false;
+			isStateEndFlag = false;
 			Flame = 0;
 		}
 	}
 
 	BulletUp();
-	
+	punch_.remove_if([](RobotPunch* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
+	for (RobotPunch* bullet : punch_)
+	{
+		bullet->Update();
+		if (bullet->GetWorldTransform().translation_.z<=-100)
+		{
+			bullet->SetIsDead(true);
+		}
+	}
+
 	state->Update(this);
 	UpdateMatrixs();
-
+	CoreWorldTransform.UpdateMatrix();
 }
 
 void EnemyRobot::Draw(ViewProjection view)
 {
 	state->Draw(this,view);
+	CoreModel_->Draw(CoreWorldTransform, view);
 	for (RobotBullet* bullet : Bullets_)
 	{
 		bullet->Draw(view);
 
+	}
+	for (RobotPunch* bullet : punch_)
+	{
+		bullet->Draw(view);
 	}
 	enemy_.HeadModel->Draw(enemy_.HeadWorldTransform, view);
 	enemy_.BodyModel->Draw(enemy_.BodyWorldTransform, view);
@@ -89,6 +128,14 @@ void EnemyRobot::BulletPushBack(Vector3 velocity,Vector3 pos)
 	RobotBullet* bullet = new RobotBullet();
 	bullet->Initialize(velocity, pos);
 	Bullets_.push_back(bullet);
+
+}
+
+void EnemyRobot::PunchPushBack(Vector3 pos)
+{
+	RobotPunch* bullet = new RobotPunch();
+	bullet->Initialize(pos);
+	punch_.push_back(bullet);
 
 }
 
@@ -168,6 +215,8 @@ void EnemyRobot::BulletUp()
 		}
 		return false;
 		});
+
+
 
 	for (RobotBullet* bullet : Bullets_) {
 

@@ -5,6 +5,8 @@
 
 #include"../GameObject/Enemy/Robot/state/RandBullet/EnemyRobotRandBulletState.h"
 #include"../GameObject/Enemy/Robot/state/RobotPunch/EnemyRobotPunchState.h"
+#include"../GameObject/Enemy/Robot/Punch/RobotPunch.h"
+
 struct  SEnemyRobot
 {
 	WorldTransform BodyWorldTransform;
@@ -46,10 +48,11 @@ public:
 	void SetStartLT(Vector3 r) { StartLTWorPos = r; }
 	void SetStartLB(Vector3 r) { StartLBWorPos = r; }
 
-
 	Player* GetPlayer() { return player_; }
 	SEnemyRobot &GetEnemy() { return enemy_; }
 	void BulletPushBack(Vector3 velocity,Vector3 pos);
+	void PunchPushBack(Vector3 pos);
+	std::list<RobotPunch*>GetPunch() { return punch_; }
 
 	Vector3 EasingFanc(Vector3 startv, Vector3 Endv, float &Flame, float EndFlame);
 private:
@@ -88,6 +91,16 @@ private:
 
 	float Flame = 0.0f;
 	float EndFlame=180.0f;
+
+	Player* player = nullptr;
+
+
+	std::list<RobotPunch*>punch_ = {};
+
+
+	std::unique_ptr<Model> CoreModel_ = nullptr;
+	WorldTransform CoreWorldTransform = {};
+
 };
 
 

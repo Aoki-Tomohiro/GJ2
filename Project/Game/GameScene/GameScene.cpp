@@ -112,6 +112,7 @@ void GameScene::Update(GameManager* gameManager) {
 	transCube_.get()->SetPlayer(player_.get());
 	//敵キャラの更新
 	//transCube_->Update();
+	EnemyRobot_->SetPlayer(player_.get());
 	EnemyRobot_->Update();
 
 	//箱の更新

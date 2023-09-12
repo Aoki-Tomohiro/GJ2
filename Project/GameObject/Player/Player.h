@@ -23,7 +23,7 @@ enum class Behavior {
 class Player : public Collider {
 public:
 	//強化状態の時間
-	static const int kEnhancedStateTime = 60 * 20;
+	static const int kEnhancedStateTime = 60 * 15;
 	//無敵時間
 	static const int kInvincibleTime = 60;
 
@@ -31,7 +31,7 @@ public:
 	struct WorkDash {
 		//ダッシュ用の媒介変数
 		uint32_t dashParameter_ = 0;
-		uint32_t coolTime = 300;
+		uint32_t coolTime = 0;
 	};
 
 	//ジャンプ用ワーク

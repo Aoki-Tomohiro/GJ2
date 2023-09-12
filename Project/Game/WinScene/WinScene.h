@@ -70,14 +70,16 @@ private:
 
 
 	//タイトル画面の画像
-	Sprite* sprite_ = nullptr;
+	Sprite* winSprite_[2] = { nullptr };
 
 	//テクスチャ用
-	uint32_t textureHandle_ = 0u;
+	uint32_t winTextureHandle_[2] = { 0u };
 
 	//位置
 	Vector2 position_ = {};
 
+	int32_t winTextureChangeTime_ = 0;
+	int32_t winTextureNumber_ = 0;
 
 	//BGM
 	Audio* bgmAudio_ = nullptr;

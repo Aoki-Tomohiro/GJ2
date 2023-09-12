@@ -142,6 +142,12 @@ public:
 	/// <returns></returns>
 	Behavior GetBehavior() { return behavior_; };
 
+	//Playerのライフを取得する
+	int32_t GetLife() {
+		return playerLife_;
+	}
+
+
 private:
 	/// <summary>
 	/// 通常行動初期化
@@ -208,6 +214,10 @@ private:
 	/// 3Dレティクルの座標を取得
 	/// </summary>
 	Vector3 Get3DReticleWorldPosition();
+
+
+	
+
 
 private:
 	//モデル

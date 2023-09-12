@@ -118,4 +118,10 @@ private:
 
 
 
+	//SceneChange用のフラグ
+	bool changeToWin_ = false;
+	bool changeToLose_ = false;
+
+
+
 };

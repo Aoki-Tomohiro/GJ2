@@ -244,6 +244,9 @@ void Player::BehaviorRootUpdate() {
 	if (Input::GetInstance()->GetJoystickState(joyState)) {
 		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
 			if (workJump_.flag == false) {
+
+
+
 				workJump_.power = 1.0f;
 				workJump_.flag = true;
 			}
@@ -467,6 +470,7 @@ void Player::BehaviorBoxPushUpdate() {
 	if (Input::GetInstance()->GetJoystickState(joyState)) {
 		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
 			if (workJump_.flag == false) {
+				jumpSE_->SoundPlayWave(jumpSEHandle_, 0);
 				workJump_.power = 1.0f;
 				workJump_.flag = true;
 			}
@@ -480,7 +484,7 @@ void Player::BehaviorBoxPushUpdate() {
 			worldTransformBase_.translation_.y = 0.0f;
 			workJump_.flag = false;
 		}
-		jumpSE_->SoundPlayWave(jumpSEHandle_, 0);
+		
 	}
 
 	//通常状態に戻す
@@ -559,6 +563,9 @@ void Player::UpdateLife() {
 		spriteHP2_->SetScale(spriteScale_);
 		break;
 	}
+
+	
+
 }
 
 void Player::UpdateInvincible() {

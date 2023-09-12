@@ -38,6 +38,11 @@ void BoxManager::Initialize() {
 			areas_[i].model->GetMaterial()->Update();
 		}
 	}
+
+	powerUpSE_ = Audio::GetInstance();
+	powerUpSEHandle_ = powerUpSE_->SoundLoadWave("Resources/Music/SE/PowerUp/PowerUp1.wav");
+
+
 }
 
 void BoxManager::Update() {
@@ -311,6 +316,11 @@ void BoxManager::CheckArea() {
 	if (inBoxCount_ >= 3) {
 		//自キャラを強化状態にする
 		player_->SetEnhanced();
+
+		//効果音もなるよ
+		powerUpSE_->SoundPlayWave(powerUpSEHandle_, 0);
+
+
 		//箱を消す
 		for (const std::unique_ptr<Box>& box : boxs_) {
 			if (box->GetInArea()) {

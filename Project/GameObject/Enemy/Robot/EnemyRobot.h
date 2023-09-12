@@ -71,6 +71,13 @@ public:
 	Vector3 EasingFanc(Vector3 startv, Vector3 Endv, float &Flame, float EndFlame);
 
 	void SetGameSceneRobot(GameSceneRobot* gameSceneRobot) { gameSceneRobot_ = gameSceneRobot; };
+
+	int32_t GetLife() {
+		return life_;
+	}
+
+
+
 private:
 	float LerpMove(float pos);
 

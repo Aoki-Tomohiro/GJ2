@@ -89,6 +89,9 @@ void GameScene::Initialize(GameManager* gameManager) {
 
 	bgmAudio_->SoundPlayWave(bgmHandle_, true);
 
+	//SceneChange用のフラグ
+	changeToWin_ = false;
+	changeToLose_ = false;
 
 
 
@@ -100,6 +103,10 @@ void GameScene::Update(GameManager* gameManager) {
 	followCamera_->Update(player_->GetBehavior());
 	//自キャラの更新
 	player_->Update();
+
+
+
+
 	//デスフラグの立った自弾を削除
 	playerBullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {
 		if (bullet->isDead()) {
@@ -117,7 +124,8 @@ void GameScene::Update(GameManager* gameManager) {
 	//敵キャラの更新
 
 	transCube_->Update();
-
+	
+	
 
 
 	//箱の更新
@@ -169,18 +177,10 @@ void GameScene::Update(GameManager* gameManager) {
 	}
 
 
-	//2でSelectSceneへ
-	if (input_->IsPushKeyEnter(DIK_W)) {
-		bgmAudio_->StopAudio(bgmHandle_);
-		gameManager->ChangeScene(new WinScene());
-		return;
-	}
-	//3でSelectSceneへ
-	if (input_->IsPushKeyEnter(DIK_L)) {
-		bgmAudio_->StopAudio(bgmHandle_);
-		gameManager->ChangeScene(new LoseScene());
-		return;
-	}
+	
+	
+
+	
 
 
 	ImGui::Begin(" ");
@@ -207,7 +207,30 @@ void GameScene::Update(GameManager* gameManager) {
 	ImGui::Text("L:LoseScene");
 	ImGui::End();
 
+	
+	if (transCube_->GetLife() <= 0) {
+		bgmAudio_->StopAudio(bgmHandle_);
+		
+		//SceneChange用のフラグ
+		changeToWin_ = true;
+		
+	}
 
+	if (player_->GetLife()<=0) {
+		bgmAudio_->StopAudio(bgmHandle_);
+		
+		changeToLose_ = true;
+	}
+
+	if (changeToWin_ == true) {
+		gameManager->ChangeScene(new WinScene());
+	}
+
+	
+
+	if (changeToLose_ == true) {
+		gameManager->ChangeScene(new LoseScene());
+	}
 };
 
 void GameScene::Draw(GameManager* gameManager) {

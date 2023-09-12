@@ -1,7 +1,7 @@
 #include "ExplanationScene.h"
 #include "GameManager/GameManager.h"
 #include "SelectScene/SelectScene.h"
-
+#include "imgui.h"
 
 /// <summary>
 /// コンストラクタ
@@ -14,10 +14,11 @@ ExplanationScene::ExplanationScene() {
 /// デストラクタ
 /// </summary>
 ExplanationScene::~ExplanationScene() {
-	for (int i = 0; i < EXPLANATION_NUMBER_; i++) {
-		delete explanationSprite_[0];
-		delete explanationSprite_[1];
+	for (int i = 0; i < 2; i++) {
+		delete explanationSprite_[i];
 	}
+
+	delete backSprite_;
 }
 
 /// <summary>
@@ -38,7 +39,7 @@ void ExplanationScene::Initialize(GameManager* gameManager) {
 	debugCamera_ = new DebugCamera();
 
 
-
+	isFadeInMode_ = true;
 
 	//スプライトの初期化
 	//Fade用
@@ -50,33 +51,38 @@ void ExplanationScene::Initialize(GameManager* gameManager) {
 	COLOR_BIND = 1.0f;
 	//1.0fで真っ暗
 	transparency_ = { COLOR_BIND,COLOR_BIND,COLOR_BIND,1.0f };
-	fadeInterval_ = 10.0 / 256.0f;
+	fadeInterval_ = 1.0f / 256.0f;
 
 
 	const int SECOND_ = 60;
 	int32_t loadingTime = 0;
 
 	//説明
-	for (int i = 0; i < EXPLANATION_NUMBER_; i++) {
-		explanationSprite_[0] = new Sprite();
-		explanationSprite_[1] = new Sprite();
+	explanationSprite_[0] = new Sprite();
+	explanationSprite_[1] = new Sprite();
 
 
-		explanationHandle_[0] = textureManager_->Load("Project/Resources/Explanation/Explanation1.png");
-		explanationHandle_[1] = textureManager_->Load("Project/Resources/Explanation/Explanation2.png");
+	explanationHandle_[0] = textureManager_->Load("Project/Resources/Explanation/Explanation1.png");
+	explanationHandle_[1] = textureManager_->Load("Project/Resources/Explanation/Explanation2.png");
 
 
-		explanationSprite_[0]->Create(explanationHandle_[0] , {0.0f,0.0f});
-		explanationSprite_[1]->Create(explanationHandle_[1] , {0.0f,0.0f});
+	explanationSprite_[0]->Create(explanationHandle_[0] , {0.0f,0.0f});
+	explanationSprite_[1]->Create(explanationHandle_[1] , {0.0f,0.0f});
 
-		explanationCurrentNumber_ = 0;
-	}
+	explanationCurrentNumber_ = 0;
 }
 
 /// <summary>
 /// 更新
 /// </summary>
 void ExplanationScene::Update(GameManager* gameManager) {
+	
+	ImGui::Begin("Explanation");
+	ImGui::InputFloat4("transparency", &transparency_.x);
+	ImGui::InputInt("loadingTime", &loadingTime);
+	
+	
+	
 	//FadeIn
 	//黒背景が透明になっていっていく
 	//疑似FadeIn
@@ -93,7 +99,6 @@ void ExplanationScene::Update(GameManager* gameManager) {
 
 	//FadeOut
 	if (isFadeOutMode_ == true) {
-		bgmAudio_->StopAudio(bgmHandle_);
 		transparency_.w += fadeInterval_;
 
 		///完全に暗くなるとローディングへ
@@ -113,6 +118,9 @@ void ExplanationScene::Update(GameManager* gameManager) {
 			
 	}	
 
+
+
+	ImGui::End();
 }
 
 /// <summary>
@@ -122,7 +130,7 @@ void ExplanationScene::Draw(GameManager* gameManager) {
 	explanationSprite_[0]->Draw();
 
 
-
+	backSprite_->Draw();
 
 
 

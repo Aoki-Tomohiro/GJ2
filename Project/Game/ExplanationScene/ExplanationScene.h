@@ -70,9 +70,8 @@ private:
 	uint32_t backTextureHandle_ = 0u;
 
 	//操作説明
-	static const int EXPLANATION_NUMBER_ = 2;
-	Sprite* explanationSprite_[EXPLANATION_NUMBER_] = { nullptr };
-	uint32_t explanationHandle_[EXPLANATION_NUMBER_] = { 0u };
+	Sprite* explanationSprite_[2] = { nullptr };
+	uint32_t explanationHandle_[2] = { 0u };
 	int32_t explanationCurrentNumber_ = 0;
 
 	//Trigger専用のタイマー
@@ -100,21 +99,6 @@ private:
 
 	const int SECOND_ = 60;
 	int32_t loadingTime = 0;
-
-	//BGM
-	Audio* bgmAudio_ = nullptr;
-	uint32_t bgmHandle_ = 0u;
-
-
-	//SE
-	Audio* startSEAudio_ = nullptr;
-	uint32_t startSEHandle_ = 0u;
-
-	Audio* selectSEAudio_ = nullptr;
-	uint32_t selectSEHandle_ = 0u;
-	uint32_t returnSEHandle_ = 0u;
-	uint32_t explanationSEHandle_ = 0u;
-
 
 	//titleへ
 	

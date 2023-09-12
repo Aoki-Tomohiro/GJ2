@@ -59,7 +59,7 @@ void GameScene::Initialize(GameManager* gameManager) {
 	EnemyRobot_->Initialize();
 
 	transCube_->SetGameScene(this);
-	transCube_->Initialize();
+	/*transCube_->Initialize();*/
 
 	//追従カメラの初期化
 	followCamera_ = std::make_unique<FollowCamera>();
@@ -111,15 +111,15 @@ void GameScene::Update(GameManager* gameManager) {
 
 	transCube_.get()->SetPlayer(player_.get());
 	//敵キャラの更新
-	//transCube_->Update();
+	transCube_->Update();
 	EnemyRobot_->Update();
 
 	//箱の更新
 	boxManager_->Update();
 
 	
-	//追従カメラの更新
-	followCamera_->Update(player_.get()->GetBehavior());
+	////追従カメラの更新
+	//followCamera_->Update(player_.get()->GetBehavior());
 	//デスフラグの立ったパーティクルを削除
 	particleEmitters_.remove_if([](std::unique_ptr<ParticleEmitter>& particleEmitter) {
 		if (particleEmitter->isDead()) {

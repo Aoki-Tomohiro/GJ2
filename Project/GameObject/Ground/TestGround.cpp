@@ -8,7 +8,7 @@ void TestGround::Initialize()
 	model_.get()->CreateFromOBJ("Resources/Ground", "Ground.obj");
 	worldTransform.matWorld_ = MakeIdentity4x4();
 	
-	worldTransform.scale_ = { 4,4,4 };
+	worldTransform.scale_ = { 6,6,6 };
 	worldTransform.UpdateMatrix();
 
 }

@@ -6,7 +6,7 @@ void Doom::Initialize() {
 	model_.get()->CreateFromOBJ("Resources/Doom", "Doom.obj");
 	worldTransform.matWorld_ = MakeIdentity4x4();
 	
-	worldTransform.scale_ = { 25,25,25 };
+	worldTransform.scale_ = { 35,35,35 };
 	worldTransform.UpdateMatrix();
 }
 

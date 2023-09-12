@@ -62,8 +62,8 @@ void FollowCamera::Update(Behavior behavior) {
 			}
 			else {
 				//回転速度
-				const float kRotSpeedX = 0.006f;
-				const float kRotSpeedY = 0.008f;
+				const float kRotSpeedX = 0.008f;
+				const float kRotSpeedY = 0.01f;
 				//目標角度の算出
 				destinationAngleX_ -= rotation.x * kRotSpeedX;
 				destinationAngleY_ += rotation.y * kRotSpeedY;

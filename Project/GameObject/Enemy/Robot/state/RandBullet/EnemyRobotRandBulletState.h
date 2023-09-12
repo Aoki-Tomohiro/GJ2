@@ -26,6 +26,7 @@ private:
 	Vector3 SpownPosition = {};
 
 	int32_t BulletCoolTimer = 0;
+	int32_t StateTimer = 0;
 
 	bool MoveFlag;
 	float Flame = 0;

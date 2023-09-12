@@ -7,8 +7,6 @@
 #include"../GameObject/Enemy/Robot/state/RobotPunch/EnemyRobotPunchState.h"
 struct  SEnemyRobot
 {
-
-	WorldTransform CoreWorldTransform;
 	WorldTransform BodyWorldTransform;
 	WorldTransform HeadWorldTransform;
 	WorldTransform RarmWorldTransform;
@@ -16,7 +14,6 @@ struct  SEnemyRobot
 	WorldTransform LarmWorldTransform;
 	WorldTransform LarmBoWorldTransform;
 
-	std::unique_ptr<Model> CoreModel = nullptr;
 	std::unique_ptr<Model> BodyModel = nullptr;
 	std::unique_ptr<Model> HeadModel = nullptr;
 	std::unique_ptr<Model> RarmTopModel = nullptr;
@@ -40,6 +37,16 @@ public:
 	void SetPlayer(Player* player) { player_ = player; }
 	void SetRTEnemyWorldPos(Vector3 enemy) { enemy_.RarmWorldTransform.rotation_ = enemy; }
 
+	void SetMoveFlag(bool Flag) {MoveFlag = Flag; }
+	void SetStateEndFlag(bool Flag) { isStateEndFlag = Flag; }
+
+	void SetStartRT(Vector3 r) { StartRTWorPos = r; }
+	void SetStartRB(Vector3 r) { StartRBWorPos = r; }
+
+	void SetStartLT(Vector3 r) { StartLTWorPos = r; }
+	void SetStartLB(Vector3 r) { StartLBWorPos = r; }
+
+
 	Player* GetPlayer() { return player_; }
 	SEnemyRobot &GetEnemy() { return enemy_; }
 	void BulletPushBack(Vector3 velocity,Vector3 pos);
@@ -54,6 +61,9 @@ private:
 
 	void BulletUp();
 	SEnemyRobot enemy_ = {};
+
+	std::unique_ptr<Model> EnemyCore = nullptr;
+
 	std::list<RobotBullet*> Bullets_ = {};
 
 	Player* player_ = nullptr;
@@ -62,7 +72,7 @@ private:
 
 	bool MoveFlag = false;
 	bool StateFlag = false;
-	bool StateEndFlag = false;
+	bool isStateEndFlag = false;
 
 	Vector3 StartRTWorPos = {};
 	Vector3 EndRTWorPos = {};

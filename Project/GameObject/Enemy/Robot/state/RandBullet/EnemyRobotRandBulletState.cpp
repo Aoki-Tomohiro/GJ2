@@ -32,6 +32,7 @@ void EnemyRobotRandBulletState::Initialize(EnemyRobot* state)
 
 void EnemyRobotRandBulletState::Update(EnemyRobot* state)
 {
+	StateTimer++;
 	BulletCoolTimer++;
 	if (BulletCoolTimer>=120)
 	{
@@ -64,8 +65,16 @@ void EnemyRobotRandBulletState::Update(EnemyRobot* state)
 			MoveFlag = false;
 		}
 	}
-
-
+	
+	if (StateTimer>=420)
+	{
+		state->SetStartRT(state->GetEnemy().RarmWorldTransform.rotation_);
+		state->SetStartRB(state->GetEnemy().RarmBoWorldTransform.rotation_);
+		state->SetStartLT(state->GetEnemy().LarmWorldTransform.rotation_);
+		state->SetStartLB(state->GetEnemy().LarmBoWorldTransform.rotation_);
+		state->SetMoveFlag(true);
+		state->SetStateEndFlag(true);
+	}
 }
 
 void EnemyRobotRandBulletState::Draw(EnemyRobot* state, ViewProjection view)

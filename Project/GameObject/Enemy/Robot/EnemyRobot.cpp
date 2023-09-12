@@ -21,13 +21,13 @@ void EnemyRobot::Initialize()
 	enemy_.BodyWorldTransform.matWorld_ = MakeIdentity4x4();
 	enemy_.BodyWorldTransform.scale_ = { 28,28,28 };
 	enemy_.BodyWorldTransform.translation_ = { 0,20,90 };
+	//EnemyCore->CreateFromOBJ();
 	HeadArmInit();
 	UpdateMatrixs();
-	state = std::make_unique<EnemeyRobotPunchState>();
+	state = std::make_unique<EnemyRobotRandBulletState>();
 	state->Initialize(this);
 	MoveFlag = true;
-	StateFlag = false;
-	StateEndFlag = true;
+
 
 	StartRTWorPos = enemy_.RarmWorldTransform.rotation_;
 	EndRTWorPos = { 0,0,0.5 };
@@ -42,24 +42,10 @@ void EnemyRobot::Initialize()
 
 void EnemyRobot::Update()
 {
-	ImGui::Begin("Larm");
-	ImGui::SliderFloat3("Torotate", &enemy_.LarmWorldTransform.rotation_.x, -5, 5);
-	ImGui::SliderFloat3("Borotate", &enemy_.LarmBoWorldTransform.rotation_.x, -5, 5);
-	ImGui::End();
-	ImGui::Begin("Rarm");
-	ImGui::SliderFloat3("Tot", &enemy_.RarmWorldTransform.rotation_.x, -5, 5);
-	ImGui::SliderFloat3("Bot", &enemy_.RarmBoWorldTransform.rotation_.x, -5, 5);
-	ImGui::End();
 
-	ImGui::Begin("Body");
-	ImGui::DragFloat3("trans", &enemy_.BodyWorldTransform.translation_.x, -5, 5);
-	ImGui::End();
-
-
-	if (MoveFlag&&StateEndFlag)
-	{
+	if (MoveFlag&&isStateEndFlag)
+	{		
 		Flame++;
-
 		enemy_.RarmWorldTransform.rotation_=EasingFanc(StartRTWorPos, EndRTWorPos, Flame, EndFlame);
 		enemy_.RarmBoWorldTransform.rotation_ = EasingFanc(StartRBWorPos, EndRBWorPos, Flame, EndFlame);
 		enemy_.LarmWorldTransform.rotation_ = EasingFanc(StartLTWorPos, EndLTWorPos, Flame, EndFlame);
@@ -68,8 +54,10 @@ void EnemyRobot::Update()
 		if (Flame==EndFlame)
 		{
 			MoveFlag = false;
-
-
+			state.release();
+			state = std::make_unique<EnemeyRobotPunchState>();
+			state->Initialize(this);
+			Flame = 0;
 		}
 	}
 
@@ -129,7 +117,7 @@ Vector3 EnemyRobot::EasingFanc( Vector3 startv, Vector3 Endv, float &Flame, floa
 void EnemyRobot::UpdateMatrixs()
 {
 	enemy_.BodyWorldTransform.UpdateMatrix();
-	enemy_.CoreWorldTransform.UpdateMatrix();
+
 	enemy_.HeadWorldTransform.UpdateMatrix();
 	enemy_.LarmWorldTransform.UpdateMatrix();
 	enemy_.LarmBoWorldTransform.UpdateMatrix();

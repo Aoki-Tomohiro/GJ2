@@ -7,6 +7,8 @@ void EnemeyRobotPunchState::Initialize(EnemyRobot* state)
 
 void EnemeyRobotPunchState::Update(EnemyRobot* state)
 {
+	state->GetEnemy().
+
 }
 
 void EnemeyRobotPunchState::Draw(EnemyRobot* state, ViewProjection view)

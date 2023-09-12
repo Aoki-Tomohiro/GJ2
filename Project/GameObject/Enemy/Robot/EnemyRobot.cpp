@@ -53,7 +53,7 @@ void EnemyRobot::Initialize()
 	SetCollisionAttribute(kCollisionAttributeEnemy);
 	//衝突対象を自分の属性以外に設定
 	SetCollisionMask(kCollisionMaskEnemy);
-
+	SetRadius(3.0f);
 }
 
 void EnemyRobot::Update()

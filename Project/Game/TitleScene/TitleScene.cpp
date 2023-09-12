@@ -41,11 +41,12 @@ void TitleScene::Initialize(GameManager* gameManager) {
 	//Timer系の変数
 	triggerButtonBTime_ = 0;
 	fadeOutTime_ = 0;
+	isFadeInMode_ = true;
 	isFadeOutMode_ = false;
 
 	//透明度
 	COLOR_BIND = 1.0f;
-	transparency_ = { COLOR_BIND,COLOR_BIND,COLOR_BIND,0.0f };
+	transparency_ = { COLOR_BIND,COLOR_BIND,COLOR_BIND,1.0f };
 	fadeInterval_ = 10.0 / 256.0f;
 
 
@@ -117,31 +118,47 @@ void TitleScene::Update(GameManager* gameManager) {
 
 	//BGM再生
 	//ループあり
+	//FadeIn
+	//黒背景が透明になっていっていく
+	//疑似FadeIn
+	if (isFadeInMode_ == true) {
+		transparency_.w -= fadeInterval_;
+
+		if (transparency_.w <= 0.0f) {
+			isFadeInMode_ = false;
+		}
+	}
 	
 
 
-	XINPUT_STATE joyState{};
+	if (isFadeInMode_ == false) {
+		XINPUT_STATE joyState{};
 
-	if (Input::GetInstance()->GetJoystickState(joyState)) {
+		if (Input::GetInstance()->GetJoystickState(joyState)) {
 
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-			triggerButtonBTime_ += 1;
+			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+				triggerButtonBTime_ += 1;
+			
+			}
+		
+		}
+
+		//トリガー代わり
+		if (triggerButtonBTime_ == 1) {
+			isFadeOutMode_ = true;
+			//StartSE再生
+			//ループ無し
+			startSEAudio_->SoundPlayWave(startSEHandle_, false);
+		
+			//BGMを止める
+			bgmAudio_->StopAudio(bgmHandle_);
 			
 		}
-		
 	}
 
-	//トリガー代わり
-	if (triggerButtonBTime_ == 1) {
-		isFadeOutMode_ = true;
-		//StartSE再生
-		//ループ無し
-		startSEAudio_->SoundPlayWave(startSEHandle_, false);
+	
 
-		//BGMを止める
-		bgmAudio_->StopAudio(bgmHandle_);
-			
-	}
+
 
 	if (isFadeOutMode_ == true) {
 		transparency_.w += fadeInterval_;

@@ -51,7 +51,7 @@ void ExplanationScene::Initialize(GameManager* gameManager) {
 	COLOR_BIND = 1.0f;
 	//1.0fで真っ暗
 	transparency_ = { COLOR_BIND,COLOR_BIND,COLOR_BIND,1.0f };
-	fadeInterval_ = 1.0f / 256.0f;
+	fadeInterval_ = 10.0f / 256.0f;
 
 
 	const int SECOND_ = 60;
@@ -70,6 +70,23 @@ void ExplanationScene::Initialize(GameManager* gameManager) {
 	explanationSprite_[1]->Create(explanationHandle_[1] , {0.0f,0.0f});
 
 	explanationCurrentNumber_ = 0;
+
+
+
+
+
+
+
+	explanationSEHandle_=audio_->SoundLoadWave("Project/Resources/Music/SE/Deside/Deside1.wav");
+
+
+	selectSEAudio_ = Audio::GetInstance();;
+	explanationSEHandle_ = audio_->SoundLoadWave("Project/Resources/Music/SE/Select/Select.wav");
+
+
+
+
+
 }
 
 /// <summary>
@@ -94,7 +111,44 @@ void ExplanationScene::Update(GameManager* gameManager) {
 	}
 
 
+	if (isFadeInMode_ == false) {
+		isTriggerB_;
 
+		XINPUT_STATE joyState{};
+		if (Input::GetInstance()->GetJoystickState(joyState)) {
+
+			//決定
+			if (isTriggerB_ == false) {
+				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B && triggerButtonBTime_==0) {
+					triggerButtonBTime_ += 1;
+				}
+			}
+			//1の時移動
+			if ((triggerButtonBTime_==1 )) {
+				selectSEAudio_->SoundPlayWave(explanationSEHandle_, 0);
+
+				isTriggerB_ = true;
+				triggerButtonBTime_ = 0;
+
+				explanationCurrentNumber_ += 1;
+
+				if (explanationCurrentNumber_ == 2) {
+					isFadeOutMode_ = true;
+				}
+
+
+			}
+
+			if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B)==0) {
+				isTriggerB_ = false;
+				triggerButtonBTime_ = 0;
+			}
+
+			
+
+
+		}
+	}
 
 
 	//FadeOut
@@ -127,8 +181,14 @@ void ExplanationScene::Update(GameManager* gameManager) {
 /// 描画
 /// </summary>
 void ExplanationScene::Draw(GameManager* gameManager) {
-	explanationSprite_[0]->Draw();
-
+	if (explanationCurrentNumber_ == 0) {
+		explanationSprite_[0]->Draw();
+	}
+	
+	if (explanationCurrentNumber_ == 1 ||
+		explanationCurrentNumber_ == 2) {
+		explanationSprite_[1]->Draw();
+	}
 
 	backSprite_->Draw();
 

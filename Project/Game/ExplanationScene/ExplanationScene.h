@@ -81,8 +81,6 @@ private:
 	float_t fadeOutTime_ = 0.0f;
 
 	bool isTriggerB_ = false;
-	bool isTriggerLeft_ = false;
-	bool isTriggerRight_ = false;
 
 
 
@@ -103,5 +101,12 @@ private:
 	//titleへ
 	
 	bool explanationChange_ = false;
+
+
+
+	Audio* selectSEAudio_ = nullptr;
+	uint32_t returnSEHandle_ = 0u;
+	uint32_t explanationSEHandle_ = 0u;
+
 
 };

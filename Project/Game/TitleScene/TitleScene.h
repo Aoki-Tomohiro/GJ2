@@ -82,6 +82,8 @@ private:
 	int32_t triggerButtonBTime_ = 0;
 	float_t fadeOutTime_ = 0;
 
+	bool isFadeInMode_ = true;
+
 	//FadeOut用
 	bool isFadeOutMode_ = false;
 	float COLOR_BIND = 1.0f;

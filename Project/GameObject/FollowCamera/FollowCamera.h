@@ -7,6 +7,11 @@
 class FollowCamera {
 public:
 	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Initialize(const Vector3& offset);
+
+	/// <summary>
 	/// 更新
 	/// </summary>
 	void Update(Behavior behavior);

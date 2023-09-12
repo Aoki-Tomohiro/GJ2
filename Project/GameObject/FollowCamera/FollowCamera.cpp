@@ -2,6 +2,11 @@
 #include "Input/Input.h"
 #include "ImGuiManager/ImGuiManager.h"
 
+void FollowCamera::Initialize(const Vector3& offset) {
+	//オフセットの初期化
+	normalOffset_ = offset;
+}
+
 void FollowCamera::Update(Behavior behavior) {
 	//自キャラの状態を取得
 	playerBehavior_ = behavior;

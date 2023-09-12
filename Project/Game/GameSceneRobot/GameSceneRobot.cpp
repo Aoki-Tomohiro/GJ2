@@ -43,6 +43,7 @@ void GameSceneRobot::Initialize(GameManager* gameManager) {
 	//自弾
 	modelPlayerBullet_ = std::make_unique<Model>();
 	modelPlayerBullet_->CreateSphere();
+
 	//モデルを配列にまとめる
 	playerModels_ = { modelPlayerHead_.get(),modelPlayerBody_.get(),modelPlayerL_arm_.get(),modelPlayerR_arm_.get(),modelPlayerBullet_.get() };
 	//自キャラの初期化
@@ -78,6 +79,10 @@ void GameSceneRobot::Initialize(GameManager* gameManager) {
 	bgmHandle_ = audio_->SoundLoadWave("Resources/Music/BGM/Game/GameBGM2.wav");
 
 	bgmAudio_->SoundPlayWave(bgmHandle_, true);
+
+	//Doom
+	doom_ = std::make_unique<Doom>();
+	doom_->Initialize();
 };
 
 void GameSceneRobot::Update(GameManager* gameManager) {
@@ -182,6 +187,7 @@ void GameSceneRobot::Update(GameManager* gameManager) {
 	ImGui::Text("W:WinScene");
 	ImGui::Text("L:LoseScene");
 	ImGui::End();
+
 };
 
 void GameSceneRobot::Draw(GameManager* gameManager) {
@@ -201,7 +207,7 @@ void GameSceneRobot::Draw(GameManager* gameManager) {
 
 	//地面の描画
 	ground_->Draw(viewProjection_);
-
+	doom_->Draw(viewProjection_);
 	//パーティクルの描画
 	for (std::unique_ptr<ParticleEmitter>& particleEmitter : particleEmitters_) {
 		particleEmitter->Draw(viewProjection_);

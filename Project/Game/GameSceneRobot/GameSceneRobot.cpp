@@ -56,6 +56,7 @@ void GameSceneRobot::Initialize(GameManager* gameManager) {
 
 	//追従カメラの初期化
 	followCamera_ = std::make_unique<FollowCamera>();
+	followCamera_->Initialize({ 0.0f,15.0f,-80.0f });
 	followCamera_->SetTarget(&player_->GetWorldTransform());
 	player_->SetViewProjection(&followCamera_->GetViewProjection());
 

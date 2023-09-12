@@ -61,6 +61,7 @@ void GameScene::Initialize(GameManager* gameManager) {
 
 	//追従カメラの初期化
 	followCamera_ = std::make_unique<FollowCamera>();
+	followCamera_->Initialize({ 0.0f,5.0f,-30.0f });
 	followCamera_->SetTarget(&player_->GetWorldTransform());
 	player_->SetViewProjection(&followCamera_->GetViewProjection());
 

@@ -129,6 +129,10 @@ private:
 
 	GameSceneRobot* gameSceneRobot_ = nullptr;
 
+	std::unique_ptr<Sprite> CoreAttackTelop = nullptr;
+	uint32_t TelopTex = {};
+	bool TelopFlag = false;
+	float TelopDrawCount = 1.0f;
 };
 
 

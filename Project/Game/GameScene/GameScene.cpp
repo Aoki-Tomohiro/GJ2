@@ -54,8 +54,7 @@ void GameScene::Initialize(GameManager* gameManager) {
 	transCube_ = std::make_unique<TransCube>();
 	transCube_->SetPlayer(player_.get());
 	transCube_->Initialize();
-	player_->SetTrancCube(transCube_.get());
-
+	
 	EnemyRobot_ = std::make_unique<EnemyRobot>();
 	EnemyRobot_->Initialize();
 
@@ -120,7 +119,7 @@ void GameScene::Update(GameManager* gameManager) {
 
 	
 	//追従カメラの更新
-	followCamera_->Update();
+	followCamera_->Update(player_.get()->GetBehavior());
 	//デスフラグの立ったパーティクルを削除
 	particleEmitters_.remove_if([](std::unique_ptr<ParticleEmitter>& particleEmitter) {
 		if (particleEmitter->isDead()) {

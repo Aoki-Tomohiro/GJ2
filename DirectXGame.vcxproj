@@ -127,6 +127,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\GameObject\Ground\TestGround.cpp" />
     <ClCompile Include="Project\GameObject\Player\Player.cpp" />
     <ClCompile Include="Project\GameObject\Player\PlayerBullet.cpp" />
+    <ClCompile Include="Project\Game\ExplanationScene\ExplanationScene.cpp" />
     <ClCompile Include="Project\Game\GameManager\GameManager.cpp" />
     <ClCompile Include="Project\Game\GameScene\GameScene.cpp" />
     <ClCompile Include="Project\Game\LoseScene\LoseScene.cpp" />
@@ -175,6 +176,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\GameObject\Ground\TestGround.h" />
     <ClInclude Include="Project\GameObject\Player\Player.h" />
     <ClInclude Include="Project\GameObject\Player\PlayerBullet.h" />
+    <ClInclude Include="Project\Game\ExplanationScene\ExplanationScene.h" />
     <ClInclude Include="Project\Game\GameManager\GameManager.h" />
     <ClInclude Include="Project\Game\GameManager\IScene.h" />
     <ClInclude Include="Project\Game\GameScene\GameScene.h" />

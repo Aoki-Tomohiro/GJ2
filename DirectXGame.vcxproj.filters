@@ -240,6 +240,9 @@
     <ClCompile Include="Project\Game\TitleScene\TitleScene.cpp">
       <Filter>ソース ファイル\Project\Game</Filter>
     </ClCompile>
+    <ClCompile Include="Project\Game\ExplanationScene\ExplanationScene.cpp">
+      <Filter>ソース ファイル\Project\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Base\DirectXCommon\DirectXCommon.h">
@@ -381,6 +384,9 @@
       <Filter>ヘッダー ファイル\Project\Game</Filter>
     </ClInclude>
     <ClInclude Include="Project\Game\TitleScene\TitleScene.h">
+      <Filter>ヘッダー ファイル\Project\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Game\ExplanationScene\ExplanationScene.h">
       <Filter>ヘッダー ファイル\Project\Game</Filter>
     </ClInclude>
   </ItemGroup>

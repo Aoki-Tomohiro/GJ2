@@ -5,6 +5,7 @@
 #include "SelectScene/SelectScene.h"
 #include "WinScene/WinScene.h"
 #include "LoseScene/LoseScene.h"
+#include "ExplanationScene/ExplanationScene.h"
 
 #include "GlobalVariables/GlobalVariables.h"
 
@@ -40,7 +41,7 @@ GameManager::GameManager() {
 
 
 	//シーンの初期化
-	currentScene_ = new SelectScene();
+	currentScene_ = new ExplanationScene();
 	currentScene_->Initialize(this);
 }
 

@@ -1,6 +1,8 @@
 #include "SelectScene.h"
 #include "GameManager/GameManager.h"
 #include "GameScene/GameScene.h"
+#include "TitleScene/TitleScene.h"
+#include "ExplanationScene/ExplanationScene.h"
 #include <imgui.h>
 
 
@@ -37,7 +39,7 @@ SelectScene::~SelectScene() {
 
 
 
-
+	
 
 }
 
@@ -78,6 +80,7 @@ void SelectScene::Initialize(GameManager* gameManager) {
 	triggerButtonLeftTime_ = 0;
 	triggerButtonRightTime_ = 0;
 
+	isTriggerB_ = false;
 	isTriggerLeft_ = false;
 	isTriggerRight_ = false;
 
@@ -116,7 +119,7 @@ void SelectScene::Initialize(GameManager* gameManager) {
 	//タイトルに戻る
 	backToTitleSprite_ = new Sprite();
 	backToTitleTexture_ = textureManager_->Load("Project/Resources/Select/ToTitle.png");
-	backToTitlePosition_ = { 400.0f,450.0f };
+	backToTitlePosition_ = { 375.0f,500.0f };
 	backToTitleSprite_->Create(backToTitleTexture_, backToTitlePosition_);
 	
 	
@@ -130,10 +133,11 @@ void SelectScene::Initialize(GameManager* gameManager) {
 	
 
 	//アイコンの間隔
-	WIDTH_INTERVAL_ = 200.0f;
-	stageIconPosition[0] = { backToTitlePosition_.x + WIDTH_INTERVAL_ * 1.0f,backToTitlePosition_.y };
-	stageIconPosition[1] = { backToTitlePosition_.x + WIDTH_INTERVAL_ * 2.0f,backToTitlePosition_.y };
-	stageIconPosition[2] = { backToTitlePosition_.x + WIDTH_INTERVAL_ * 2.0f,backToTitlePosition_.y };
+	WIDTH_INTERVAL_ = 150.0f;
+	HEIGHT_INTERVAL_ = 100.0f;
+	stageIconPosition[0] = { backToTitlePosition_.x + WIDTH_INTERVAL_ * 1.0f,backToTitlePosition_.y + WIDTH_INTERVAL_ * 0.0f };
+	stageIconPosition[1] = { backToTitlePosition_.x + WIDTH_INTERVAL_ * 2.0f,backToTitlePosition_.y + WIDTH_INTERVAL_ * 0.0f };
+	stageIconPosition[2] = { backToTitlePosition_.x + WIDTH_INTERVAL_ * 3.0f,backToTitlePosition_.y + WIDTH_INTERVAL_ * 0.0f };
 
 	stageIconSprite_[0]->Create(stageIconTexture_[0], stageIconPosition[0]);
 	stageIconSprite_[1]->Create(stageIconTexture_[1], stageIconPosition[1]);
@@ -146,6 +150,14 @@ void SelectScene::Initialize(GameManager* gameManager) {
 	cursorSprite_->Create(cursorTexture_, cursorPosition);
 
 
+
+	
+	
+	
+	explanationChange_ = false;
+
+
+
 	//Music
 	bgmAudio_ = Audio::GetInstance();
 	bgmHandle_ = audio_->SoundLoadWave("Project/Resources/Music/BGM/Select/SelectBGM.wav");
@@ -156,7 +168,13 @@ void SelectScene::Initialize(GameManager* gameManager) {
 	//SE
 	startSEAudio_ =  Audio::GetInstance();
 	startSEHandle_=audio_->SoundLoadWave("Project/Resources/Music/SE/Deside/Start.wav");
-	
+	returnSEHandle_=audio_->SoundLoadWave("Project/Resources/Music/SE/Deside/Deside2.wav");
+	explanationSEHandle_=audio_->SoundLoadWave("Project/Resources/Music/SE/Deside/Deside1.wav");
+
+
+	selectSEAudio_ = Audio::GetInstance();;
+	selectSEHandle_ = audio_->SoundLoadWave("Project/Resources/Music/SE/Select/Select.wav");
+
 
 }
 
@@ -193,7 +211,8 @@ void SelectScene::Update(GameManager* gameManager) {
 	ImGui::Text("B To GameScene");
 	ImGui::Text("Select Key Left Or Right");
 	ImGui::InputInt("triggerLeftTime", &triggerButtonLeftTime_);
-	ImGui::InputInt("triggerRightTime", &triggerButtonRightTime_);
+
+	ImGui::InputFloat2("cursorPosition", &cursorPosition.x);
 
 	ImGui::InputInt("stageNumber_", &stageNumber_);
 	
@@ -210,150 +229,145 @@ void SelectScene::Update(GameManager* gameManager) {
 
 #pragma region 選択
 	
-	//if (cursorSprite_->GetTranslation().x == backToTitlePosition_.x) {
-	//	triggerButtonLeftTime_ = 0;
-	//	triggerButtonRightTime_ = 0;
-	//	stageNumber_ = 0;
-	//}
-	//if (cursorSprite_->GetTranslation().x == stageIconPosition[0].x) {
-	//	triggerButtonLeftTime_ = 0;
-	//	triggerButtonRightTime_ = 0;
-	//	stageNumber_ = 1;
-	//}
-	//if (cursorSprite_->GetTranslation().x == stageIconPosition[1].x) {
-	//	triggerButtonLeftTime_ = 0;
-	//	triggerButtonRightTime_ = 0;
-	//	stageNumber_ = 2;
-	//}
-
+	if (cursorSprite_->GetTranslation().x == backToTitlePosition_.x) {
+		stageNumber_ = 0;
+	}
+	if (cursorSprite_->GetTranslation().x == stageIconPosition[0].x) {
+		stageNumber_ = 1;
+	}
+	if (cursorSprite_->GetTranslation().x == stageIconPosition[1].x) {
+		stageNumber_ = 2;
+	}
+	if (cursorSprite_->GetTranslation().x == stageIconPosition[2].x) {
+		stageNumber_ = 3;
+	}
 
 	//2つ用意で
 	if (isFadeInMode_ == false) {
 
 		XINPUT_STATE joyState{};
-
 		if (Input::GetInstance()->GetJoystickState(joyState)) {
 
 			//決定
-			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-				triggerButtonBTime_ += 1;
-				
+			if (isTriggerB_ == false) {
+				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+					triggerButtonBTime_ += 1;
+				}
 			}
+			
 
 			
 			//十字ボタンで選択
 			//左
-			if (isTriggerLeft_ == false && triggerButtonLeftTime_==0) {
-				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) {
-					isTriggerLeft_ = true;
+			if (isTriggerLeft_ == false ) {
+				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT && triggerButtonLeftTime_==0) {
+					
 					triggerButtonLeftTime_ += 1;
 				
 				}
 			}
 			
 			if (isTriggerRight_ == false) {
-				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) {
+				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT&& triggerButtonRightTime_==0) {
 				
 					triggerButtonRightTime_ += 1;
 				}
 			}
 			
-			
-
 
 			//1の時移動
 			if ((triggerButtonLeftTime_==1 )) {
-				
+				selectSEAudio_->SoundPlayWave(selectSEHandle_, 0);
 
-				if (isTriggerLeft_ == true) {
-					cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x - WIDTH_INTERVAL_,cursorPosition.y });
-				}
+				isTriggerLeft_ = true;
 				triggerButtonLeftTime_ = 0;
 
-				if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT)==0) {
-				
-					isTriggerLeft_ = false;
-					triggerButtonLeftTime_ = 0;
+				if (stageNumber_ == 0) {
+					cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x,cursorPosition.y });
 				}
+				else {
+					cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x - WIDTH_INTERVAL_,cursorPosition.y });
+					
+					
+				}
+
 			}
+
+			if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT)==0) {
+				isTriggerLeft_ = false;
+				triggerButtonLeftTime_ = 0;
+			}
+
+
+
+
+
+
+
+			//右
 			if ((triggerButtonRightTime_==1 )) {
-				isTriggerRight_ = false;
+				isTriggerRight_ = true;
+				triggerButtonRightTime_ = 0;
+				selectSEAudio_->SoundPlayWave(selectSEHandle_, 0);
+				if (stageNumber_ == 3) {
+					cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x,cursorPosition.y });
+				}
+				else {
+					cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x + WIDTH_INTERVAL_,cursorPosition.y });
+					
+					
+				}
+
 			}
+
+			if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT)==0) {
+				isTriggerRight_ = false;
+				triggerButtonRightTime_ = 0;
+			}
+
+
+
+
+
+
+
+
+			//操作説明
+
+
 
 
 
 		}
 		
-		/*if (isTriggerLeft_ == true) {
-			cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x - WIDTH_INTERVAL_,cursorPosition.y });
-			triggerButtonLeftTime_ = 0;
-		}*/
-		if (isTriggerRight_ == true) {
-			cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x + WIDTH_INTERVAL_,cursorPosition.y });
-			triggerButtonRightTime_ = 0;
+		//タイトルへ
+		if (triggerButtonBTime_ == 1 && stageNumber_==0) {
+			isFadeOutMode_ = true;
+			//StartSE再生
+			//ループ無し
+			startSEAudio_->SoundPlayWave(returnSEHandle_, false);
+
+
+
+
 		}
-
-
-
-
-			//トリガー代わり
-		if (triggerButtonBTime_ == 1) {
+		if (triggerButtonBTime_ == 1 && stageNumber_==1) {
 			isFadeOutMode_ = true;
 			//StartSE再生
 			//ループ無し
 			startSEAudio_->SoundPlayWave(startSEHandle_, false);
-
-			
 		}
-		//if (isTriggerLeft_ == true) {
-		//	triggerButtonLeftTime_ += 1;
-		//	
-		//	
-		//}
-		//if (isTriggerRight_ == true) {
-		//	triggerButtonRightTime_ += 1;
-		//	
-		//}
-
-
-		//if (triggerButtonLeftTime_ == 1) {
-		//	ImGui::Text("Left");
-		//	
-		//	//中にGetterを入れたら大丈夫だった
-		//	if (cursorSprite_->GetTranslation().x > backToTitlePosition_.x) {
-		//		cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x - WIDTH_INTERVAL_,cursorPosition.y });
-		//		
-		//		isTriggerLeft_ = false;
-		//	}
-		//	else{
-		//		cursorSprite_->SetTranslation(cursorSprite_->GetTranslation());
-		//		triggerButtonLeftTime_ = 0;
-		//		isTriggerLeft_ = false;
-		//	}
-		//	
-		//	
-		//}
-
-		//if (triggerButtonRightTime_ == 1) {
-		//	ImGui::Text("Right");
-		//	cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x+ WIDTH_INTERVAL_,cursorPosition.y });
-		//		
-		//	isTriggerRight_ = false;
-		//	triggerButtonRightTime_ = 0;
-		//	//中にGetterを入れたら大丈夫だった
-		//	//if (cursorSprite_->GetTranslation().x < stageIconPosition[1].x) {
-		//	//	
-		//	//}
-		//	/*else{
-		//		cursorSprite_->SetTranslation(cursorSprite_->GetTranslation());
-		//		
-		//		isTriggerRight_ = false;
-		//	}*/
-
-		//}
-
 		
+		if (triggerButtonBTime_ == 1 && stageNumber_==2) {
+			isFadeOutMode_ = true;
+			startSEAudio_->SoundPlayWave(startSEHandle_, false);
+		}
 
+		//操作説明へ
+		if (triggerButtonBTime_ == 1 && stageNumber_==3) {
+			isFadeOutMode_ = true;
+			startSEAudio_->SoundPlayWave(explanationSEHandle_, false);
+		}
 	}
 	
 
@@ -376,14 +390,23 @@ void SelectScene::Update(GameManager* gameManager) {
 	//スプライトの透明度をここで設定
 	backSprite_->SetColor({COLOR_BIND,COLOR_BIND,COLOR_BIND,transparency_.w});
 	
-	
+
+	//LoadingからTitleSceneへ
+	if (loadingTime > SECOND_ * 3 && stageNumber_ == 0) {
+		gameManager->ChangeScene(new TitleScene());
+	}
 	//LoadingからGameSceneへ
-	if (loadingTime > SECOND_ * 3) {
+	if (loadingTime > SECOND_ * 3 && stageNumber_ == 1) {
 		gameManager->ChangeScene(new GameScene());	
 	}
-		
-	
-
+	if (loadingTime > SECOND_ * 3 && stageNumber_ == 2) {
+		gameManager->ChangeScene(new GameScene());
+			
+	}	
+	if (loadingTime > SECOND_ * 3 && stageNumber_ == 3) {
+		gameManager->ChangeScene(new ExplanationScene());
+			
+	}	
 
 	
 	
@@ -403,7 +426,7 @@ void SelectScene::Draw(GameManager* gameManager) {
 	//StageIcon
 	stageIconSprite_[0]->Draw();
 	stageIconSprite_[1]->Draw();
-	
+	stageIconSprite_[2]->Draw();
 
 	//タイトルに戻るためのアイコン
 	backToTitleSprite_->Draw();

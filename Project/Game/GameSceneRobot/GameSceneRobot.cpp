@@ -97,7 +97,7 @@ void GameSceneRobot::Update(GameManager* gameManager) {
 	for (std::unique_ptr<PlayerBullet>& bullet : playerBullets_) {
 		bullet->Update();
 	}
-
+	EnemyRobot_->SetPlayer(player_.get());
 	//敵キャラの更新
 	EnemyRobot_->Update();
 
@@ -236,5 +236,17 @@ void GameSceneRobot::SetCollisions(){
 	collisionManager_->SetColliderListAABB(player_.get());
 	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets_) {
 		collisionManager_->SetColliderList(bullet.get());
+	}
+
+
+	collisionManager_->SetColliderList(EnemyRobot_.get());
+	for (RobotBullet* bullet : EnemyRobot_.get()->GetBullets())
+	{
+		collisionManager_->SetColliderList(bullet);
+	}
+	for (RobotPunch* bullet : EnemyRobot_.get()->GetPunch())
+	{
+		collisionManager_->SetColliderListAABB(bullet);
+
 	}
 }

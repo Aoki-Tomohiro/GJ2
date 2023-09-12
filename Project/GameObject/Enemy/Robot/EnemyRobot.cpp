@@ -76,6 +76,26 @@ void EnemyRobot::BulletPushBack(Vector3 velocity,Vector3 pos)
 
 }
 
+float EnemyRobot::LerpMove(float pos)
+{
+
+	float result;
+
+	result = pos < 0.5 ? 4 * pos * pos * pos : 1 - std::powf(-2.0f * pos + 2, 3) / 2.0f;
+
+	return result;
+
+}
+Vector3 EnemyRobot::EasingFanc(EnemyRobot* state, Vector3 startv, Vector3 Endv, float &Flame, float EndFlame)
+{
+	Vector3 result;
+
+	result.x = startv.x + (Endv.x - startv.x) * LerpMove(Flame / EndFlame);
+	result.y = startv.y+ (Endv.y - startv.y)* LerpMove(Flame / EndFlame);
+	result.z = startv.z + (Endv.z - startv.z) * LerpMove(Flame / EndFlame);
+	return result;
+}
+
 
 
 void EnemyRobot::UpdateMatrixs()
@@ -104,8 +124,9 @@ void EnemyRobot::HeadArmInit()
 	enemy_.LarmBoModel = std::make_unique <Model>();
 	enemy_.LarmBoModel->CreateFromOBJ("Project/Resources/EnemyObj/EnemyRobot/LBoArm", "LBoArm.obj");
 	enemy_.LarmBoWorldTransform.parent_ = &enemy_.LarmWorldTransform;
-	enemy_.LarmBoWorldTransform.translation_.x = enemy_.LarmBoWorldTransform.translation_.x + 1.0f;
+	enemy_.LarmBoWorldTransform.translation_.x = enemy_.LarmBoWorldTransform.translation_.x + 0.80f;
     enemy_.LarmBoWorldTransform.translation_.y = enemy_.LarmBoWorldTransform.translation_.y + 0.1f;
+	enemy_.LarmBoWorldTransform.translation_.z = enemy_.LarmBoWorldTransform.translation_.z - 0.1f;
 
 	enemy_.RarmTopModel = std::make_unique<Model>();
 	enemy_.RarmTopModel->CreateFromOBJ("Project/Resources/EnemyObj/EnemyRobot/RTopArm", "RTopArm.obj");

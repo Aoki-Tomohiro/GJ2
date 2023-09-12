@@ -16,6 +16,12 @@ void EnemyRobotRandBulletState::Initialize(EnemyRobot* state)
 	StartRBWorldPos = state->GetEnemy().RarmBoWorldTransform.rotation_;
 	EndRBWorldPos = { 0.0f,-1.3f,1.6f };
 
+	StartLTWorldPos = state->GetEnemy().LarmWorldTransform.rotation_;
+	EndLTWorldPos = { 0,0,-0.5f };
+	
+	StartLBWorldPos = state->GetEnemy().LarmBoWorldTransform.rotation_;
+	EndLBWorldPos = { 0.0f,1.0f,-0.0f };
+
 	///StartWorldPos.BodyWorldTransform = state->GetEnemy().BodyWorldTransform;
 	//StartWorldPos.HeadWorldTransform = state->GetEnemy().HeadWorldTransform;
 	//1.3//0.6
@@ -44,17 +50,13 @@ void EnemyRobotRandBulletState::Update(EnemyRobot* state)
 	if (MoveFlag)
 	{
 		Flame++;
-		//Vector3 pos;
 		
-		state->GetEnemy().RarmWorldTransform.rotation_.x = StartRTWorldPos.x + (EndRTWorldPos.x - StartRTWorldPos.x) * LerpMove(Flame / EndFlame);
-		state->GetEnemy().RarmWorldTransform.rotation_.z = StartRTWorldPos.z + (EndRTWorldPos.z - StartRTWorldPos.z) * LerpMove(Flame / EndFlame);
-		state->GetEnemy().RarmWorldTransform.rotation_.y = StartRTWorldPos.y + (EndRTWorldPos.y - StartRTWorldPos.y) * LerpMove(Flame / EndFlame);
-
-		state->GetEnemy().RarmBoWorldTransform.rotation_.x = StartRBWorldPos.x + (EndRBWorldPos.x - StartRBWorldPos.x) * LerpMove(Flame / EndFlame);
-		state->GetEnemy().RarmBoWorldTransform.rotation_.z = StartRBWorldPos.z + (EndRBWorldPos.z - StartRBWorldPos.z) * LerpMove(Flame / EndFlame);
-		state->GetEnemy().RarmBoWorldTransform.rotation_.y = StartRBWorldPos.y + (EndRBWorldPos.y - StartRBWorldPos.y) * LerpMove(Flame / EndFlame);
-
-
+	//R
+		state->GetEnemy().RarmWorldTransform.rotation_ = state->EasingFanc(state, StartRTWorldPos, EndRTWorldPos, Flame, EndFlame);
+		state->GetEnemy().RarmBoWorldTransform.rotation_ = state->EasingFanc(state, StartRBWorldPos, EndRBWorldPos, Flame, EndFlame);
+	//L
+		state->GetEnemy().LarmWorldTransform.rotation_ = state->EasingFanc(state, StartLTWorldPos, EndLTWorldPos, Flame, EndFlame);
+		state->GetEnemy().LarmBoWorldTransform.rotation_ = state->EasingFanc(state, StartLBWorldPos, EndLBWorldPos, Flame, EndFlame);
 
 		
 		if (Flame == EndFlame) {
@@ -86,14 +88,4 @@ Vector3 EnemyRobotRandBulletState::CircleAngleFanc(float theta)
 	velocity.z = std::sinf(theta);
 
 	return velocity;
-}
-float EnemyRobotRandBulletState::LerpMove(float pos)
-{
-
-	float result;
-
-	result = pos < 0.5 ? 4 * pos * pos * pos : 1 - std::powf(-2.0f * pos + 2, 3) / 2.0f;
-
-	return result;
-
 }

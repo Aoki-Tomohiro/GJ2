@@ -20,8 +20,6 @@ public:
 
 private:
 
-	float LerpMove(float pos);
-
 
 	Vector3 CircleAngleFanc(float theta);
 
@@ -38,4 +36,10 @@ private:
 
 	Vector3 StartRBWorldPos = {};
 	Vector3 EndRBWorldPos = {};
+
+	Vector3 StartLTWorldPos = {};
+	Vector3 EndLTWorldPos = {};
+
+	Vector3 StartLBWorldPos = {};
+	Vector3 EndLBWorldPos = {};
 };

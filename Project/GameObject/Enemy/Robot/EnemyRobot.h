@@ -43,8 +43,11 @@ public:
 	Player* GetPlayer() { return player_; }
 	SEnemyRobot &GetEnemy() { return enemy_; }
 	void BulletPushBack(Vector3 velocity,Vector3 pos);
+
+	Vector3 EasingFanc(EnemyRobot* state, Vector3 startv, Vector3 Endv, float &Flame, float EndFlame);
 private:
-	
+	float LerpMove(float pos);
+
 	void UpdateMatrixs();
 
 	void HeadArmInit();

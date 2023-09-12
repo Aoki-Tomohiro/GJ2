@@ -1,5 +1,12 @@
 #include "GameManager.h"
+
 #include "GameScene/GameScene.h"
+#include "TitleScene/TitleScene.h"
+#include "SelectScene/SelectScene.h"
+#include "WinScene/WinScene.h"
+#include "LoseScene/LoseScene.h"
+#include "ExplanationScene/ExplanationScene.h"
+
 #include "GlobalVariables/GlobalVariables.h"
 
 GameManager::GameManager() {
@@ -30,8 +37,11 @@ GameManager::GameManager() {
 	Sprite::Initialize();
 	//グローバル変数の読み込み
 	GlobalVariables::GetInstance()->LoadFiles();
+
+
+
 	//シーンの初期化
-	currentScene_ = new GameScene();
+	currentScene_ = new TitleScene();
 	currentScene_->Initialize(this);
 }
 
@@ -50,7 +60,7 @@ GameManager::~GameManager() {
 }
 
 void GameManager::ChangeScene(IScene* newScene) {
-	currentScene_ = nullptr;
+	delete currentScene_;
 	currentScene_ = newScene;
 	currentScene_->Initialize(this);
 }

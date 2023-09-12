@@ -2,25 +2,14 @@
 #include "Sprite/Sprite.h"
 #include "TransformationMatrix/WorldTransform.h"
 #include "TransformationMatrix/ViewProjection.h"
+#include "../GameObject/Player/Player.h"
 
-class FollowCamera{
+class FollowCamera {
 public:
-
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
-
-	/// <summary>
-	/// オフセット計算
-	/// </summary>
-	/// <returns></returns>
-	Vector3 Offset()const;
-
-	/// <summary>
-	/// リセット
-	/// </summary>
-	void Reset();
+	void Update(Behavior behavior);
 
 	/// <summary>
 	/// 追従対象を設定
@@ -29,16 +18,22 @@ public:
 	void SetTarget(const WorldTransform* target);
 
 	/// <summary>
-	/// ロックオン対象を設定
-	/// </summary>
-	/// <param name="rockonTarget"></param>
-	void SetRockonTarget(const WorldTransform* rockonTarget);
-
-	/// <summary>
 	/// ビュープロジェクションを取得
 	/// </summary>
 	/// <returns></returns>
 	const ViewProjection& GetViewProjection() { return viewProjection_; };
+
+private:
+	/// <summary>
+	/// オフセット計算
+	/// </summary>
+	/// <returns></returns>
+	Vector3 Offset();
+
+	/// <summary>
+	/// リセット
+	/// </summary>
+	void Reset();
 
 private:
 	//ビュープロジェクション
@@ -52,10 +47,12 @@ private:
 	Vector3 interTarget_{};
 	//ロックオンターゲット
 	const WorldTransform* rockonTarget_{};
-	//ロックオンのフラグ
-	bool isRockon_ = false;
-	//
+	//オフセット
+	Vector3 offset_{ 0.0f,2.0f,-30.0f };
+	//角度制限
 	float minRotateX = 0.0f;
 	float maxRotateX = 0.5f;
+	//自キャラの状態
+	Behavior playerBehavior_ = Behavior::kRoot;
 };
 

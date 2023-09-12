@@ -27,19 +27,6 @@ void TransCubeRandBulletState::Update(TransCube* state)
 {
 
 
-	for (TransCubeBullet* bullet : state->Getbullets()) {
-
-		if (bullet->GetPosition().x >= 80 || bullet->GetPosition().x <= -80)
-		{
-			bullet->SetIsDead(true);
-
-		}
-		if (bullet->GetPosition().z >= 80 || bullet->GetPosition().z <= -80)
-		{
-			bullet->SetIsDead(true);
-		}
-
-	}
 
 	WorldTransform GetCubeWorldTransform = state->GetWorldTransform();
 

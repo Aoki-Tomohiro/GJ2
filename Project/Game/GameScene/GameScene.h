@@ -20,6 +20,7 @@
 #include "../GameObject/Particle/ParticleEmitter.h"
 #include "CollisionManager/CollisionManager.h"
 #include <list>
+#include"../GameObject/Enemy/Robot/EnemyRobot.h"
 
 class GameScene : public IScene {
 public:
@@ -93,6 +94,8 @@ private:
 	//敵キャラ
 	std::unique_ptr<Model> modelTransCube_;
 	std::unique_ptr<TransCube> transCube_;
+	std::unique_ptr<EnemyRobot> EnemyRobot_;
+
 	//追従カメラ
 	std::unique_ptr<FollowCamera> followCamera_ = nullptr;
 	//地面

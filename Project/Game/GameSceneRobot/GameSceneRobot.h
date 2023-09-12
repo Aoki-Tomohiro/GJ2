@@ -114,6 +114,10 @@ private:
 	uint32_t bgmHandle_ = 0u;
 
 
+	//SE
+	Audio* enemyDamagedAudio_ = nullptr;
+	uint32_t enemyDamagedHandle_ = 0u;
+
 
 	//SceneChange用のフラグ
 	bool changeToWin_ = false;

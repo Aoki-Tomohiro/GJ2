@@ -79,6 +79,9 @@ void GameSceneRobot::Initialize(GameManager* gameManager) {
 
 	bgmAudio_->SoundPlayWave(bgmHandle_, true);
 
+	enemyDamagedAudio_ = Audio::GetInstance();;
+	enemyDamagedHandle_ = enemyDamagedAudio_->SoundLoadWave("Resources/Music/SE/Damage/EnemyDamaged.wav");
+
 
 	//SceneChange用のフラグ
 	changeToWin_ = false;
@@ -197,12 +200,14 @@ void GameSceneRobot::Update(GameManager* gameManager) {
 
 	if (player_->GetLife() <= 0) {
 		bgmAudio_->StopAudio(bgmHandle_);
+		
 
 		changeToLose_ = true;
 	}
 	if (EnemyRobot_->GetLife() <= 0) {
 		bgmAudio_->StopAudio(bgmHandle_);
 		changeToWin_ = true;
+		enemyDamagedAudio_->SoundPlayWave(enemyDamagedHandle_, 0);
 	}
 
 

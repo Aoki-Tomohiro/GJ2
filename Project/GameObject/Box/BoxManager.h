@@ -2,6 +2,7 @@
 #include "Box.h"
 #include <array>
 #include <memory>
+#include "Audio/Audio.h"
 
 class Player;
 
@@ -83,5 +84,9 @@ private:
 	int32_t inBoxCount_ = 0;
 	//テクスチャ
 	uint32_t textureHandle_ = 0;
+
+	Audio* powerUpSE_ = nullptr;
+	uint32_t powerUpSEHandle_ = 0u;
+
 };
 

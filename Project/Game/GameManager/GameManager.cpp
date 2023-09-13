@@ -43,7 +43,7 @@ GameManager::GameManager() {
 
 	//シーンの初期化
 
-	currentScene_ = new ExplanationScene();
+	currentScene_ = new WinScene();
 	currentScene_->Initialize(this);
 }
 

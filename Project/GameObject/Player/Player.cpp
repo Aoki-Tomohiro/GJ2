@@ -70,11 +70,13 @@ void Player::Update() {
 	isBoxPush_ = false;
 
 	XINPUT_STATE joyState;
-	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		device_ = GamePad;
-	}
-	else {
+	if (input_->IsPushKey(DIK_W) || input_->IsPushKey(DIK_S) || input_->IsPushKey(DIK_A) || input_->IsPushKey(DIK_D) ||
+		input_->IsPushKey(DIK_UP) || input_->IsPushKey(DIK_DOWN) || input_->IsPushKey(DIK_LEFT) || input_->IsPushKey(DIK_RIGHT) ||
+		input_->IsPushKey(DIK_LSHIFT) || input_->IsPushKey(DIK_E) || input_->IsPushKey(DIK_C)) {
 		device_ = KeyBoard;
+	}
+	else if (input_->GetJoystickState(joyState)) {
+		device_ = GamePad;
 	}
 
 	//Behaviorの遷移処理
@@ -903,7 +905,7 @@ void Player::Set3DReticlePosition() {
 	// ワールド→スクリーン座標変換(ここで3Dから2Dになる)
 	positionReticle = Transform(positionReticle, matViewProjectionViewport);
 	// スプライトのレティクルに座標設定
-	sprite2DReticle_->SetTranslation(Vector2(positionReticle.x - 48, positionReticle.y - 48));
+	sprite2DReticle_->SetTranslation(Vector2(positionReticle.x - 1280 / 2, positionReticle.y - 720 / 2));
 }
 
 Vector3 Player::Get3DReticleWorldPosition() {

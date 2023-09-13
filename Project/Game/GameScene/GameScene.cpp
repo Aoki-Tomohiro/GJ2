@@ -161,15 +161,15 @@ void GameScene::Update(GameManager* gameManager) {
 
 	//デバッグカメラの更新
 	debugCamera_->Update();
-	//デバッグカメラの切り替え
-	if (input_->IsPushKeyEnter(DIK_1)) {
-		if (isDebugCameraActive_ == false) {
-			isDebugCameraActive_ = true;
-		}
-		else {
-			isDebugCameraActive_ = false;
-		}
-	}
+	////デバッグカメラの切り替え
+	//if (input_->IsPushKeyEnter(DIK_1)) {
+	//	if (isDebugCameraActive_ == false) {
+	//		isDebugCameraActive_ = true;
+	//	}
+	//	else {
+	//		isDebugCameraActive_ = false;
+	//	}
+	//}
 	//ビュープロジェクションの更新
 	if (isDebugCameraActive_ == true) {
 		viewProjection_.matView_ = debugCamera_->GetViewProjection().matView_;

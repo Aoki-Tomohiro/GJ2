@@ -265,62 +265,68 @@ void SelectScene::Update(GameManager* gameManager) {
 				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
 					triggerButtonBTime_ += 1;
 				}
-				
+
 
 			}
-			
-			
-			
+
+
+
 			//十字ボタンで選択
 			//左
-			if (isTriggerLeft_ == false ) {
-				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT && triggerButtonLeftTime_==0) {
-					
+			if (isTriggerLeft_ == false) {
+				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT && triggerButtonLeftTime_ == 0) {
+
 					triggerButtonLeftTime_ += 1;
-				
+
 				}
-				
+
 
 			}
-			if (input_->IsPushKeyEnter(DIK_LEFT)) {
-				triggerButtonLeftTime_ = 1;
-			}
 
+		}
 
+		if (input_->IsPushKeyEnter(DIK_LEFT)) {
+			triggerButtonLeftTime_ = 1;
+		}
+
+		if (Input::GetInstance()->GetJoystickState(joyState)) {
 			//右
 			if (isTriggerRight_ == false) {
-				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT&& triggerButtonRightTime_==0) {
-				
+				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT && triggerButtonRightTime_ == 0) {
+
 					triggerButtonRightTime_ += 1;
 				}
 			}
-			if (input_->IsPushKeyEnter(DIK_RIGHT)) {
-				triggerButtonRightTime_ = 1;
+		}
+		if (input_->IsPushKeyEnter(DIK_RIGHT)) {
+			triggerButtonRightTime_ = 1;
+		}
+
+
+		//1の時移動
+		if ((triggerButtonLeftTime_ == 1)) {
+			selectSEAudio_->SoundPlayWave(selectSEHandle_, 0);
+
+			isTriggerLeft_ = true;
+			triggerButtonLeftTime_ = 0;
+
+			if (stageNumber_ == 0) {
+				cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x,cursorPosition.y });
+			}
+			else {
+				cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x - WIDTH_INTERVAL_,cursorPosition.y });
+
+
 			}
 
+		}
 
-			//1の時移動
-			if ((triggerButtonLeftTime_==1 )) {
-				selectSEAudio_->SoundPlayWave(selectSEHandle_, 0);
-
-				isTriggerLeft_ = true;
-				triggerButtonLeftTime_ = 0;
-
-				if (stageNumber_ == 0) {
-					cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x,cursorPosition.y });
-				}
-				else {
-					cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x - WIDTH_INTERVAL_,cursorPosition.y });
-					
-					
-				}
-
-			}
-
-			if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT)==0) {
+		if (Input::GetInstance()->GetJoystickState(joyState)) {
+			if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) == 0) {
 				isTriggerLeft_ = false;
 				triggerButtonLeftTime_ = 0;
 			}
+		}
 
 
 
@@ -328,31 +334,32 @@ void SelectScene::Update(GameManager* gameManager) {
 
 
 
-			//右
-			if ((triggerButtonRightTime_==1 )) {
-				isTriggerRight_ = true;
-				triggerButtonRightTime_ = 0;
-				selectSEAudio_->SoundPlayWave(selectSEHandle_, 0);
-				if (stageNumber_ == 3) {
-					cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x,cursorPosition.y });
-				}
-				else {
-					cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x + WIDTH_INTERVAL_,cursorPosition.y });
-					
-					
-				}
+		//右
+		if ((triggerButtonRightTime_ == 1)) {
+			isTriggerRight_ = true;
+			triggerButtonRightTime_ = 0;
+			selectSEAudio_->SoundPlayWave(selectSEHandle_, 0);
+			if (stageNumber_ == 3) {
+				cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x,cursorPosition.y });
+			}
+			else {
+				cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x + WIDTH_INTERVAL_,cursorPosition.y });
+
 
 			}
 
-			if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT)==0) {
+		}
+
+		if (Input::GetInstance()->GetJoystickState(joyState)) {
+			if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) == 0) {
 				isTriggerRight_ = false;
 				triggerButtonRightTime_ = 0;
 			}
 
-
-
-
 		}
+
+
+		
 		
 
 

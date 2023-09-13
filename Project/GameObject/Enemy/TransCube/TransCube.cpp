@@ -186,7 +186,7 @@ Vector3 TransCube::GetWorldPosition()
 	Vector3 result = {};
 
 	result.x = worldTransform.matWorld_.m[3][0];
-	result.y = worldTransform.matWorld_.m[3][1]+4;
+	result.y = worldTransform.matWorld_.m[3][1]+1.0f;
 	result.z = worldTransform.matWorld_.m[3][2];
 	return result;
 }

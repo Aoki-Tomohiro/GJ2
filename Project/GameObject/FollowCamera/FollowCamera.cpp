@@ -28,11 +28,13 @@ void FollowCamera::Update(Behavior behavior) {
 	viewProjection_.translation_ = Add(interTarget_, offset);
 
 	XINPUT_STATE joyState;
-	if (input_->GetJoystickState(joyState)) {
-		device_ = GamePad;
-	}
-	else {
+	if (input_->IsPushKey(DIK_W) || input_->IsPushKey(DIK_S) || input_->IsPushKey(DIK_A) || input_->IsPushKey(DIK_D) ||
+		input_->IsPushKey(DIK_UP) || input_->IsPushKey(DIK_DOWN) || input_->IsPushKey(DIK_LEFT) || input_->IsPushKey(DIK_RIGHT) ||
+		input_->IsPushKey(DIK_LSHIFT) || input_->IsPushKey(DIK_E) || input_->IsPushKey(DIK_C)) {
 		device_ = KeyBoard;
+	}
+	else if (input_->GetJoystickState(joyState)) {
+		device_ = GamePad;
 	}
 
 	switch (device_) {

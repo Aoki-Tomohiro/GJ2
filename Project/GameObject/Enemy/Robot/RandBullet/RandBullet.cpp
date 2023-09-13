@@ -15,11 +15,8 @@ void  RobotBullet::Initialize(Vector3& velocity, Vector3 pos)
 
 	model_ = std::make_unique<Model>();
 	//model_->CreateSphere();
-
-	model_->CreateFromOBJ("Resources/EnemyObj/TransCube", "TransCube.obj");
-	worldTransform_.matWorld_ = MakeIdentity4x4();
-	worldTransform_.scale_ = { 1,1,1 };
 	worldTransform_.translation_ = pos;
+	model_->CreateFromOBJ("Resources/EnemyObj/TransCube", "TransCube.obj");
 	worldTransform_.translation_.y = worldTransform_.translation_.y + 0.0f;
 	velocity_ = velocity;
 	//velocity_ = Multiply(velocity_, 0.0f);

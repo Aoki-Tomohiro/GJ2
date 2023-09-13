@@ -2,13 +2,8 @@
 
 void EnemyRobotRandBulletState::Initialize(EnemyRobot* state)
 {
-	SpownPosition.x = state->GetEnemy().BodyWorldTransform.matWorld_.m[3][0];
 
-	SpownPosition.y = state->GetEnemy().BodyWorldTransform.matWorld_.m[3][1];
 
-	SpownPosition.z = state->GetEnemy().BodyWorldTransform.matWorld_.m[3][2];
-	SpownPosition.z=70;
-	SpownPosition.y = 0;
 
 	StartRTWorldPos = state->GetEnemy().RarmWorldTransform.rotation_;
 	EndRTWorldPos = { 0,0,0.5 };
@@ -32,6 +27,13 @@ void EnemyRobotRandBulletState::Initialize(EnemyRobot* state)
 
 void EnemyRobotRandBulletState::Update(EnemyRobot* state)
 {
+	SpownPosition.x = state->GetEnemy().BodyWorldTransform.matWorld_.m[3][0];
+
+	SpownPosition.y = state->GetEnemy().BodyWorldTransform.matWorld_.m[3][1];
+
+	SpownPosition.z = state->GetEnemy().BodyWorldTransform.matWorld_.m[3][2];
+	SpownPosition.z = 70;
+	SpownPosition.y = 0;
 	StateTimer++;
 	BulletCoolTimer++;
 	if (BulletCoolTimer>=120)

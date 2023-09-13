@@ -115,7 +115,7 @@ void EnemyRobot::Update()
 		}
 	}
 
-	BulletUp();
+	
 	punch_.remove_if([](RobotPunch* bullet) {
 		if (bullet->IsDead()) {
 			delete bullet;
@@ -123,16 +123,18 @@ void EnemyRobot::Update()
 		}
 		return false;
 	});
+
+
+	state->Update(this);
+	BulletUp();
 	for (RobotPunch* bullet : punch_)
 	{
 		bullet->Update();
-		if (bullet->GetWorldTransform().translation_.z<=-100)
+		if (bullet->GetWorldTransform().translation_.z <= -100)
 		{
 			bullet->SetIsDead(true);
 		}
 	}
-
-	state->Update(this);
 	UpdateMatrixs();
 	CoreWorldTransform.UpdateMatrix();
 

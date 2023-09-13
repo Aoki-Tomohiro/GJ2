@@ -43,7 +43,7 @@ void TransCube::Initialize()
 	SetCollisionAttribute(kCollisionAttributeEnemy);
 	//衝突対象を自分の属性以外に設定
 	SetCollisionMask(kCollisionMaskEnemy);
-	SetRadius(6.0f);
+	SetRadius(7.0f);
 
 	//スプライトの作成
 	textureHandleHP1_ = TextureManager::GetInstance()->Load("Resources/TransCubeHP1.png");
@@ -186,7 +186,7 @@ Vector3 TransCube::GetWorldPosition()
 	Vector3 result = {};
 
 	result.x = worldTransform.matWorld_.m[3][0];
-	result.y = worldTransform.matWorld_.m[3][1];
+	result.y = worldTransform.matWorld_.m[3][1]+4;
 	result.z = worldTransform.matWorld_.m[3][2];
 	return result;
 }

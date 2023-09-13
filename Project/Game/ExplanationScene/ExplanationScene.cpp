@@ -124,7 +124,13 @@ void ExplanationScene::Update(GameManager* gameManager) {
 				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B && triggerButtonBTime_==0) {
 					triggerButtonBTime_ += 1;
 				}
+				
+
 			}
+			if (input_->IsPushKeyEnter(DIK_B)||input_->IsPushKeyEnter(DIK_RETURN)) {
+					triggerButtonBTime_ = 1;
+				}
+
 			//1の時移動
 			if ((triggerButtonBTime_==1 )) {
 				
@@ -180,7 +186,7 @@ void ExplanationScene::Update(GameManager* gameManager) {
 
 
 
-	ImGui::End();
+	
 }
 
 /// <summary>

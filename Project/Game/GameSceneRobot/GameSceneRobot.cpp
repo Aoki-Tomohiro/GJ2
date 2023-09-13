@@ -155,40 +155,27 @@ void GameSceneRobot::Update(GameManager* gameManager) {
 	}
 
 
-	//2でSelectSceneへ
-	if (input_->IsPushKeyEnter(DIK_W)) {
-		bgmAudio_->StopAudio(bgmHandle_);
-		gameManager->ChangeScene(new WinScene());
-		return;
-	}
-	//3でSelectSceneへ
-	if (input_->IsPushKeyEnter(DIK_L)) {
-		bgmAudio_->StopAudio(bgmHandle_);
-		gameManager->ChangeScene(new LoseScene());
-		return;
-	}
+	//ImGui::Begin(" ");
+	////ポストプロセス
+	//ImGui::Checkbox("PostProcess", &postProcess_->isActive);
+	//ImGui::Checkbox("Bloom", &postProcess_->isBloomActive);
+	//ImGui::Checkbox("Fog", &postProcess_->isFogActive);
+	//ImGui::Checkbox("DoF", &postProcess_->isDofActive);
+	//ImGui::Checkbox("LensDistortion", &postProcess_->isLensDistortionActive);
+	//ImGui::Checkbox("Vignette", &postProcess_->isVignetteActive);
+	////デバッグカメラ
+	//ImGui::Checkbox("DebugCamera", &isDebugCameraActive_);
+	//ImGui::Text("1 : DebugCamera");
+	//ImGui::Text("WASD : Move up/down/left/right");
+	//ImGui::Text("MouseWheel : Move forward/backward");
+	//ImGui::Text("Left Right : RotateX");
+	//ImGui::Text("UP DOWN : RotateY");
+	//ImGui::End();
 
-	ImGui::Begin(" ");
-	//ポストプロセス
-	ImGui::Checkbox("PostProcess", &postProcess_->isActive);
-	ImGui::Checkbox("Bloom", &postProcess_->isBloomActive);
-	ImGui::Checkbox("Fog", &postProcess_->isFogActive);
-	ImGui::Checkbox("DoF", &postProcess_->isDofActive);
-	ImGui::Checkbox("LensDistortion", &postProcess_->isLensDistortionActive);
-	ImGui::Checkbox("Vignette", &postProcess_->isVignetteActive);
-	//デバッグカメラ
-	ImGui::Checkbox("DebugCamera", &isDebugCameraActive_);
-	ImGui::Text("1 : DebugCamera");
-	ImGui::Text("WASD : Move up/down/left/right");
-	ImGui::Text("MouseWheel : Move forward/backward");
-	ImGui::Text("Left Right : RotateX");
-	ImGui::Text("UP DOWN : RotateY");
-	ImGui::End();
-
-	ImGui::Begin("GameSceneRobot");
-	ImGui::Text("W:WinScene");
-	ImGui::Text("L:LoseScene");
-	ImGui::End();
+	//ImGui::Begin("GameSceneRobot");
+	//ImGui::Text("W:WinScene");
+	//ImGui::Text("L:LoseScene");
+	//ImGui::End();
 
 
 	if (player_->GetLife() <= 0) {

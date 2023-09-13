@@ -148,26 +148,6 @@ void LoseScene::Update(GameManager* gameManager) {
 	//Aボタンでステージ選択へ
 	//今はそのままゲームシーンへ
 	
-	//1でGameSceneへ
-	//if (input_->IsPushKeyEnter(DIK_1)) {
-	//	gameManager->ChangeScene(new GameScene());
-	//}
-	////2でSelectSceneへ
-	//if (input_->IsPushKeyEnter(DIK_2)) {
-	//	gameManager->ChangeScene(new SelectScene());
-	//}
-	////3でSelectSceneへ
-	//if (input_->IsPushKeyEnter(DIK_3)) {
-	//	gameManager->ChangeScene(new TitleScene());
-	//}
-
-	ImGui::Begin("WinScene");
-	ImGui::Text("1:To GameScene");
-	ImGui::Text("2:To SelectScene");
-	ImGui::Text("3:To TitleScene");
-
-
-	ImGui::End();
 
 	XINPUT_STATE joyState{};
 
@@ -201,37 +181,62 @@ void LoseScene::Update(GameManager* gameManager) {
 		}
 	}
 
+	if (isFadeOutModeToSelect_ == false && isFadeOutModeToTitle_ == false) {
+		if (input_->IsPushKeyEnter(DIK_B) || input_->IsPushKeyEnter(DIK_RETURN)) {
+			//StartSE再生
+			//ループ無し
+			backSEAudio_->SoundPlayWave(backSEHandle_, false);
+
+			//BGMを止める
+			bgmAudio_->StopAudio(bgmHandle_);
+				
+			isFadeOutModeToSelect_ = true;
+		}
 
 
-
-
-	//トリガー代わり
-	//Bを押したばあい
-	if (triggerButtonBTime_ == 1) {
-		
-		//StartSE再生
-		//ループ無し
-		backSEAudio_->SoundPlayWave(backSEHandle_, false);
-
-		//BGMを止める
-		bgmAudio_->StopAudio(bgmHandle_);
+		//トリガー代わり
+		//Bを押したばあい
+		if (triggerButtonBTime_ == 1) {
 			
-		isFadeOutModeToSelect_ = true;
+			//StartSE再生
+			//ループ無し
+			backSEAudio_->SoundPlayWave(backSEHandle_, false);
 
-	}
+			//BGMを止める
+			bgmAudio_->StopAudio(bgmHandle_);
+				
+			isFadeOutModeToSelect_ = true;
 
-	if (triggerButtonATime_ == 1) {
-		
-		//StartSE再生
-		//ループ無し
-		backSEAudio_->SoundPlayWave(backSEHandle_, false);
+		}
 
-		//BGMを止める
-		bgmAudio_->StopAudio(bgmHandle_);
+
+
+
+		if (input_->IsPushKeyEnter(DIK_A) || input_->IsPushKeyEnter(DIK_SPACE)) {
+			//StartSE再生
+			//ループ無し
+			backSEAudio_->SoundPlayWave(backSEHandle_, false);
+
+			//BGMを止める
+			bgmAudio_->StopAudio(bgmHandle_);
+				
+			isFadeOutModeToTitle_ = true;
+		}
+
+		if (triggerButtonATime_ == 1) {
 			
-		isFadeOutModeToTitle_ = true;
+			//StartSE再生
+			//ループ無し
+			backSEAudio_->SoundPlayWave(backSEHandle_, false);
 
+			//BGMを止める
+			bgmAudio_->StopAudio(bgmHandle_);
+				
+			isFadeOutModeToTitle_ = true;
+
+		}
 	}
+	
 
 	
 	

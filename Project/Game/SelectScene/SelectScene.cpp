@@ -265,9 +265,11 @@ void SelectScene::Update(GameManager* gameManager) {
 				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
 					triggerButtonBTime_ += 1;
 				}
+				
+
 			}
 			
-
+			
 			
 			//十字ボタンで選択
 			//左
@@ -277,15 +279,25 @@ void SelectScene::Update(GameManager* gameManager) {
 					triggerButtonLeftTime_ += 1;
 				
 				}
+				
+
 			}
-			
+			if (input_->IsPushKeyEnter(DIK_LEFT)) {
+				triggerButtonLeftTime_ = 1;
+			}
+
+
+			//右
 			if (isTriggerRight_ == false) {
 				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT&& triggerButtonRightTime_==0) {
 				
 					triggerButtonRightTime_ += 1;
 				}
 			}
-			
+			if (input_->IsPushKeyEnter(DIK_RIGHT)) {
+				triggerButtonRightTime_ = 1;
+			}
+
 
 			//1の時移動
 			if ((triggerButtonLeftTime_==1 )) {
@@ -340,16 +352,6 @@ void SelectScene::Update(GameManager* gameManager) {
 
 
 
-
-
-
-
-			//操作説明
-
-
-
-
-
 		}
 		
 
@@ -370,6 +372,41 @@ void SelectScene::Update(GameManager* gameManager) {
 
 		}
 
+		
+		if (stageNumber_ == 0 && isFadeOutMode_==false) {
+			if (input_->IsPushKeyEnter(DIK_B)||input_->IsPushKeyEnter(DIK_RETURN)) {
+				isFadeOutMode_ = true;
+				//StartSE再生
+				//ループ無し
+				startSEAudio_->SoundPlayWave(returnSEHandle_, false);
+			}
+		}
+
+		if (stageNumber_ == 1 && isFadeOutMode_==false) {
+			if (input_->IsPushKeyEnter(DIK_B)||input_->IsPushKeyEnter(DIK_RETURN)) {
+				isFadeOutMode_ = true;
+				//StartSE再生
+				//ループ無し
+				startSEAudio_->SoundPlayWave(startSEHandle_, false);
+			}
+		}
+		if (stageNumber_ == 2 && isFadeOutMode_==false) {
+			if (input_->IsPushKeyEnter(DIK_B)||input_->IsPushKeyEnter(DIK_RETURN)) {
+				isFadeOutMode_ = true;
+				//StartSE再生
+				//ループ無し
+				startSEAudio_->SoundPlayWave(startSEHandle_, false);
+			}
+		}
+
+		if (stageNumber_ == 3 && isFadeOutMode_==false) {
+			if (input_->IsPushKeyEnter(DIK_B)||input_->IsPushKeyEnter(DIK_RETURN)) {
+				isFadeOutMode_ = true;
+				//StartSE再生
+				//ループ無し
+				startSEAudio_->SoundPlayWave(explanationSEHandle_, false);
+			}
+		}
 		
 	}
 	
@@ -409,7 +446,7 @@ void SelectScene::Update(GameManager* gameManager) {
 	if (isFadeOutMode_ == true) {
 		bgmAudio_->StopAudio(bgmHandle_);
 		transparency_.w += fadeInterval_;
-		ImGui::Text("decide");
+		
 
 		///完全に暗くなるとローディングへ
 		if (transparency_.w >= 1.0f) {

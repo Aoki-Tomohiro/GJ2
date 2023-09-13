@@ -5,7 +5,7 @@
 #include "CollisionManager/Collider.h"
 #include <optional>
 #include "Audio/Audio.h"
-
+#include "Input/Input.h"
 
 class GameScene;
 class GameSceneRobot;
@@ -222,6 +222,9 @@ private:
 private:
 	//モデル
 	std::vector<Model*> models_{};
+	//Input
+	Input* input_ = nullptr;
+
 	//ワールドトランスフォーム
 	WorldTransform worldTransformBase_{};
 	WorldTransform worldTransformHead_{};

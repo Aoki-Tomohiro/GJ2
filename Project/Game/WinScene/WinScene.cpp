@@ -165,33 +165,63 @@ void WinScene::Update(GameManager* gameManager) {
 		
 	}
 
-	//トリガー代わり
-	//Bを押したばあい
-	if (triggerButtonBTime_ == 1) {
+
+	if (isFadeOutModeToSelect_ == false && isFadeOutModeToTitle_==false) {
+		if (input_->IsPushKeyEnter(DIK_B) || input_->IsPushKeyEnter(DIK_RETURN)) {
+			//StartSE再生
+			//ループ無し
+			backSEAudio_->SoundPlayWave(backSEHandle_, false);
+
+			//BGMを止める
+			bgmAudio_->StopAudio(bgmHandle_);
+				
+			isFadeOutModeToSelect_ = true;
+		}
 		
-		//StartSE再生
-		//ループ無し
-		backSEAudio_->SoundPlayWave(backSEHandle_, false);
 
-		//BGMを止める
-		bgmAudio_->StopAudio(bgmHandle_);
+
+		//トリガー代わり
+		//Bを押したばあい
+		if (triggerButtonBTime_ == 1) {
 			
-		isFadeOutModeToSelect_ = true;
+			//StartSE再生
+			//ループ無し
+			backSEAudio_->SoundPlayWave(backSEHandle_, false);
 
+			//BGMを止める
+			bgmAudio_->StopAudio(bgmHandle_);
+				
+			isFadeOutModeToSelect_ = true;
+
+		}
+
+
+		if (input_->IsPushKeyEnter(DIK_A) || input_->IsPushKeyEnter(DIK_SPACE)) {
+			//StartSE再生
+			//ループ無し
+			backSEAudio_->SoundPlayWave(backSEHandle_, false);
+
+			//BGMを止める
+			bgmAudio_->StopAudio(bgmHandle_);
+				
+			isFadeOutModeToTitle_ = true;
+		}
+
+		if (triggerButtonATime_ == 1) {
+			
+			//StartSE再生
+			//ループ無し
+			backSEAudio_->SoundPlayWave(backSEHandle_, false);
+
+			//BGMを止める
+			bgmAudio_->StopAudio(bgmHandle_);
+				
+			isFadeOutModeToTitle_ = true;
+
+		}
 	}
 
-	if (triggerButtonATime_ == 1) {
-		
-		//StartSE再生
-		//ループ無し
-		backSEAudio_->SoundPlayWave(backSEHandle_, false);
-
-		//BGMを止める
-		bgmAudio_->StopAudio(bgmHandle_);
-			
-		isFadeOutModeToTitle_ = true;
-
-	}
+	
 
 	
 	

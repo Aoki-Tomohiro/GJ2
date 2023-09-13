@@ -3,17 +3,12 @@
 #include "GameScene/GameScene.h"
 #include "GameSceneRobot/GameSceneRobot.h"
 #include "../GameObject/Enemy/TransCube/TransCube.h"
-#include "Input/Input.h"
 #include "CollisionManager/CollisionConfig.h"
 #include "ImGuiManager/ImGuiManager.h"
 
 void Player::Initialize(const std::vector<Model*> models) {
 	//モデルの初期化
 	models_ = models;
-
-	//Inputのインスタンスを取得
-	input_ = Input::GetInstance();
-
 	//ワールドトランスフォームの初期化
 	worldTransformHead_.parent_ = &worldTransformBase_;
 	worldTransformBody_.parent_ = &worldTransformBase_;
@@ -47,20 +42,20 @@ void Player::Initialize(const std::vector<Model*> models) {
 	//Audioのインスタンスを取得
 	audio_ = Audio::GetInstance();
 
-	damegedSE_ =Audio::GetInstance();
-	damagedSEHandle_ =  audio_->SoundLoadWave("Resources/Music/SE/Damage/PlayerDamaged.wav");
+	damegedSE_ = Audio::GetInstance();
+	damagedSEHandle_ = audio_->SoundLoadWave("Resources/Music/SE/Damage/PlayerDamaged.wav");
 
 	attackSE_ = Audio::GetInstance();
 	attackSEHandle_ = audio_->SoundLoadWave("Resources/Music/SE/Attack/PlayerAttack.wav");
 
 
-	dashSE_ =  Audio::GetInstance();
-	dashSEHandle_ =  audio_->SoundLoadWave("Resources/Music/SE/Dash/Dash.wav");;
+	dashSE_ = Audio::GetInstance();
+	dashSEHandle_ = audio_->SoundLoadWave("Resources/Music/SE/Dash/Dash.wav");;
 
-	jumpSE_ =  Audio::GetInstance();
-	jumpSEHandle_ =  audio_->SoundLoadWave("Resources/Music/SE/Jump/Jump.wav");
+	jumpSE_ = Audio::GetInstance();
+	jumpSEHandle_ = audio_->SoundLoadWave("Resources/Music/SE/Jump/Jump.wav");
 
-
+	input_ = Input::GetInstance();
 }
 
 void Player::Update() {
@@ -73,6 +68,14 @@ void Player::Update() {
 
 	//ボックスのフラグをfalseにする
 	isBoxPush_ = false;
+
+	XINPUT_STATE joyState;
+	if (Input::GetInstance()->GetJoystickState(joyState)) {
+		device_ = GamePad;
+	}
+	else {
+		device_ = KeyBoard;
+	}
 
 	//Behaviorの遷移処理
 	if (behaviorRequest_) {
@@ -190,182 +193,163 @@ void Player::BehaviorRootInitialize() {
 }
 
 void Player::BehaviorRootUpdate() {
-	//キーボード
-	Vector3 velocity_{ 0.0f,0.0f,0.0f };
-	if (Input::GetInstance()->IsPushKey(DIK_W)) {
-		//速さ
-		float kSpeed = 0.3f;
-		//強化状態の時
-		if (isEnhancedState_) {
-			kSpeed = 0.5f;
-		}
-		velocity_.z = kSpeed;
-	}
-	if (Input::GetInstance()->IsPushKey(DIK_S)) {
-		//速さ
-		float kSpeed = -0.3f;
-		//強化状態の時
-		if (isEnhancedState_) {
-			kSpeed = -0.5f;
-		}
-		velocity_.z = kSpeed;
-	}
-	if (Input::GetInstance()->IsPushKey(DIK_A)) {
-		//速さ
-		float kSpeed = -0.3f;
-		//強化状態の時
-		if (isEnhancedState_) {
-			kSpeed = -0.5f;
-		}
-		velocity_.x = kSpeed;
-	}
-	if (Input::GetInstance()->IsPushKey(DIK_D)) {
-		//速さ
-		float kSpeed = 0.3f;
-		//強化状態の時
-		if (isEnhancedState_) {
-			kSpeed = 0.5f;
-		}
-		velocity_.x = kSpeed;
-	}
-
-	Matrix4x4 rotateMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
-	velocity_ = TransformNormal(velocity_, rotateMatrix);
-	worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, velocity_);
-	//目標角度の算出
-	destinationAngleY_ = std::atan2(velocity_.x, velocity_.z);
-	//移動方向に見た目を合わせる
-	worldTransformBase_.rotation_.y = LerpShortAngle(worldTransformBase_.rotation_.y, destinationAngleY_, 0.5f);
-
-	//ジャンプ処理
-	if (Input::GetInstance()->IsPushKey(DIK_C)) {
-		if (workJump_.flag == false) {
-			workJump_.power = 1.0f;
-			workJump_.flag = true;
-		}
-	}
-	if (workJump_.flag) {
-		worldTransformBase_.translation_.y += workJump_.power;
-		workJump_.power -= 0.05f;
-		if (worldTransformBase_.translation_.y <= 0.0f) {
-			worldTransformBase_.translation_.y = 0.0f;
-			workJump_.flag = false;
-		}
-	}
-
-	//ダッシュ行動予約
 	const uint32_t behaviorDashCoolTime = 180;
-	if (workDash_.coolTime != behaviorDashCoolTime) {
-		workDash_.coolTime++;
-	}
-	if (Input::GetInstance()->IsPushKey(DIK_E)) {
-		if (workDash_.coolTime == 180) {
-			behaviorRequest_ = Behavior::kDash;
-		}
-	}
+	switch (device_) {
+	case KeyBoard:
+#pragma region キーボード操作
+		if (input_->IsPushKey(DIK_W) || input_->IsPushKey(DIK_S) || input_->IsPushKey(DIK_A) || input_->IsPushKey(DIK_D)) {
+			if (input_->IsPushKey(DIK_W)) {
+				velocity_.z = 1.0f;
+			}
+			else if (input_->IsPushKey(DIK_S)) {
+				velocity_.z = -1.0f;
+			}
 
-	//攻撃行動予約
-	if (Input::GetInstance()->IsPushKey(DIK_SPACE)) {
-		behaviorRequest_ = Behavior::kAttack;
-	}
-
-
-
-
-
-
-
-	///コントローラー
-	XINPUT_STATE joyState{};
-	if (!Input::GetInstance()->GetJoystickState(joyState)) {
-		return;
-	}
-
-	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		//しきい値
-		const float threshold = 0.7f;
-		//移動フラグ
-		bool isMoving = false;
-		//移動量
-		velocity_ = {
-			(float)joyState.Gamepad.sThumbLX / SHRT_MAX,
-			0.0f,
-			(float)joyState.Gamepad.sThumbLY / SHRT_MAX,
-		};
-
-		//スティックの押し込みが遊び範囲を超えていたら移動フラグをtureにする
-		if (Length(velocity_) > threshold) {
-			isMoving = true;
-		}
-
-		if (isMoving) {
-			//速さ
+			if (input_->IsPushKey(DIK_A)) {
+				velocity_.x = -1.0f;
+			}
+			else if (input_->IsPushKey(DIK_D)) {
+				velocity_.x = 1.0f;
+			}
 			float kSpeed = 0.3f;
-			//強化状態の時
 			if (isEnhancedState_) {
 				kSpeed = 0.5f;
 			}
-
-			//移動量に速さを反映
 			velocity_ = Multiply(Normalize(velocity_), kSpeed);
-
-			//移動ベクトルをカメラの角度だけ回転する
 			Matrix4x4 rotateMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
 			velocity_ = TransformNormal(velocity_, rotateMatrix);
-
-			//移動
 			worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, velocity_);
-
-			//目標角度の算出
 			destinationAngleY_ = std::atan2(velocity_.x, velocity_.z);
 		}
-	}
+		worldTransformBase_.rotation_.y = Lerp(worldTransformBase_.rotation_.y, destinationAngleY_, 0.5f);
 
-	//移動方向に見た目を合わせる
-	worldTransformBase_.rotation_.y = LerpShortAngle(worldTransformBase_.rotation_.y, destinationAngleY_, 0.5f);
-
-	//ジャンプ処理
-	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A  ||input_->IsPushKeyEnter(DIK_C)) {
+		//ジャンプ処理
+		if (input_->IsPushKey(DIK_C)) {
 			if (workJump_.flag == false) {
-
-
-
 				workJump_.power = 1.0f;
 				workJump_.flag = true;
 			}
 		}
-	}
-	if (workJump_.flag) {
-		worldTransformBase_.translation_.y += workJump_.power;
-		workJump_.power -= 0.05f;
-		if (worldTransformBase_.translation_.y <= 0.0f) {
-			worldTransformBase_.translation_.y = 0.0f;
-			workJump_.flag = false;
+		if (workJump_.flag) {
+			worldTransformBase_.translation_.y += workJump_.power;
+			workJump_.power -= 0.05f;
+			if (worldTransformBase_.translation_.y <= 0.0f) {
+				worldTransformBase_.translation_.y = 0.0f;
+				workJump_.flag = false;
+			}
 		}
-	}
-
-	//ダッシュ行動予約
-	/*const uint32_t behaviorDashCoolTime = 180;*/
-	if (workDash_.coolTime != behaviorDashCoolTime) {
-		workDash_.coolTime++;
-	}
-	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+		//ダッシュ行動予約
+		/*const uint32_t behaviorDashCoolTime = 180;*/
+		if (workDash_.coolTime != behaviorDashCoolTime) {
+			workDash_.coolTime++;
+		}
+		if (input_->IsPushKey(DIK_E)) {
 			if (workDash_.coolTime == 180) {
 				behaviorRequest_ = Behavior::kDash;
 			}
 		}
-	}
-
-	//攻撃行動予約
-	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		//if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
-		//	behaviorRequest_ = Behavior::kAttack;
-		//}
-		if (joyState.Gamepad.bLeftTrigger ||input_->IsPushKey(DIK_LSHIFT)) {
+		//攻撃行動予約
+		if (input_->IsPushKey(DIK_LSHIFT)) {
 			behaviorRequest_ = Behavior::kAttack;
 		}
+#pragma endregion
+		break;
+	case GamePad:
+#pragma region コントローラー操作
+		///コントローラー
+		XINPUT_STATE joyState{};
+		if (!input_->GetJoystickState(joyState)) {
+			return;
+		}
+
+		if (input_->GetJoystickState(joyState)) {
+			//しきい値
+			const float threshold = 0.7f;
+			//移動フラグ
+			bool isMoving = false;
+			//移動量
+			velocity_ = {
+				(float)joyState.Gamepad.sThumbLX / SHRT_MAX,
+				0.0f,
+				(float)joyState.Gamepad.sThumbLY / SHRT_MAX,
+			};
+
+			//スティックの押し込みが遊び範囲を超えていたら移動フラグをtureにする
+			if (Length(velocity_) > threshold) {
+				isMoving = true;
+			}
+
+			if (isMoving) {
+				//速さ
+				float kSpeed = 0.3f;
+				//強化状態の時
+				if (isEnhancedState_) {
+					kSpeed = 0.5f;
+				}
+
+				//移動量に速さを反映
+				velocity_ = Multiply(Normalize(velocity_), kSpeed);
+
+				//移動ベクトルをカメラの角度だけ回転する
+				Matrix4x4 rotateMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
+				velocity_ = TransformNormal(velocity_, rotateMatrix);
+
+				//移動
+				worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, velocity_);
+
+				//目標角度の算出
+				destinationAngleY_ = std::atan2(velocity_.x, velocity_.z);
+			}
+		}
+
+		//移動方向に見た目を合わせる
+		worldTransformBase_.rotation_.y = LerpShortAngle(worldTransformBase_.rotation_.y, destinationAngleY_, 0.5f);
+
+		//ジャンプ処理
+		if (input_->GetJoystickState(joyState)) {
+			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
+				if (workJump_.flag == false) {
+
+
+
+					workJump_.power = 1.0f;
+					workJump_.flag = true;
+				}
+			}
+		}
+		if (workJump_.flag) {
+			worldTransformBase_.translation_.y += workJump_.power;
+			workJump_.power -= 0.05f;
+			if (worldTransformBase_.translation_.y <= 0.0f) {
+				worldTransformBase_.translation_.y = 0.0f;
+				workJump_.flag = false;
+			}
+		}
+
+		//ダッシュ行動予約
+		/*const uint32_t behaviorDashCoolTime = 180;*/
+		if (workDash_.coolTime != behaviorDashCoolTime) {
+			workDash_.coolTime++;
+		}
+		if (input_->GetJoystickState(joyState)) {
+			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+				if (workDash_.coolTime == 180) {
+					behaviorRequest_ = Behavior::kDash;
+				}
+			}
+		}
+
+		//攻撃行動予約
+		if (input_->GetJoystickState(joyState)) {
+			//if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+			//	behaviorRequest_ = Behavior::kAttack;
+			//}
+			if (joyState.Gamepad.bLeftTrigger) {
+				behaviorRequest_ = Behavior::kAttack;
+			}
+		}
+#pragma endregion
+		break;
 	}
 }
 
@@ -374,93 +358,172 @@ void Player::BehaviorAttackInitialize() {
 }
 
 void Player::BehaviorAttackUpdate() {
-	XINPUT_STATE joyState{};
-	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		//しきい値
-		const float threshold = 0.7f;
-		//移動フラグ
-		bool isMoving = false;
-		//移動量
-		velocity_ = {
-			(float)joyState.Gamepad.sThumbLX / SHRT_MAX,
-			0.0f,
-			(float)joyState.Gamepad.sThumbLY / SHRT_MAX,
-		};
+	const uint32_t behaviorDashCoolTime = 180;
+	switch (device_) {
+	case KeyBoard:
+#pragma region キーボード操作
+		if (input_->IsPushKey(DIK_W) || input_->IsPushKey(DIK_S) || input_->IsPushKey(DIK_A) || input_->IsPushKey(DIK_D)) {
+			if (input_->IsPushKey(DIK_W)) {
+				velocity_.z = 1.0f;
+			}
+			else if (input_->IsPushKey(DIK_S)) {
+				velocity_.z = -1.0f;
+			}
 
-		//スティックの押し込みが遊び範囲を超えていたら移動フラグをtureにする
-		if (Length(velocity_) > threshold) {
-			isMoving = true;
-		}
-
-		if (isMoving) {
-			//速さ
+			if (input_->IsPushKey(DIK_A)) {
+				velocity_.x = -1.0f;
+			}
+			else if (input_->IsPushKey(DIK_D)) {
+				velocity_.x = 1.0f;
+			}
 			float kSpeed = 0.2f;
 			if (isEnhancedState_) {
 				kSpeed = 0.4f;
 			}
-
-			//移動量に速さを反映
 			velocity_ = Multiply(Normalize(velocity_), kSpeed);
-
-			//移動ベクトルをカメラの角度だけ回転する
 			Matrix4x4 rotateMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
 			velocity_ = TransformNormal(velocity_, rotateMatrix);
-
-			//移動
 			worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, velocity_);
-
-			//目標角度の算出
 			Vector3 rotation = Normalize(Subtract(Player::Get3DReticleWorldPosition(), Player::GetWorldPosition()));
 			destinationAngleY_ = std::atan2(rotation.x, rotation.z);
 		}
-	}
+		worldTransformBase_.rotation_.y = Lerp(worldTransformBase_.rotation_.y, destinationAngleY_, 0.5f);
 
-	//移動方向に見た目を合わせる
-	worldTransformBase_.rotation_.y = LerpShortAngle(worldTransformBase_.rotation_.y, destinationAngleY_, 0.5f);
+		//射撃処理
+		Player::Fire();
 
-	//射撃処理
-	Player::Fire();
-
-	//ジャンプ処理
-	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
+		//ジャンプ処理
+		if (input_->IsPushKey(DIK_C)) {
 			if (workJump_.flag == false) {
 				workJump_.power = 1.0f;
 				workJump_.flag = true;
 			}
 		}
-	}
-	if (workJump_.flag) {
-		worldTransformBase_.translation_.y += workJump_.power;
-		workJump_.power -= 0.05f;
-		if (worldTransformBase_.translation_.y <= 0.0f) {
-			worldTransformBase_.translation_.y = 0.0f;
-			workJump_.flag = false;
+		if (workJump_.flag) {
+			worldTransformBase_.translation_.y += workJump_.power;
+			workJump_.power -= 0.05f;
+			if (worldTransformBase_.translation_.y <= 0.0f) {
+				worldTransformBase_.translation_.y = 0.0f;
+				workJump_.flag = false;
+			}
 		}
-	}
 
-	//ダッシュ行動予約
-	const uint32_t behaviorDashCoolTime = 180;
-	if (workDash_.coolTime != behaviorDashCoolTime) {
-		workDash_.coolTime++;
-	}
-	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+		//ダッシュ行動予約
+		/*const uint32_t behaviorDashCoolTime = 180;*/
+		if (workDash_.coolTime != behaviorDashCoolTime) {
+			workDash_.coolTime++;
+		}
+		if (input_->IsPushKey(DIK_E)) {
 			if (workDash_.coolTime == 180) {
 				behaviorRequest_ = Behavior::kDash;
 			}
 		}
-	}
 
-	//RBを押し続けているときに弾を発射する
-	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		if (joyState.Gamepad.bLeftTrigger != 0) {
+		//RBを押し続けているときに弾を発射する
+		if (input_->IsPushKey(DIK_LSHIFT)) {
 			return;
 		}
-	}
 
-	//RBを離したら通常行動に戻る
-	behaviorRequest_ = Behavior::kRoot;
+		//RBを離したら通常行動に戻る
+		behaviorRequest_ = Behavior::kRoot;
+#pragma endregion
+		break;
+	case GamePad:
+#pragma region コントローラー操作
+		XINPUT_STATE joyState{};
+		if (!input_->GetJoystickState(joyState)) {
+			return;
+		}
+
+		if (input_->GetJoystickState(joyState)) {
+			//しきい値
+			const float threshold = 0.7f;
+			//移動フラグ
+			bool isMoving = false;
+			//移動量
+			velocity_ = {
+				(float)joyState.Gamepad.sThumbLX / SHRT_MAX,
+				0.0f,
+				(float)joyState.Gamepad.sThumbLY / SHRT_MAX,
+			};
+
+			//スティックの押し込みが遊び範囲を超えていたら移動フラグをtureにする
+			if (Length(velocity_) > threshold) {
+				isMoving = true;
+			}
+
+			if (isMoving) {
+				//速さ
+				float kSpeed = 0.2f;
+				if (isEnhancedState_) {
+					kSpeed = 0.4f;
+				}
+
+				//移動量に速さを反映
+				velocity_ = Multiply(Normalize(velocity_), kSpeed);
+
+				//移動ベクトルをカメラの角度だけ回転する
+				Matrix4x4 rotateMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
+				velocity_ = TransformNormal(velocity_, rotateMatrix);
+
+				//移動
+				worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, velocity_);
+
+				//目標角度の算出
+				Vector3 rotation = Normalize(Subtract(Player::Get3DReticleWorldPosition(), Player::GetWorldPosition()));
+				destinationAngleY_ = std::atan2(rotation.x, rotation.z);
+			}
+		}
+
+		//移動方向に見た目を合わせる
+		worldTransformBase_.rotation_.y = LerpShortAngle(worldTransformBase_.rotation_.y, destinationAngleY_, 0.5f);
+
+		//射撃処理
+		Player::Fire();
+
+		//ジャンプ処理
+		if (input_->GetJoystickState(joyState)) {
+			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
+				if (workJump_.flag == false) {
+					workJump_.power = 1.0f;
+					workJump_.flag = true;
+				}
+			}
+		}
+		if (workJump_.flag) {
+			worldTransformBase_.translation_.y += workJump_.power;
+			workJump_.power -= 0.05f;
+			if (worldTransformBase_.translation_.y <= 0.0f) {
+				worldTransformBase_.translation_.y = 0.0f;
+				workJump_.flag = false;
+			}
+		}
+
+		//ダッシュ行動予約
+		/*const uint32_t behaviorDashCoolTime = 180;*/
+		if (workDash_.coolTime != behaviorDashCoolTime) {
+			workDash_.coolTime++;
+		}
+		if (input_->GetJoystickState(joyState)) {
+			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+				if (workDash_.coolTime == 180) {
+					behaviorRequest_ = Behavior::kDash;
+				}
+			}
+		}
+
+		//RBを押し続けているときに弾を発射する
+		if (input_->GetJoystickState(joyState)) {
+			if (joyState.Gamepad.bLeftTrigger != 0) {
+				return;
+			}
+		}
+
+		//RBを離したら通常行動に戻る
+		behaviorRequest_ = Behavior::kRoot;
+#pragma endregion
+		break;
+	}
 }
 
 void Player::BehaviorDashInitialize() {
@@ -470,67 +533,56 @@ void Player::BehaviorDashInitialize() {
 }
 
 void Player::BehaviorDashUpdate() {
-	XINPUT_STATE joyState{};
-	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		//速さ
-		float kSpeed = 1.0f;
-		//移動量
-		velocity_ = {
-			(float)joyState.Gamepad.sThumbLX / SHRT_MAX,
-			0.0f,
-			(float)joyState.Gamepad.sThumbLY / SHRT_MAX,
-		};
-		
-		//移動量に速さを反映
-		velocity_ = Multiply(Normalize(velocity_), kSpeed);
-
-		//移動ベクトルをカメラの角度だけ回転する
-		Matrix4x4 rotateMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
-		velocity_ = TransformNormal(velocity_, rotateMatrix);
-
-		//移動
-		worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, velocity_);
-
-		dashSE_->SoundPlayWave(dashSEHandle_, 0);
-
-
-
-	}
-
-	//ダッシュの時間
 	const uint32_t behaviorDashTime = 10;
-	//規定の時間経過で通常行動に戻る
-	if (++workDash_.dashParameter_ >= behaviorDashTime) {
-		behaviorRequest_ = Behavior::kRoot;
-	}
-}
+	switch (device_) {
+	case KeyBoard:
+#pragma region キーボード操作
+		if (input_->IsPushKey(DIK_W) || input_->IsPushKey(DIK_S) || input_->IsPushKey(DIK_A) || input_->IsPushKey(DIK_D)) {
+			float kSpeed = 1.0f;
+			if (input_->IsPushKey(DIK_W)) {
+				velocity_.z = 1.0f;
+			}
+			else if (input_->IsPushKey(DIK_S)) {
+				velocity_.z = -1.0f;
+			}
 
-void Player::BehaviorBoxPushInitialize() {
-
-}
-
-void Player::BehaviorBoxPushUpdate() {
-	XINPUT_STATE joyState{};
-	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		//しきい値
-		const float threshold = 0.7f;
-		//移動フラグ
-		bool isMoving = false;
-		//移動量
-		velocity_ = {
-			(float)joyState.Gamepad.sThumbLX / SHRT_MAX,
-			0.0f,
-			(float)joyState.Gamepad.sThumbLY / SHRT_MAX,
-		};
-
-		//スティックの押し込みが遊び範囲を超えていたら移動フラグをtureにする
-		if (Length(velocity_) > threshold) {
-			isMoving = true;
+			if (input_->IsPushKey(DIK_A)) {
+				velocity_.x = -1.0f;
+			}
+			else if (input_->IsPushKey(DIK_D)) {
+				velocity_.x = 1.0f;
+			}
+			velocity_ = Multiply(Normalize(velocity_), kSpeed);
+			Matrix4x4 rotateMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
+			velocity_ = TransformNormal(velocity_, rotateMatrix);
+			worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, velocity_);
+			dashSE_->SoundPlayWave(dashSEHandle_, 0);
 		}
 
-		if (isMoving) {
+		//ダッシュの時間
+		/*const uint32_t behaviorDashTime = 10;*/
+		//規定の時間経過で通常行動に戻る
+		if (++workDash_.dashParameter_ >= behaviorDashTime) {
+			behaviorRequest_ = Behavior::kRoot;
+		}
+#pragma endregion
+		break;
+	case GamePad:
+#pragma region コントローラー操作
+		XINPUT_STATE joyState{};
+		if (!input_->GetJoystickState(joyState)) {
+			return;
+		}
+
+		if (input_->GetJoystickState(joyState)) {
 			//速さ
-			const float kSpeed = 0.2f;
+			float kSpeed = 1.0f;
+			//移動量
+			velocity_ = {
+				(float)joyState.Gamepad.sThumbLX / SHRT_MAX,
+				0.0f,
+				(float)joyState.Gamepad.sThumbLY / SHRT_MAX,
+			};
 
 			//移動量に速さを反映
 			velocity_ = Multiply(Normalize(velocity_), kSpeed);
@@ -542,45 +594,154 @@ void Player::BehaviorBoxPushUpdate() {
 			//移動
 			worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, velocity_);
 
-			//目標角度の算出
+			dashSE_->SoundPlayWave(dashSEHandle_, 0);
+
+
+
+		}
+
+		//ダッシュの時間
+		//const uint32_t behaviorDashTime = 10;
+		//規定の時間経過で通常行動に戻る
+		if (++workDash_.dashParameter_ >= behaviorDashTime) {
+			behaviorRequest_ = Behavior::kRoot;
+		}
+
+#pragma endregion
+		break;
+	}
+}
+
+void Player::BehaviorBoxPushInitialize() {
+
+}
+
+void Player::BehaviorBoxPushUpdate() {
+	switch (device_) {
+	case KeyBoard:
+#pragma region キーボード操作
+		if (input_->IsPushKey(DIK_W) || input_->IsPushKey(DIK_S) || input_->IsPushKey(DIK_A) || input_->IsPushKey(DIK_D)) {
+			float kSpeed = 0.2f;
+			if (input_->IsPushKey(DIK_W)) {
+				velocity_.z = 1.0f;
+			}
+			else if (input_->IsPushKey(DIK_S)) {
+				velocity_.z = -1.0f;
+			}
+
+			if (input_->IsPushKey(DIK_A)) {
+				velocity_.x = -1.0f;
+			}
+			else if (input_->IsPushKey(DIK_D)) {
+				velocity_.x = 1.0f;
+			}
+			velocity_ = Multiply(Normalize(velocity_), kSpeed);
+			Matrix4x4 rotateMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
+			velocity_ = TransformNormal(velocity_, rotateMatrix);
+			worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, velocity_);
 			destinationAngleY_ = std::atan2(velocity_.x, velocity_.z);
 		}
-	}
+		worldTransformBase_.rotation_.y = Lerp(worldTransformBase_.rotation_.y, destinationAngleY_, 0.5f);
 
-	//移動方向に見た目を合わせる
-	worldTransformBase_.rotation_.y = LerpShortAngle(worldTransformBase_.rotation_.y, destinationAngleY_, 0.5f);
-
-	//ジャンプ処理
-	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A ||
-			input_->IsPushKeyEnter(DIK_C)) {
+		//ジャンプ処理
+		if (input_->IsPushKey(DIK_C)) {
 			if (workJump_.flag == false) {
-				jumpSE_->SoundPlayWave(jumpSEHandle_, 0);
 				workJump_.power = 1.0f;
 				workJump_.flag = true;
 			}
 		}
-	}
-	if (workJump_.flag) {
-		worldTransformBase_.translation_.y += workJump_.power;
-		
-		workJump_.power -= 0.05f;
-		if (worldTransformBase_.translation_.y <= 0.0f) {
-			worldTransformBase_.translation_.y = 0.0f;
-			workJump_.flag = false;
+		if (workJump_.flag) {
+			worldTransformBase_.translation_.y += workJump_.power;
+			workJump_.power -= 0.05f;
+			if (worldTransformBase_.translation_.y <= 0.0f) {
+				worldTransformBase_.translation_.y = 0.0f;
+				workJump_.flag = false;
+			}
 		}
-		
-	}
 
-	//通常状態に戻す
-	behaviorRequest_ = Behavior::kRoot;
+		behaviorRequest_ = Behavior::kRoot;
+
+#pragma endregion
+		break;
+	case GamePad:
+#pragma region コントローラー操作
+		XINPUT_STATE joyState{};
+		if (!input_->GetJoystickState(joyState)) {
+			return;
+		}
+
+		if (input_->GetJoystickState(joyState)) {
+			//しきい値
+			const float threshold = 0.7f;
+			//移動フラグ
+			bool isMoving = false;
+			//移動量
+			velocity_ = {
+				(float)joyState.Gamepad.sThumbLX / SHRT_MAX,
+				0.0f,
+				(float)joyState.Gamepad.sThumbLY / SHRT_MAX,
+			};
+
+			//スティックの押し込みが遊び範囲を超えていたら移動フラグをtureにする
+			if (Length(velocity_) > threshold) {
+				isMoving = true;
+			}
+
+			if (isMoving) {
+				//速さ
+				const float kSpeed = 0.2f;
+
+				//移動量に速さを反映
+				velocity_ = Multiply(Normalize(velocity_), kSpeed);
+
+				//移動ベクトルをカメラの角度だけ回転する
+				Matrix4x4 rotateMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
+				velocity_ = TransformNormal(velocity_, rotateMatrix);
+
+				//移動
+				worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, velocity_);
+
+				//目標角度の算出
+				destinationAngleY_ = std::atan2(velocity_.x, velocity_.z);
+			}
+		}
+
+		//移動方向に見た目を合わせる
+		worldTransformBase_.rotation_.y = LerpShortAngle(worldTransformBase_.rotation_.y, destinationAngleY_, 0.5f);
+
+		//ジャンプ処理
+		if (input_->GetJoystickState(joyState)) {
+			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
+				if (workJump_.flag == false) {
+					jumpSE_->SoundPlayWave(jumpSEHandle_, 0);
+					workJump_.power = 1.0f;
+					workJump_.flag = true;
+				}
+			}
+		}
+		if (workJump_.flag) {
+			worldTransformBase_.translation_.y += workJump_.power;
+
+			workJump_.power -= 0.05f;
+			if (worldTransformBase_.translation_.y <= 0.0f) {
+				worldTransformBase_.translation_.y = 0.0f;
+				workJump_.flag = false;
+			}
+
+		}
+
+		//通常状態に戻す
+		behaviorRequest_ = Behavior::kRoot;
+#pragma endregion
+		break;
+	}
 }
 
 void Player::Fire() {
-	XINPUT_STATE joyState{};
-	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		//RTを押しているとき発射する
-		if (joyState.Gamepad.bRightTrigger || input_->IsPushKeyEnter(DIK_SPACE)) {
+	switch (device_) {
+	case KeyBoard:
+#pragma region キーボード操作
+		if (input_->IsPushKey(DIK_SPACE)) {
 			// 発射タイマーが０以下の時に弾を発射する
 			if (--bulletTimer_ <= 0) {
 				// 発射タイマーを戻す
@@ -604,7 +765,7 @@ void Player::Fire() {
 				PlayerBullet* newBullet = new PlayerBullet();
 				Vector3 worldPos{};
 				worldPos = Player::GetWorldPosition();
-				newBullet->Initialize(models_[4], worldPos, velocity);
+				newBullet->Initialize(worldPos, velocity);
 
 				// 弾を登録する
 				if (gameScene_ != nullptr) {
@@ -615,13 +776,65 @@ void Player::Fire() {
 				}
 
 				attackSE_->SoundPlayWave(attackSEHandle_, 0);
-				
-
-
-
-
 			}
 		}
+#pragma endregion
+		break;
+	case GamePad:
+#pragma region コントローラー操作
+		XINPUT_STATE joyState{};
+		if (!input_->GetJoystickState(joyState)) {
+			return;
+		}
+
+		if (input_->GetJoystickState(joyState)) {
+			//RTを押しているとき発射する
+			if (joyState.Gamepad.bRightTrigger) {
+				// 発射タイマーが０以下の時に弾を発射する
+				if (--bulletTimer_ <= 0) {
+					// 発射タイマーを戻す
+					bulletTimer_ = 20;
+					if (isEnhancedState_) {
+						bulletTimer_ = 10;
+					}
+
+					// 弾の速度
+					const float kBulletSpeed = 3.0f;
+					Vector3 velocity(0, 0, kBulletSpeed);
+
+					// 速度ベクトルを自機の向きに合わせて回転させる
+					/*velocity = TransformNormal(velocity, worldTransformBase_.matWorld_);*/
+					/*velocity = Subtract(transCube_->GetWorldPosition(), Player::GetWorldPosition());*/
+					velocity = Subtract(Player::Get3DReticleWorldPosition(), Player::GetWorldPosition());
+					velocity = Normalize(velocity);
+					velocity = Multiply(velocity, kBulletSpeed);
+
+					// 弾を生成し、初期化
+					PlayerBullet* newBullet = new PlayerBullet();
+					Vector3 worldPos{};
+					worldPos = Player::GetWorldPosition();
+					newBullet->Initialize(worldPos, velocity);
+
+					// 弾を登録する
+					if (gameScene_ != nullptr) {
+						gameScene_->AddPlayerBullet(newBullet);
+					}
+					else if (gameSceneRobot_ != nullptr) {
+						gameSceneRobot_->AddPlayerBullet(newBullet);
+					}
+
+					attackSE_->SoundPlayWave(attackSEHandle_, 0);
+
+
+
+
+
+				}
+			}
+		}
+
+#pragma endregion
+		break;
 	}
 }
 
@@ -648,9 +861,6 @@ void Player::UpdateLife() {
 		spriteHP2_->SetScale(spriteScale_);
 		break;
 	}
-
-	
-
 }
 
 void Player::UpdateInvincible() {

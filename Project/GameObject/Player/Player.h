@@ -7,6 +7,7 @@
 #include "Audio/Audio.h"
 #include "Input/Input.h"
 
+
 class GameScene;
 class GameSceneRobot;
 
@@ -15,6 +16,11 @@ enum class Behavior {
 	kAttack,//攻撃状態
 	kDash,//ダッシュ状態
 	kBoxPush,//箱を押してる状態
+};
+//デバイス
+enum CurrentDevice {
+	KeyBoard,
+	GamePad,
 };
 
 /// <summary>
@@ -216,15 +222,12 @@ private:
 	Vector3 Get3DReticleWorldPosition();
 
 
-	
+
 
 
 private:
 	//モデル
 	std::vector<Model*> models_{};
-	//Input
-	Input* input_ = nullptr;
-
 	//ワールドトランスフォーム
 	WorldTransform worldTransformBase_{};
 	WorldTransform worldTransformHead_{};
@@ -291,6 +294,10 @@ private:
 
 	Audio* jumpSE_ = nullptr;
 	uint32_t jumpSEHandle_ = 0u;
+
+	//デバイス
+	Input* input_ = nullptr;
+	int32_t device_ = GamePad;
 
 };
 

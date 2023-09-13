@@ -6,9 +6,8 @@ PlayerBullet::~PlayerBullet() {
 	delete model_;
 }
 
-void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity) {
+void PlayerBullet::Initialize(const Vector3& position, const Vector3& velocity) {
 	//モデルの初期化
-	assert(model);
 	model_ = new Model();
 	model_->CreateFromOBJ("Resources/PlayerBullet", "PlayerBullet.obj");
 	//ワールドトランスフォームの初期化

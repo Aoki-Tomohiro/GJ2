@@ -3,6 +3,7 @@
 #include "TransformationMatrix/WorldTransform.h"
 #include "TransformationMatrix/ViewProjection.h"
 #include "../GameObject/Player/Player.h"
+#include "Input/Input.h"
 
 class FollowCamera {
 public:
@@ -62,5 +63,8 @@ private:
 	float maxRotateX = 0.5f;
 	//自キャラの状態
 	Behavior playerBehavior_ = Behavior::kRoot;
+	//デバイス
+	int32_t device_ = GamePad;
+	Input* input_ = nullptr;
 };
 

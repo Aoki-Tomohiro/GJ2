@@ -53,7 +53,7 @@ void BoxManager::Update() {
 			return true;
 		}
 		return false;
-	});
+		});
 
 	//エリア内の箱の数を初期化する
 	inBoxCount_ = 0;
@@ -76,12 +76,6 @@ void BoxManager::Update() {
 
 	//エリアにある箱を確認
 	CheckArea();
-
-	ImGui::Begin("BoxManager");
-	ImGui::Text("boxCount : %d", boxCount_);
-	ImGui::Text("inBoxCount : %d", inBoxCount_);
-	ImGui::Text("areaAttribute : %d,%d,%d", areas_[0].kAreaAttribute, areas_[1].kAreaAttribute, areas_[2].kAreaAttribute);
-	ImGui::End();
 }
 
 void BoxManager::Draw(const ViewProjection& viewProjection) {

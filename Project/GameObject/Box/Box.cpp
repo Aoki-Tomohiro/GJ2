@@ -51,9 +51,6 @@ void Box::Update() {
 	onPlayer_ = false;
 	//ワールドトランスフォームの更新
 	worldTransform_.UpdateMatrix();
-	ImGui::Begin("Boxs");
-	ImGui::Text("boxAttribute : %d", attribute_);
-	ImGui::End();
 }
 
 void Box::Draw(const ViewProjection& viewProjection) {

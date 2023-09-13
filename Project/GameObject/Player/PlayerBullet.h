@@ -6,7 +6,7 @@
 /// <summary>
 /// 自機弾
 /// </summary>
-class PlayerBullet : public Collider{
+class PlayerBullet : public Collider {
 public:
 	//弾が消える時間
 	static const int32_t kLifeTime = 60 * 5;
@@ -19,7 +19,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Model* model, const Vector3& position, const Vector3& velocity);
+	void Initialize(const Vector3& position, const Vector3& velocity);
 
 	/// <summary>
 	/// 更新

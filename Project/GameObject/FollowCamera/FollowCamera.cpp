@@ -1,10 +1,10 @@
 #include "FollowCamera.h"
-#include "Input/Input.h"
 #include "ImGuiManager/ImGuiManager.h"
 
 void FollowCamera::Initialize(const Vector3& offset) {
 	//オフセットの初期化
 	normalOffset_ = offset;
+	input_ = Input::GetInstance();
 }
 
 void FollowCamera::Update(Behavior behavior) {
@@ -27,90 +27,170 @@ void FollowCamera::Update(Behavior behavior) {
 	//カメラ座標
 	viewProjection_.translation_ = Add(interTarget_, offset);
 
-	//旋回操作
-	XINPUT_STATE joyState{};
-	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		//しきい値
-		const float threshold = 0.7f;
-		const float thresholdAttack = 0.2f;
-		//回転フラグ
-		bool isRotation = false;
-		//回転量
-		Vector3 rotation = {
-			(float)joyState.Gamepad.sThumbRY / SHRT_MAX,
-			(float)joyState.Gamepad.sThumbRX / SHRT_MAX,
-			0.0f
-		};
+	XINPUT_STATE joyState;
+	if (input_->GetJoystickState(joyState)) {
+		device_ = GamePad;
+	}
+	else {
+		device_ = KeyBoard;
+	}
 
-		//自キャラが攻撃状態ではないときにデッドゾーンを有効にする
+	switch (device_) {
+	case KeyBoard:
+#pragma region キーボード操作
 		if (playerBehavior_ != Behavior::kAttack) {
-			//スティックの押し込みが遊び範囲を超えていたら回転フラグをtureにする
-			if (Length(rotation) > threshold) {
-				isRotation = true;
+			const float kRotSpeedX = 0.02f;
+			const float kRotSpeedY = 0.04f;
+			if (input_->IsPushKey(DIK_UP)) {
+				destinationAngleX_ -= kRotSpeedX;
+			}
+			else if (input_->IsPushKey(DIK_DOWN)) {
+				destinationAngleX_ += kRotSpeedX;
+			}
+
+			if (input_->IsPushKey(DIK_LEFT)) {
+				destinationAngleY_ -= kRotSpeedY;
+			}
+			else if (input_->IsPushKey(DIK_RIGHT)) {
+				destinationAngleY_ += kRotSpeedY;
 			}
 		}
 		else {
-			//スティックの押し込みが遊び範囲を超えていたら回転フラグをtureにする
-			if (Length(rotation) > thresholdAttack) {
-				isRotation = true;
+			const float kRotSpeedX = 0.008f;
+			const float kRotSpeedY = 0.01f;
+			if (input_->IsPushKey(DIK_UP)) {
+				destinationAngleX_ -= kRotSpeedX;
+			}
+			else if (input_->IsPushKey(DIK_DOWN)) {
+				destinationAngleX_ += kRotSpeedX;
+			}
+
+			if (input_->IsPushKey(DIK_LEFT)) {
+				destinationAngleY_ -= kRotSpeedY;
+			}
+			else if (input_->IsPushKey(DIK_RIGHT)) {
+				destinationAngleY_ += kRotSpeedY;
 			}
 		}
 
-		if (isRotation) {
+		//角度制限
+		if (playerBehavior_ != Behavior::kAttack) {
+			minRotateX = -0.16f;
+			maxRotateX = 0.2f;
+		}
+		else {
+			minRotateX = -0.2f;
+			maxRotateX = 0.2f;
+		}
+		if (destinationAngleX_ >= maxRotateX) {
+			destinationAngleX_ = maxRotateX;
+		}
+		else if (destinationAngleX_ <= minRotateX) {
+			destinationAngleX_ = minRotateX;
+		}
+
+		//最短角度補間
+		if (playerBehavior_ != Behavior::kAttack) {
+			viewProjection_.rotation_.x = LerpShortAngle(viewProjection_.rotation_.x, destinationAngleX_, 0.2f);
+			viewProjection_.rotation_.y = LerpShortAngle(viewProjection_.rotation_.y, destinationAngleY_, 0.2f);
+		}
+		else {
+			viewProjection_.rotation_.x = LerpShortAngle(viewProjection_.rotation_.x, destinationAngleX_, 0.4f);
+			viewProjection_.rotation_.y = LerpShortAngle(viewProjection_.rotation_.y, destinationAngleY_, 0.4f);
+		}
+
+		//ビュー行列の計算
+		viewProjection_.UpdateMatrix();
+#pragma endregion
+		break;
+	case GamePad:
+#pragma region コントローラー操作
+		//旋回操作
+		XINPUT_STATE joyState{};
+		if (!input_->GetJoystickState(joyState)) {
+			return;
+		}
+
+		if (input_->GetJoystickState(joyState)) {
+			//しきい値
+			const float threshold = 0.7f;
+			const float thresholdAttack = 0.2f;
+			//回転フラグ
+			bool isRotation = false;
+			//回転量
+			Vector3 rotation = {
+				(float)joyState.Gamepad.sThumbRY / SHRT_MAX,
+				(float)joyState.Gamepad.sThumbRX / SHRT_MAX,
+				0.0f
+			};
+
+			//自キャラが攻撃状態ではないときにデッドゾーンを有効にする
 			if (playerBehavior_ != Behavior::kAttack) {
-				//回転速度
-				const float kRotSpeedX = 0.02f;
-				const float kRotSpeedY = 0.04f;
-				//目標角度の算出
-				destinationAngleX_ -= rotation.x * kRotSpeedX;
-				destinationAngleY_ += rotation.y * kRotSpeedY;
+				//スティックの押し込みが遊び範囲を超えていたら回転フラグをtureにする
+				if (Length(rotation) > threshold) {
+					isRotation = true;
+				}
 			}
 			else {
-				//回転速度
-				const float kRotSpeedX = 0.008f;
-				const float kRotSpeedY = 0.01f;
-				//目標角度の算出
-				destinationAngleX_ -= rotation.x * kRotSpeedX;
-				destinationAngleY_ += rotation.y * kRotSpeedY;
+				//スティックの押し込みが遊び範囲を超えていたら回転フラグをtureにする
+				if (Length(rotation) > thresholdAttack) {
+					isRotation = true;
+				}
+			}
+
+			if (isRotation) {
+				if (playerBehavior_ != Behavior::kAttack) {
+					//回転速度
+					const float kRotSpeedX = 0.02f;
+					const float kRotSpeedY = 0.04f;
+					//目標角度の算出
+					destinationAngleX_ -= rotation.x * kRotSpeedX;
+					destinationAngleY_ += rotation.y * kRotSpeedY;
+				}
+				else {
+					//回転速度
+					const float kRotSpeedX = 0.008f;
+					const float kRotSpeedY = 0.01f;
+					//目標角度の算出
+					destinationAngleX_ -= rotation.x * kRotSpeedX;
+					destinationAngleY_ += rotation.y * kRotSpeedY;
+				}
 			}
 		}
-	}
 
-	//角度制限
-	if (playerBehavior_ != Behavior::kAttack) {
-		minRotateX = -0.16f;
-		maxRotateX = 0.2f;
-	}
-	else {
-		minRotateX = -0.2f;
-		maxRotateX = 0.2f;
-	}
+		//角度制限
+		if (playerBehavior_ != Behavior::kAttack) {
+			minRotateX = -0.16f;
+			maxRotateX = 0.2f;
+		}
+		else {
+			minRotateX = -0.2f;
+			maxRotateX = 0.2f;
+		}
 
-	if (destinationAngleX_ >= maxRotateX) {
-		destinationAngleX_ = maxRotateX;
-	}
-	else if (destinationAngleX_ <= minRotateX) {
-		destinationAngleX_ = minRotateX;
-	}
+		if (destinationAngleX_ >= maxRotateX) {
+			destinationAngleX_ = maxRotateX;
+		}
+		else if (destinationAngleX_ <= minRotateX) {
+			destinationAngleX_ = minRotateX;
+		}
 
 
-	//最短角度補間
-	if (playerBehavior_ != Behavior::kAttack) {
-		viewProjection_.rotation_.x = LerpShortAngle(viewProjection_.rotation_.x, destinationAngleX_, 0.2f);
-		viewProjection_.rotation_.y = LerpShortAngle(viewProjection_.rotation_.y, destinationAngleY_, 0.2f);
-	}
-	else {
-		viewProjection_.rotation_.x = LerpShortAngle(viewProjection_.rotation_.x, destinationAngleX_, 0.4f);
-		viewProjection_.rotation_.y = LerpShortAngle(viewProjection_.rotation_.y, destinationAngleY_, 0.4f);
-	}
+		//最短角度補間
+		if (playerBehavior_ != Behavior::kAttack) {
+			viewProjection_.rotation_.x = LerpShortAngle(viewProjection_.rotation_.x, destinationAngleX_, 0.2f);
+			viewProjection_.rotation_.y = LerpShortAngle(viewProjection_.rotation_.y, destinationAngleY_, 0.2f);
+		}
+		else {
+			viewProjection_.rotation_.x = LerpShortAngle(viewProjection_.rotation_.x, destinationAngleX_, 0.4f);
+			viewProjection_.rotation_.y = LerpShortAngle(viewProjection_.rotation_.y, destinationAngleY_, 0.4f);
+		}
 
-	//ビュー行列の計算
-	viewProjection_.UpdateMatrix();
-
-	ImGui::Begin("Rockon");
-	ImGui::DragFloat("maxRotate", &maxRotateX, 0.01f);
-	ImGui::DragFloat("minRotate", &minRotateX, 0.01f);
-	ImGui::End();
+		//ビュー行列の計算
+		viewProjection_.UpdateMatrix();
+#pragma endregion
+		break;
+	}
 }
 
 Vector3 FollowCamera::Offset() {

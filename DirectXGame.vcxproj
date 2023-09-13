@@ -108,13 +108,27 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Components\CollisionManager\CollisionManager.cpp" />
     <ClCompile Include="Engine\Components\Input\Input.cpp" />
     <ClCompile Include="Engine\Components\PostProcess\PostProcess.cpp" />
-    <ClCompile Include="Engine\Externals\imgui\imgui.cpp" />
-    <ClCompile Include="Engine\Externals\imgui\imgui_demo.cpp" />
-    <ClCompile Include="Engine\Externals\imgui\imgui_draw.cpp" />
-    <ClCompile Include="Engine\Externals\imgui\imgui_impl_dx12.cpp" />
-    <ClCompile Include="Engine\Externals\imgui\imgui_impl_win32.cpp" />
-    <ClCompile Include="Engine\Externals\imgui\imgui_tables.cpp" />
-    <ClCompile Include="Engine\Externals\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Engine\Externals\imgui\imgui.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MinSpace</Optimization>
+    </ClCompile>
+    <ClCompile Include="Engine\Externals\imgui\imgui_demo.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MinSpace</Optimization>
+    </ClCompile>
+    <ClCompile Include="Engine\Externals\imgui\imgui_draw.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MinSpace</Optimization>
+    </ClCompile>
+    <ClCompile Include="Engine\Externals\imgui\imgui_impl_dx12.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MinSpace</Optimization>
+    </ClCompile>
+    <ClCompile Include="Engine\Externals\imgui\imgui_impl_win32.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MinSpace</Optimization>
+    </ClCompile>
+    <ClCompile Include="Engine\Externals\imgui\imgui_tables.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MinSpace</Optimization>
+    </ClCompile>
+    <ClCompile Include="Engine\Externals\imgui\imgui_widgets.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MinSpace</Optimization>
+    </ClCompile>
     <ClCompile Include="Engine\Math\MathFunction.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Project\GameObject\Box\Box.cpp" />

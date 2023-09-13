@@ -8,16 +8,16 @@
 void BoxManager::Initialize() {
 	//ランド関数の初期化
 	std::srand(unsigned int(time(nullptr)));
-	//テクスチャの読み込み
-	textureHandle_ = TextureManager::GetInstance()->Load("Resources/white.png");
+	////テクスチャの読み込み
+	//textureHandle_ = TextureManager::GetInstance()->Load("Resources/white.png");
 	//エリアの初期化
 	for (int i = 0; i < areas_.size(); i++) {
 		//モデルの作成
 		areas_[i].model = std::make_unique<Model>();
-		areas_[i].model->CreateFromOBJ("Resources", "plane.obj");
+		areas_[i].model->CreateFromOBJ("Resources/Plane", "Plane.obj");
 		//ワールドトランスフォームの初期化
 		areas_[i].worldTransform.translation_ = { i * 4.0f - 4.0f,0.1f,0.0f };
-		areas_[i].worldTransform.rotation_.x = 3.14159265359f / 2.0f;
+	/*	areas_[i].worldTransform.rotation_.x = 3.14159265359f / 2.0f;*/
 		areas_[i].worldTransform.scale_ = { 2.0f,2.0f,2.0f };
 		//属性の初期化
 		uint32_t attribute = rand() % 3;
@@ -81,7 +81,7 @@ void BoxManager::Update() {
 void BoxManager::Draw(const ViewProjection& viewProjection) {
 	//エリアの描画
 	for (int i = 0; i < areas_.size(); i++) {
-		areas_[i].model->Draw(areas_[i].worldTransform, viewProjection, textureHandle_);
+		areas_[i].model->Draw(areas_[i].worldTransform, viewProjection);
 	}
 	//箱の描画
 	for (const std::unique_ptr<Box>& box : boxs_) {

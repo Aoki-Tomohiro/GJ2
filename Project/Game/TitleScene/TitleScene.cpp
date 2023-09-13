@@ -135,13 +135,21 @@ void TitleScene::Update(GameManager* gameManager) {
 	if (isFadeInMode_ == false) {
 		XINPUT_STATE joyState{};
 
-		if (Input::GetInstance()->GetJoystickState(joyState)) {
+		if (Input::GetInstance()->GetJoystickState(joyState) ) {
 
 			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
 				triggerButtonBTime_ += 1;
 			
 			}
 		
+		}
+
+		if (input_->IsPushKey(DIK_B)) {
+			triggerButtonBTime_ += 1;
+		}
+
+		if (input_->IsPushKey(DIK_RETURN)) {
+			triggerButtonBTime_ += 1;
 		}
 
 		//トリガー代わり
@@ -221,7 +229,7 @@ void TitleScene::Draw(GameManager* gameManager) {
 
 	backSprite_->Draw();
 
-	if (isStartTexture_ == true) {
+	if (isStartTexture_ == true &&isFadeOutMode_==false) {
 		startSprite_->Draw();
 
 	}

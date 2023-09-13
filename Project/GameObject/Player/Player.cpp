@@ -10,6 +10,10 @@
 void Player::Initialize(const std::vector<Model*> models) {
 	//モデルの初期化
 	models_ = models;
+
+	//Inputのインスタンスを取得
+	input_ = Input::GetInstance();
+
 	//ワールドトランスフォームの初期化
 	worldTransformHead_.parent_ = &worldTransformBase_;
 	worldTransformBody_.parent_ = &worldTransformBase_;
@@ -322,7 +326,7 @@ void Player::BehaviorRootUpdate() {
 
 	//ジャンプ処理
 	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A  ||input_->IsPushKeyEnter(DIK_C)) {
 			if (workJump_.flag == false) {
 
 
@@ -359,7 +363,7 @@ void Player::BehaviorRootUpdate() {
 		//if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
 		//	behaviorRequest_ = Behavior::kAttack;
 		//}
-		if (joyState.Gamepad.bLeftTrigger) {
+		if (joyState.Gamepad.bLeftTrigger ||input_->IsPushKey(DIK_LSHIFT)) {
 			behaviorRequest_ = Behavior::kAttack;
 		}
 	}
@@ -476,7 +480,7 @@ void Player::BehaviorDashUpdate() {
 			0.0f,
 			(float)joyState.Gamepad.sThumbLY / SHRT_MAX,
 		};
-
+		
 		//移動量に速さを反映
 		velocity_ = Multiply(Normalize(velocity_), kSpeed);
 
@@ -548,7 +552,8 @@ void Player::BehaviorBoxPushUpdate() {
 
 	//ジャンプ処理
 	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A ||
+			input_->IsPushKeyEnter(DIK_C)) {
 			if (workJump_.flag == false) {
 				jumpSE_->SoundPlayWave(jumpSEHandle_, 0);
 				workJump_.power = 1.0f;
@@ -575,7 +580,7 @@ void Player::Fire() {
 	XINPUT_STATE joyState{};
 	if (Input::GetInstance()->GetJoystickState(joyState)) {
 		//RTを押しているとき発射する
-		if (joyState.Gamepad.bRightTrigger) {
+		if (joyState.Gamepad.bRightTrigger || input_->IsPushKeyEnter(DIK_SPACE)) {
 			// 発射タイマーが０以下の時に弾を発射する
 			if (--bulletTimer_ <= 0) {
 				// 発射タイマーを戻す

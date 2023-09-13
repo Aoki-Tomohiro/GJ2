@@ -89,6 +89,10 @@ void GameScene::Initialize(GameManager* gameManager) {
 
 	bgmAudio_->SoundPlayWave(bgmHandle_, true);
 
+	enemyDamagedAudio_ = Audio::GetInstance();
+	enemyDamagedHandle_ = enemyDamagedAudio_->SoundLoadWave("Resources/Music/SE/Damage/EnemyDamaged.wav");
+
+
 	//SceneChange用のフラグ
 	changeToWin_ = false;
 	changeToLose_ = false;
@@ -210,7 +214,7 @@ void GameScene::Update(GameManager* gameManager) {
 	
 	if (transCube_->GetLife() <= 0) {
 		bgmAudio_->StopAudio(bgmHandle_);
-		
+		enemyDamagedAudio_->SoundPlayWave(enemyDamagedHandle_, 0);
 		//SceneChange用のフラグ
 		changeToWin_ = true;
 		

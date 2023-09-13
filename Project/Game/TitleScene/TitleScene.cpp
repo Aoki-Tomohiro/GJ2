@@ -144,56 +144,45 @@ void TitleScene::Update(GameManager* gameManager) {
 		
 		}
 
-		if (input_->IsPushKey(DIK_B)) {
-			triggerButtonBTime_ += 1;
-		}
-
-		if (input_->IsPushKey(DIK_RETURN)) {
-			triggerButtonBTime_ += 1;
-		}
-
-		//トリガー代わり
-		if (triggerButtonBTime_ == 1) {
-			isFadeOutMode_ = true;
-			//StartSE再生
-			//ループ無し
-			startSEAudio_->SoundPlayWave(startSEHandle_, false);
-		
-			//BGMを止める
-			bgmAudio_->StopAudio(bgmHandle_);
-			
-		}
-
-		
-		transparencyChangeTime_ += 1;
-		
-		if (transparencyChangeTime_ > 0) {
-			if (transparencyChangeTime_ > 0 &&
-				transparencyChangeTime_ <= SECOND_/2) {
-				isStartTexture_ = true;
-			}
-			if (transparencyChangeTime_ > SECOND_/2 &&
-				transparencyChangeTime_ <= SECOND_) {
-				isStartTexture_ = false;
-			}
-			if (transparencyChangeTime_ > SECOND_) {
-				transparencyChangeTime_ = 0;
-			}
-			
-
-		}
-
-
-		
-
-
-
-
-
-
-
+	}
+	if (input_->IsPushKey(DIK_B)) {
+		triggerButtonBTime_ += 1;
 	}
 
+	if (input_->IsPushKey(DIK_RETURN)) {
+		triggerButtonBTime_ += 1;
+	}
+
+	//トリガー代わり
+	if (triggerButtonBTime_ == 1) {
+		isFadeOutMode_ = true;
+		//StartSE再生
+		//ループ無し
+		startSEAudio_->SoundPlayWave(startSEHandle_, false);
+	
+		//BGMを止める
+		bgmAudio_->StopAudio(bgmHandle_);
+			
+	}
+
+		
+	transparencyChangeTime_ += 1;
+	
+	if (transparencyChangeTime_ > 0) {
+		if (transparencyChangeTime_ > 0 &&
+			transparencyChangeTime_ <= SECOND_/2) {
+			isStartTexture_ = true;
+		}
+		if (transparencyChangeTime_ > SECOND_/2 &&
+			transparencyChangeTime_ <= SECOND_) {
+			isStartTexture_ = false;
+		}
+		if (transparencyChangeTime_ > SECOND_) {
+			transparencyChangeTime_ = 0;
+		}
+		
+
+	}
 	
 
 

@@ -127,30 +127,7 @@ void ExplanationScene::Update(GameManager* gameManager) {
 				
 
 			}
-			if (input_->IsPushKeyEnter(DIK_B)||input_->IsPushKeyEnter(DIK_RETURN)) {
-					triggerButtonBTime_ = 1;
-				}
-
-			//1の時移動
-			if ((triggerButtonBTime_==1 )) {
-				
-
-				isTriggerB_ = true;
-				triggerButtonBTime_ = 0;
-
-				explanationCurrentNumber_ += 1;
-
-				if (explanationCurrentNumber_ == 3) {
-					isFadeOutMode_ = true;
-					selectSEAudio_->SoundPlayWave(returnSEHandle_, 0);
-					bgmAudio_->StopAudio(bgmHandle_);
-				}
-				else {
-					selectSEAudio_->SoundPlayWave(explanationSEHandle_, 0);
-				}
-
-
-			}
+			
 
 			if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B)==0) {
 				isTriggerB_ = false;
@@ -161,6 +138,33 @@ void ExplanationScene::Update(GameManager* gameManager) {
 
 
 		}
+
+		if (input_->IsPushKeyEnter(DIK_B)||input_->IsPushKeyEnter(DIK_RETURN)) {
+			triggerButtonBTime_ = 1;
+		}
+
+		//1の時移動
+		if ((triggerButtonBTime_==1 )) {
+			
+
+			isTriggerB_ = true;
+			triggerButtonBTime_ = 0;
+
+			explanationCurrentNumber_ += 1;
+
+			if (explanationCurrentNumber_ == 3) {
+				isFadeOutMode_ = true;
+				selectSEAudio_->SoundPlayWave(returnSEHandle_, 0);
+				bgmAudio_->StopAudio(bgmHandle_);
+			}
+			else {
+				selectSEAudio_->SoundPlayWave(explanationSEHandle_, 0);
+			}
+
+
+		}
+
+
 	}
 
 

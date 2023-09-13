@@ -43,7 +43,7 @@ GameManager::GameManager() {
 
 	//シーンの初期化
 
-	currentScene_ = new	TitleScene();
+	currentScene_ = new	GameScene();
 	currentScene_->Initialize(this);
 }
 

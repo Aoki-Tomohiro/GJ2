@@ -269,7 +269,10 @@ void SelectScene::Update(GameManager* gameManager) {
 
 			}
 			
-			
+			if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT)==0) {
+				isTriggerLeft_ = false;
+				triggerButtonLeftTime_ = 0;
+			}
 			
 			//十字ボタンで選択
 			//左
@@ -282,9 +285,7 @@ void SelectScene::Update(GameManager* gameManager) {
 				
 
 			}
-			if (input_->IsPushKeyEnter(DIK_LEFT)) {
-				triggerButtonLeftTime_ = 1;
-			}
+			
 
 
 			//右
@@ -294,55 +295,12 @@ void SelectScene::Update(GameManager* gameManager) {
 					triggerButtonRightTime_ += 1;
 				}
 			}
-			if (input_->IsPushKeyEnter(DIK_RIGHT)) {
-				triggerButtonRightTime_ = 1;
-			}
-
-
-			//1の時移動
-			if ((triggerButtonLeftTime_==1 )) {
-				selectSEAudio_->SoundPlayWave(selectSEHandle_, 0);
-
-				isTriggerLeft_ = true;
-				triggerButtonLeftTime_ = 0;
-
-				if (stageNumber_ == 0) {
-					cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x,cursorPosition.y });
-				}
-				else {
-					cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x - WIDTH_INTERVAL_,cursorPosition.y });
-					
-					
-				}
-
-			}
-
-			if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT)==0) {
-				isTriggerLeft_ = false;
-				triggerButtonLeftTime_ = 0;
-			}
 
 
 
 
+			
 
-
-
-			//右
-			if ((triggerButtonRightTime_==1 )) {
-				isTriggerRight_ = true;
-				triggerButtonRightTime_ = 0;
-				selectSEAudio_->SoundPlayWave(selectSEHandle_, 0);
-				if (stageNumber_ == 3) {
-					cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x,cursorPosition.y });
-				}
-				else {
-					cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x + WIDTH_INTERVAL_,cursorPosition.y });
-					
-					
-				}
-
-			}
 
 			if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT)==0) {
 				isTriggerRight_ = false;
@@ -354,7 +312,50 @@ void SelectScene::Update(GameManager* gameManager) {
 
 		}
 		
+		if (input_->IsPushKeyEnter(DIK_LEFT)) {
+				triggerButtonLeftTime_ = 1;
+			}
 
+		if (input_->IsPushKeyEnter(DIK_RIGHT)) {
+				triggerButtonRightTime_ = 1;
+		}
+
+
+		//1の時移動
+		if ((triggerButtonLeftTime_==1 )) {
+			selectSEAudio_->SoundPlayWave(selectSEHandle_, 0);
+
+			isTriggerLeft_ = true;
+			triggerButtonLeftTime_ = 0;
+
+			if (stageNumber_ == 0) {
+				cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x,cursorPosition.y });
+			}
+			else {
+				cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x - WIDTH_INTERVAL_,cursorPosition.y });
+				
+				
+			}
+
+		}
+
+		
+
+		//右
+		if ((triggerButtonRightTime_==1 )) {
+			isTriggerRight_ = true;
+			triggerButtonRightTime_ = 0;
+			selectSEAudio_->SoundPlayWave(selectSEHandle_, 0);
+			if (stageNumber_ == 3) {
+				cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x,cursorPosition.y });
+			}
+			else {
+				cursorSprite_->SetTranslation({ cursorSprite_->GetTranslation().x + WIDTH_INTERVAL_,cursorPosition.y });
+				
+				
+			}
+
+		}
 
 		changeTime_ += 1;
 		if (changeTime_ > 0) {

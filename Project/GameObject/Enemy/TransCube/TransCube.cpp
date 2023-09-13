@@ -149,7 +149,7 @@ void TransCube::Update()
 	}
 
 	//体力ゲージの処理
-	spriteScale_.x = Lerp(spriteScale_.x, life_ / 300.0f, 0.1f);
+	spriteScale_.x = Lerp(spriteScale_.x, life_ / 200.0f, 0.1f);
 	spriteHP2_->SetScale(spriteScale_);
 }
 

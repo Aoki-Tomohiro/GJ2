@@ -134,16 +134,6 @@ void Player::Update() {
 
 	//3Dレティクルの座標を計算
 	Set3DReticlePosition();
-
-	ImGui::Begin("Player");
-	ImGui::Checkbox("isEnhanced", &isEnhancedState_);
-	ImGui::Text("enhancedTimer : %d", enhancedStateTimer_);
-	ImGui::Text("dashCooltime : %d", workDash_.coolTime);
-	ImGui::DragFloat2("Sprite : uvScale", &spriteScale_.x, 0.001f);
-	ImGui::Text("LT : Aim");
-	ImGui::Text("RT : Shot");
-	ImGui::Text("LB : Dash");
-	ImGui::End();
 }
 
 void Player::Draw(const ViewProjection& viewProjection) {
@@ -196,7 +186,97 @@ void Player::BehaviorRootInitialize() {
 }
 
 void Player::BehaviorRootUpdate() {
+	//キーボード
+	Vector3 velocity_{ 0.0f,0.0f,0.0f };
+	if (Input::GetInstance()->IsPushKey(DIK_W)) {
+		//速さ
+		float kSpeed = 0.3f;
+		//強化状態の時
+		if (isEnhancedState_) {
+			kSpeed = 0.5f;
+		}
+		velocity_.z = kSpeed;
+	}
+	if (Input::GetInstance()->IsPushKey(DIK_S)) {
+		//速さ
+		float kSpeed = -0.3f;
+		//強化状態の時
+		if (isEnhancedState_) {
+			kSpeed = -0.5f;
+		}
+		velocity_.z = kSpeed;
+	}
+	if (Input::GetInstance()->IsPushKey(DIK_A)) {
+		//速さ
+		float kSpeed = -0.3f;
+		//強化状態の時
+		if (isEnhancedState_) {
+			kSpeed = -0.5f;
+		}
+		velocity_.x = kSpeed;
+	}
+	if (Input::GetInstance()->IsPushKey(DIK_D)) {
+		//速さ
+		float kSpeed = 0.3f;
+		//強化状態の時
+		if (isEnhancedState_) {
+			kSpeed = 0.5f;
+		}
+		velocity_.x = kSpeed;
+	}
+
+	Matrix4x4 rotateMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
+	velocity_ = TransformNormal(velocity_, rotateMatrix);
+	worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, velocity_);
+	//目標角度の算出
+	destinationAngleY_ = std::atan2(velocity_.x, velocity_.z);
+	//移動方向に見た目を合わせる
+	worldTransformBase_.rotation_.y = LerpShortAngle(worldTransformBase_.rotation_.y, destinationAngleY_, 0.5f);
+
+	//ジャンプ処理
+	if (Input::GetInstance()->IsPushKey(DIK_C)) {
+		if (workJump_.flag == false) {
+			workJump_.power = 1.0f;
+			workJump_.flag = true;
+		}
+	}
+	if (workJump_.flag) {
+		worldTransformBase_.translation_.y += workJump_.power;
+		workJump_.power -= 0.05f;
+		if (worldTransformBase_.translation_.y <= 0.0f) {
+			worldTransformBase_.translation_.y = 0.0f;
+			workJump_.flag = false;
+		}
+	}
+
+	//ダッシュ行動予約
+	const uint32_t behaviorDashCoolTime = 180;
+	if (workDash_.coolTime != behaviorDashCoolTime) {
+		workDash_.coolTime++;
+	}
+	if (Input::GetInstance()->IsPushKey(DIK_E)) {
+		if (workDash_.coolTime == 180) {
+			behaviorRequest_ = Behavior::kDash;
+		}
+	}
+
+	//攻撃行動予約
+	if (Input::GetInstance()->IsPushKey(DIK_SPACE)) {
+		behaviorRequest_ = Behavior::kAttack;
+	}
+
+
+
+
+
+
+
+	///コントローラー
 	XINPUT_STATE joyState{};
+	if (!Input::GetInstance()->GetJoystickState(joyState)) {
+		return;
+	}
+
 	if (Input::GetInstance()->GetJoystickState(joyState)) {
 		//しきい値
 		const float threshold = 0.7f;
@@ -262,7 +342,7 @@ void Player::BehaviorRootUpdate() {
 	}
 
 	//ダッシュ行動予約
-	const uint32_t behaviorDashCoolTime = 180;
+	/*const uint32_t behaviorDashCoolTime = 180;*/
 	if (workDash_.coolTime != behaviorDashCoolTime) {
 		workDash_.coolTime++;
 	}

@@ -112,7 +112,7 @@ private:
 	GameScene* gameScene_ = nullptr;
 
 	//体力
-	int32_t life_ = 300;
+	int32_t life_ = 200;
 
 	//体力のスプライト
 	uint32_t textureHandleHP1_ = 0;
